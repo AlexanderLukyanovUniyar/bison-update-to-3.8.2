@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: bison 2.6.2\n"
+"Project-Id-Version: bison 2.6.3\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
-"POT-Creation-Date: 2012-08-03 09:44+0200\n"
-"PO-Revision-Date: 2012-08-07 09:47-0300\n"
+"POT-Creation-Date: 2012-10-22 14:37+0200\n"
+"PO-Revision-Date: 2012-10-23 09:47-0300\n"
 "Last-Translator: Felipe Castro <fefcas@gmail.com>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
 "Language: \n"
@@ -113,7 +113,7 @@ msgstr "Provu '%s --help' por pli da informo.\n"
 #: src/getargs.c:280
 #, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Uzado: %s [ELEKTILO]... DOSIERO\n"
+msgstr "Uzado: %s [MODIFILO]... DOSIERO\n"
 
 #: src/getargs.c:281
 msgid ""
@@ -128,7 +128,7 @@ msgstr ""
 
 #: src/getargs.c:288
 msgid "Mandatory arguments to long options are mandatory for short options too.\n"
-msgstr "Nepraj argumentoj por longaj elektiloj ankaŭ nepras por la mallongaj.\n"
+msgstr "Nepraj argumentoj por longaj modifiloj ankaŭ nepras por la mallongaj.\n"
 
 #: src/getargs.c:291
 msgid "The same is true for optional arguments.\n"
@@ -259,30 +259,48 @@ msgstr ""
 "  `all'          inkluzivigi la tutan informaron supre\n"
 "  `none'         malebligi la raporton\n"
 
-#: src/getargs.c:364
+#: src/getargs.c:365
 #, c-format
-msgid ""
-"\n"
-"Report bugs to <%s>.\n"
-msgstr ""
-"\n"
-"Raportu misojn al <%s>.\n"
+msgid "Report bugs to <%s>.\n"
+msgstr "Raportu misojn al <%s>.\n"
 
+#: src/getargs.c:366
+#, c-format
+msgid "%s home page: <%s>.\n"
+msgstr "%s hejmpaĝo: <%s>.\n"
+
+#: src/getargs.c:367
+msgid "General help using GNU software: <http://www.gnu.org/gethelp/>.\n"
+msgstr "Ĝenerala helpo por uzi programaron GNU: <http://www.gnu.org/gethelp/>.\n"
+
+#. TRANSLATORS: Replace LANG_CODE in this URL with your language
+#. code <http://translationproject.org/team/LANG_CODE.html> to
+#. form one of the URLs at http://translationproject.org/team/.
+#. Otherwise, replace the entire URL with your translation team's
+#. email address.
 #: src/getargs.c:380
+msgid "Report translation bugs to <http://translationproject.org/team/>.\n"
+msgstr "Raportu mistradukojn al <http://translationproject.org/team/>.\n"
+
+#: src/getargs.c:382
+msgid "For complete documentation, run: info bison.\n"
+msgstr "Por la tuta dokumentaro, lanĉu: info bison.\n"
+
+#: src/getargs.c:398
 #, c-format
 msgid "bison (GNU Bison) %s"
 msgstr "bison (GNU-a Bison) %s"
 
-#: src/getargs.c:382
+#: src/getargs.c:400
 msgid "Written by Robert Corbett and Richard Stallman.\n"
 msgstr "Verkita de Robert Corbett kaj Richard Stallman.\n"
 
-#: src/getargs.c:386
+#: src/getargs.c:404
 #, c-format
 msgid "Copyright (C) %d Free Software Foundation, Inc.\n"
 msgstr "Kopirajto (C) %d Free Software Foundation, Inc.\n"
 
-#: src/getargs.c:389
+#: src/getargs.c:407
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -290,26 +308,26 @@ msgstr ""
 "Tio ĉi estas libera programaro; vidu la kodumaĵon por kopi-kondiĉoj.  Ekzistas NENIU\n"
 "garantio; eĉ ne por MERKATIGO aŭ TAŬGO POR PRIVATA CELO.\n"
 
-#: src/getargs.c:410
+#: src/getargs.c:428
 #, c-format
 msgid "multiple skeleton declarations are invalid"
 msgstr "multoblaj deklaroj de skeleto ne estas valide"
 
-#: src/getargs.c:428
+#: src/getargs.c:446
 #, c-format
 msgid "%s: invalid language"
 msgstr "%s: malvalida lingvo"
 
-#: src/getargs.c:431
+#: src/getargs.c:449
 msgid "multiple language declarations are invalid"
 msgstr "multoblaj deklaroj de lingvo ne estas valide"
 
-#: src/getargs.c:693
+#: src/getargs.c:711
 #, c-format
 msgid "%s: missing operand"
 msgstr "%s: mankas argumento"
 
-#: src/getargs.c:695
+#: src/getargs.c:713
 #, c-format
 msgid "extra operand %s"
 msgstr "kroma argumento %s"
@@ -332,7 +350,7 @@ msgid ""
 msgstr ""
 "// Generita de %s.\n"
 "// Raportu misojn al <%s>.\n"
-"// Hejm-paĝo: <%s>.\n"
+"// Hejmpaĝo: <%s>.\n"
 "\n"
 
 #: src/location.c:93 src/scan-gram.l:855
@@ -380,7 +398,7 @@ msgstr "malvalida valoro por '%%define'-variablo %s: %s"
 msgid "accepted value: %s"
 msgstr "akceptita valoro: %s"
 
-#: src/parse-gram.y:746
+#: src/parse-gram.y:747
 #, c-format
 msgid "missing identifier in parameter declaration"
 msgstr "mankas identigilon en deklaro de parametro"
@@ -993,57 +1011,57 @@ msgstr "Nekonata sistem-eraro"
 #: lib/getopt.c:547 lib/getopt.c:576
 #, c-format
 msgid "%s: option '%s' is ambiguous; possibilities:"
-msgstr "%s: elektilo '%s' estas plursenca; eblecoj:"
+msgstr "%s: modifilo '%s' estas plursenca; eblecoj:"
 
 #: lib/getopt.c:624 lib/getopt.c:628
 #, c-format
 msgid "%s: option '--%s' doesn't allow an argument\n"
-msgstr "%s: elektilo '--%s' ne permesas argumenton\n"
+msgstr "%s: modifilo '--%s' ne permesas argumenton\n"
 
 #: lib/getopt.c:637 lib/getopt.c:642
 #, c-format
 msgid "%s: option '%c%s' doesn't allow an argument\n"
-msgstr "%s: elektilo '%c%s' ne permesas argumenton\n"
+msgstr "%s: modifilo '%c%s' ne permesas argumenton\n"
 
 #: lib/getopt.c:685 lib/getopt.c:704
 #, c-format
 msgid "%s: option '--%s' requires an argument\n"
-msgstr "%s: elektilo '--%s' postulas argumenton\n"
+msgstr "%s: modifilo '--%s' postulas argumenton\n"
 
 #: lib/getopt.c:742 lib/getopt.c:745
 #, c-format
 msgid "%s: unrecognized option '--%s'\n"
-msgstr "%s: nerekonita elektilo '--%s'\n"
+msgstr "%s: nerekonita modifilo '--%s'\n"
 
 #: lib/getopt.c:753 lib/getopt.c:756
 #, c-format
 msgid "%s: unrecognized option '%c%s'\n"
-msgstr "%s: nerekonita elektilo '%c%s'\n"
+msgstr "%s: nerekonita modifilo '%c%s'\n"
 
 #: lib/getopt.c:805 lib/getopt.c:808
 #, c-format
 msgid "%s: invalid option -- '%c'\n"
-msgstr "%s: malvalida elektilo -- '%c'\n"
+msgstr "%s: malvalida modifilo -- '%c'\n"
 
 #: lib/getopt.c:861 lib/getopt.c:878 lib/getopt.c:1088 lib/getopt.c:1106
 #, c-format
 msgid "%s: option requires an argument -- '%c'\n"
-msgstr "%s: la elektilo postulas argumenton -- '%c'\n"
+msgstr "%s: la modifilo postulas argumenton -- '%c'\n"
 
 #: lib/getopt.c:934 lib/getopt.c:950
 #, c-format
 msgid "%s: option '-W %s' is ambiguous\n"
-msgstr "%s: elektilo '-W %s' estas plursenca\n"
+msgstr "%s: modifilo '-W %s' estas plursenca\n"
 
 #: lib/getopt.c:974 lib/getopt.c:992
 #, c-format
 msgid "%s: option '-W %s' doesn't allow an argument\n"
-msgstr "%s: elektilo '-W %s' ne permesas argumenton\n"
+msgstr "%s: modifilo '-W %s' ne permesas argumenton\n"
 
 #: lib/getopt.c:1013 lib/getopt.c:1031
 #, c-format
 msgid "%s: option '-W %s' requires an argument\n"
-msgstr "%s: elektilo '-W %s' postulas argumenton\n"
+msgstr "%s: modifilo '-W %s' postulas argumenton\n"
 
 #: lib/obstack.c:413 lib/obstack.c:415 lib/xalloc-die.c:34
 msgid "memory exhausted"

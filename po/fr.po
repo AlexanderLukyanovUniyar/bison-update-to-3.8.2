@@ -6,10 +6,10 @@
 # Frédéric Marchal <fmarchal@perso.be>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU bison 2.6.2\n"
+"Project-Id-Version: GNU bison 2.6.3\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
-"POT-Creation-Date: 2012-08-03 09:44+0200\n"
-"PO-Revision-Date: 2012-08-08 21:20+0200\n"
+"POT-Creation-Date: 2012-10-22 14:37+0200\n"
+"PO-Revision-Date: 2012-10-23 16:31+0200\n"
 "Last-Translator: Frédéric Marchal <fmarchal@perso.be>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 1.4\n"
+"X-Generator: Lokalize 1.0\n"
 
 #: src/complain.c:116 src/complain.c:127 src/complain.c:136 src/complain.c:184
 #: src/complain.c:194
@@ -263,30 +263,48 @@ msgstr ""
 "  `all'          inclure toutes les informations ci-haut\n"
 "  `none'         désactiver la génération de rapport\n"
 
-#: src/getargs.c:364
+#: src/getargs.c:365
 #, c-format
-msgid ""
-"\n"
-"Report bugs to <%s>.\n"
-msgstr ""
-"\n"
-"Rapportez toutes anomalies à <%s>.\n"
+msgid "Report bugs to <%s>.\n"
+msgstr "Rapportez toutes anomalies à <%s>.\n"
 
+#: src/getargs.c:366
+#, c-format
+msgid "%s home page: <%s>.\n"
+msgstr "page d'accueil de %s: <%s>.\n"
+
+#: src/getargs.c:367
+msgid "General help using GNU software: <http://www.gnu.org/gethelp/>.\n"
+msgstr "Aide générique sur l'utilisation des logiciels GNU: <http://www.gnu.org/help/gethelp.fr.html>.\n"
+
+#. TRANSLATORS: Replace LANG_CODE in this URL with your language
+#. code <http://translationproject.org/team/LANG_CODE.html> to
+#. form one of the URLs at http://translationproject.org/team/.
+#. Otherwise, replace the entire URL with your translation team's
+#. email address.
 #: src/getargs.c:380
+msgid "Report translation bugs to <http://translationproject.org/team/>.\n"
+msgstr "Signalez les erreurs de traductions à <http://translationproject.org/team/fr.html>.\n"
+
+#: src/getargs.c:382
+msgid "For complete documentation, run: info bison.\n"
+msgstr "Pour la documentation complète, exécutez: info bison.\n"
+
+#: src/getargs.c:398
 #, c-format
 msgid "bison (GNU Bison) %s"
 msgstr "bison (GNU Bison) %s"
 
-#: src/getargs.c:382
+#: src/getargs.c:400
 msgid "Written by Robert Corbett and Richard Stallman.\n"
 msgstr "Écrit par Robert Corbett et Richard Stallman.\n"
 
-#: src/getargs.c:386
+#: src/getargs.c:404
 #, c-format
 msgid "Copyright (C) %d Free Software Foundation, Inc.\n"
 msgstr "Copyright © %d Free Software Foundation, Inc.\n"
 
-#: src/getargs.c:389
+#: src/getargs.c:407
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -295,26 +313,26 @@ msgstr ""
 "reproduction. AUCUNE garantie n'est donnée; tant pour des raisons\n"
 "COMMERCIALES que pour RÉPONDRE À UN BESOIN PARTICULIER.\n"
 
-#: src/getargs.c:410
+#: src/getargs.c:428
 #, c-format
 msgid "multiple skeleton declarations are invalid"
 msgstr "déclarations multiples de squelettes sont inacceptables"
 
-#: src/getargs.c:428
+#: src/getargs.c:446
 #, c-format
 msgid "%s: invalid language"
 msgstr "%s: langage inacceptable"
 
-#: src/getargs.c:431
+#: src/getargs.c:449
 msgid "multiple language declarations are invalid"
 msgstr "les déclarations multiples du langage sont interdits"
 
-#: src/getargs.c:693
+#: src/getargs.c:711
 #, c-format
 msgid "%s: missing operand"
 msgstr "%s: opérande manquante"
 
-#: src/getargs.c:695
+#: src/getargs.c:713
 #, c-format
 msgid "extra operand %s"
 msgstr "opérande superflu %s"
@@ -385,7 +403,7 @@ msgstr "valeur inacceptable pour %%define de la variable %s : %s"
 msgid "accepted value: %s"
 msgstr "valeur acceptée : %s"
 
-#: src/parse-gram.y:746
+#: src/parse-gram.y:747
 #, c-format
 msgid "missing identifier in parameter declaration"
 msgstr "identificateur manquant dans la déclaration de paramètres"
