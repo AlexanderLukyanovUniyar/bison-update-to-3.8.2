@@ -1,2 +1,2 @@
-tar: bison-current:. name=bison-@version@-@release@
+tar: . name=@name@-@version@-@release@
 tar: po-current:po name=po-@version@-@release@ base=po
