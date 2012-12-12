@@ -48,7 +48,6 @@
 /hash.m4
 /iconv.m4
 /include_next.m4
-/inline.m4
 /intdiv0.m4
 /intl.m4
 /intldir.m4
@@ -181,3 +180,5 @@
 /xstrndup.m4
 /obstack-printf.m4
 /extern-inline.m4
+/getdelim.m4
+/getline.m4

@@ -58,6 +58,20 @@ AC_PROG_CXX
 # Gnulib (early checks).
 gl_EARLY
 
+# Gnulib uses '#pragma GCC diagnostic push' to silence some
+# warnings, but older gcc doesn't support this.
+AC_CACHE_CHECK([whether pragma GCC diagnostic push works],
+  [lv_cv_gcc_pragma_push_works], [
+  save_CFLAGS=$CFLAGS
+  CFLAGS='-Wunknown-pragmas -Werror'
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic pop
+  ]])],
+  [lv_cv_gcc_pragma_push_works=yes],
+  [lv_cv_gcc_pragma_push_works=no])
+  CFLAGS=$save_CFLAGS])
+
 AC_ARG_ENABLE([gcc-warnings],
 [  --enable-gcc-warnings   turn on lots of GCC warnings (not recommended)],
 [case $enable_gcc_warnings in
@@ -67,37 +81,63 @@ AC_ARG_ENABLE([gcc-warnings],
               [enable_gcc_warnings=no])
 if test "$enable_gcc_warnings" = yes; then
   warn_common='-Wall -Wextra -Wno-sign-compare -Wcast-align
-    -Wcast-qual -Wformat -Wpointer-arith -Wwrite-strings'
-  warn_c='-Wbad-function-cast -Wmissing-declarations -Wmissing-prototypes
-    -Wshadow -Wstrict-prototypes'
+    -Wformat -Wpointer-arith -Wwrite-strings'
+  warn_c='-Wbad-function-cast -Wshadow -Wstrict-prototypes'
   warn_cxx='-Wnoexcept'
   AC_LANG_PUSH([C])
+  # Clang supports many of GCC's -W options, but only issues warnings
+  # on the ones it does not recognize.  In that case, gl_WARN_ADD
+  # thinks the option is supported, and unknown options are then added
+  # to CFLAGS.  But then, when -Werror is added in the test suite for
+  # instance, the warning about the unknown option turns into an
+  # error.
+  #
+  # This should be addressed by gnulib's gl_WARN_ADD, but in the
+  # meanwhile, turn warnings about unknown options into errors in
+  # CFLAGS, and restore CFLAGS after the tests.
+  save_CFLAGS=$CFLAGS
+  gl_WARN_ADD([-Werror=unknown-warning-option], [CFLAGS])
   for i in $warn_common $warn_c;
   do
     gl_WARN_ADD([$i], [WARN_CFLAGS])
   done
   gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
+
+  # Warnings for the test suite, and maybe for bison if GCC is modern
+  # enough.
+  gl_WARN_ADD([-Wmissing-declarations], [WARN_CFLAGS_TEST])
+  gl_WARN_ADD([-Wmissing-prototypes], [WARN_CFLAGS_TEST])
+  test $lv_cv_gcc_pragma_push_works = yes &&
+    AS_VAR_APPEND([WARN_CFLAGS], [" $WARN_CFLAGS_TEST"])
+
   # Warnings for the test suite only.
   gl_WARN_ADD([-Wundef], [WARN_CFLAGS_TEST])
   gl_WARN_ADD([-pedantic], [WARN_CFLAGS_TEST])
+  CFLAGS=$save_CFLAGS
   AC_LANG_POP([C])
 
+
   AC_LANG_PUSH([C++])
+  save_CXXFLAGS=$CXXFLAGS
+  gl_WARN_ADD([-Werror=unknown-warning-option], [CXXFLAGS])
   for i in $warn_common $warn_cxx;
   do
     gl_WARN_ADD([$i], [WARN_CXXFLAGS])
   done
-  gl_WARN_ADD([ -Wzero-as-null-pointer-constant], [WARN_CXXFLAGS],
+  gl_WARN_ADD([-Wzero-as-null-pointer-constant], [WARN_CXXFLAGS],
               [AC_LANG_PROGRAM([], [nullptr])])
   gl_WARN_ADD([-Werror], [WERROR_CXXFLAGS])
   # Warnings for the test suite only.
   gl_WARN_ADD([-Wundef], [WARN_CXXFLAGS_TEST])
   gl_WARN_ADD([-pedantic], [WARN_CXXFLAGS_TEST])
+  CXXFLAGS=$save_CXXFLAGS
   AC_LANG_POP([C++])
 fi
 
 BISON_TEST_FOR_WORKING_C_COMPILER
+BISON_C_COMPILER_POSIXLY_CORRECT
 BISON_TEST_FOR_WORKING_CXX_COMPILER
+BISON_CXX_COMPILER_POSIXLY_CORRECT
 
 AC_ARG_ENABLE([yacc],
   [AC_HELP_STRING([--disable-yacc],
@@ -115,6 +155,7 @@ AC_SUBST([YACC_SCRIPT])
 AC_SUBST([YACC_LIBRARY])
 
 # Checks for programs.
+AM_MISSING_PROG([DOT], [dot])
 AC_PROG_LEX
 $LEX_IS_FLEX || AC_MSG_ERROR([Flex is required])
 AC_PROG_YACC

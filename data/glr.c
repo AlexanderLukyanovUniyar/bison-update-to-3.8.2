@@ -179,13 +179,10 @@ m4_define([b4_shared_declarations],
 ## Output files.  ##
 ## -------------- ##
 
-# We do want M4 expansion after # for CPP macros.
-m4_changecom()
-m4_divert_push(0)dnl
-@output(b4_parser_file_name@)@
+b4_output_begin([b4_parser_file_name])
 b4_copyright([Skeleton implementation for Bison GLR parsers in C],
-             [2002-2012])
-[
+             [2002-2012])[
+
 /* C GLR parser skeleton written by Paul Hilfinger.  */
 
 ]b4_identification
@@ -223,11 +220,11 @@ b4_percent_code_get([[top]])[
 #endif
 
 /* Default (constant) value used for initialization for null
-   right-hand sides.  Unlike the standard yacc.c template,
-   here we set the default value of $$ to a zeroed-out value.
-   Since the default value is undefined, this behavior is
-   technically correct.  */
-static YYSTYPE yyval_default;
+   right-hand sides.  Unlike the standard yacc.c template, here we set
+   the default value of $$ to a zeroed-out value.  Since the default
+   value is undefined, this behavior is technically correct.  */
+static YYSTYPE yyval_default;]b4_locations_if([[
+static YYLTYPE yyloc_default][]b4_yyloc_default;])[
 
 /* Copy the second part of user declarations.  */
 ]b4_user_post_prologue
@@ -290,7 +287,7 @@ b4_percent_code_get[]dnl
 # include <setjmp.h>
 # define YYJMP_BUF jmp_buf
 # define YYSETJMP(Env) setjmp (Env)
-// Pacify clang.
+/* Pacify clang.  */
 # define YYLONGJMP(Env, Val) (longjmp (Env, Val), YYASSERT (0))
 #endif
 
@@ -305,13 +302,6 @@ b4_percent_code_get[]dnl
 #  define __attribute__(Spec) /* empty */
 # endif
 #endif
-
-]b4_locations_if([#define YYOPTIONAL_LOC(Name) Name],[
-#ifdef __cplusplus
-# define YYOPTIONAL_LOC(Name) /* empty */
-#else
-# define YYOPTIONAL_LOC(Name) Name __attribute__ ((__unused__))
-#endif])[
 
 #ifndef YYASSERT
 # define YYASSERT(Condition) ((void) ((Condition) || (abort (), 0)))
@@ -475,28 +465,10 @@ static const ]b4_int_type_for([b4_stos])[ yystos[] =
 #define YYTERROR 1
 
 ]b4_locations_if([[
-#ifndef YYLLOC_DEFAULT
 ]b4_yylloc_default_define[
 # define YYRHSLOC(Rhs, K) ((Rhs)[K].yystate.yyloc)
-
-/* YY_LOCATION_PRINT -- Print the location on the stream.
-   This macro was not mandated originally: define only if we know
-   we won't break user code: when these are the locations we know.  */
-
-# define YY_LOCATION_PRINT(File, Loc)                   \
-    fprintf (File, "%d.%d-%d.%d",                       \
-             (Loc).first_line, (Loc).first_column,      \
-             (Loc).last_line,  (Loc).last_column)
-#endif
-]],[
-#ifndef YYLLOC_DEFAULT
-# define YYLLOC_DEFAULT(Current, Rhs, N) ((void) 0)
-#endif
-])[
-
-#ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
-#endif
+]])[
+]b4_yy_location_print_define[
 
 /* YYLEX -- calling `yylex' with the right arguments.  */
 #define YYLEX ]b4_c_function_call([yylex], [int], b4_lex_param)[
@@ -2041,10 +2013,10 @@ yyreportSyntaxError (yyGLRStack* yystackp]b4_user_formals[)
 #if ! YYERROR_VERBOSE
   yyerror (]b4_lyyerror_args[YY_("syntax error"));
 #else
+  {
   yySymbol yytoken = yychar == YYEMPTY ? YYEMPTY : YYTRANSLATE (yychar);
   size_t yysize0 = yytnamerr (YY_NULL, yytokenName (yytoken));
   size_t yysize = yysize0;
-  size_t yysize1;
   yybool yysize_overflow = yyfalse;
   char* yymsg = YY_NULL;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
@@ -2104,9 +2076,11 @@ yyreportSyntaxError (yyGLRStack* yystackp]b4_user_formals[)
                     break;
                   }
                 yyarg[yycount++] = yytokenName (yyx);
-                yysize1 = yysize + yytnamerr (YY_NULL, yytokenName (yyx));
-                yysize_overflow |= yysize1 < yysize;
-                yysize = yysize1;
+                {
+                  size_t yysz = yysize + yytnamerr (YY_NULL, yytokenName (yyx));
+                  yysize_overflow |= yysz < yysize;
+                  yysize = yysz;
+                }
               }
         }
     }
@@ -2126,9 +2100,11 @@ yyreportSyntaxError (yyGLRStack* yystackp]b4_user_formals[)
 #undef YYCASE_
     }
 
-  yysize1 = yysize + strlen (yyformat);
-  yysize_overflow |= yysize1 < yysize;
-  yysize = yysize1;
+  {
+    size_t yysz = yysize + strlen (yyformat);
+    yysize_overflow |= yysz < yysize;
+    yysize = yysz;
+  }
 
   if (!yysize_overflow)
     yymsg = (char *) YYMALLOC (yysize);
@@ -2158,6 +2134,7 @@ yyreportSyntaxError (yyGLRStack* yystackp]b4_user_formals[)
       yyerror (]b4_lyyerror_args[YY_("syntax error"));
       yyMemoryExhausted (yystackp);
     }
+  }
 #endif /* YYERROR_VERBOSE */
   yynerrs += 1;
 }
@@ -2295,14 +2272,9 @@ yyrecoverSyntaxError (yyGLRStack* yystackp]b4_user_formals[)
   YYDPRINTF ((stderr, "Starting parse\n"));
 
   yychar = YYEMPTY;
-  yylval = yyval_default;
-]b4_locations_if([
-#if defined ]b4_api_PREFIX[LTYPE_IS_TRIVIAL && ]b4_api_PREFIX[LTYPE_IS_TRIVIAL
-  yylloc.first_line   = yylloc.last_line   = ]b4_location_initial_line[;
-  yylloc.first_column = yylloc.last_column = ]b4_location_initial_column[;
-#endif
-])
-m4_ifdef([b4_initial_action], [
+  yylval = yyval_default;]b4_locations_if([
+  yylloc = yyloc_default;])[
+]m4_ifdef([b4_initial_action], [
 b4_dollar_pushdef([yylval], [], [yylloc])dnl
 /* User initialization code.  */
 b4_user_initial_action
@@ -2601,17 +2573,17 @@ yypdumpstack (yyGLRStack* yystackp)
 }
 #endif
 ]b4_epilogue[]dnl
-dnl
-dnl glr.cc produces its own header.
-dnl
+b4_output_end()
+
+# glr.cc produces its own header.
 m4_if(b4_skeleton, ["glr.c"],
 [b4_defines_if(
-[@output(b4_spec_defines_file@)@
+[b4_output_begin([b4_spec_defines_file])
 b4_copyright([Skeleton interface for Bison GLR parsers in C],
              [2002-2012])[
 
 ]b4_cpp_guard_open([b4_spec_defines_file])[
 ]b4_shared_declarations[
 ]b4_cpp_guard_close([b4_spec_defines_file])[
-]])])dnl
-m4_divert_pop(0)
+]b4_output_end()
+])])

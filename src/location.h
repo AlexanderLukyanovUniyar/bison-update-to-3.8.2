@@ -88,7 +88,7 @@ typedef struct
 
 } location;
 
-#define YYLTYPE location
+#define GRAM_LTYPE location
 
 #define EMPTY_LOCATION_INIT {{NULL, 0, 0}, {NULL, 0, 0}}
 extern location const empty_location;
@@ -101,6 +101,13 @@ void location_compute (location *loc,
 /* Print location to file. Return number of actually printed
    characters.  */
 unsigned location_print (FILE *out, location loc);
+
+/* Free any allocated ressources and close any open file handles that are
+   left-over by the usage of location_caret.  */
+void cleanup_caret (void);
+
+/* Output to OUT the line and caret corresponding to location LOC.  */
+void location_caret (FILE *out, location loc);
 
 /* Return -1, 0, 1, depending whether a is before, equal, or
    after b.  */

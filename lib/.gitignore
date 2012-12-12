@@ -272,3 +272,11 @@
 /binary-io.c
 /mbuiter.c
 /xsize.c
+/bitrotate.c
+/math.c
+/sig-handler.c
+/stdio.c
+/unistd.c
+/wctype-h.c
+/getdelim.c
+/getline.c
