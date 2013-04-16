@@ -1,24 +1,24 @@
 # Vietnamese Translation for Bison.
-# Copyright © 2012 Free Software Foundation, Inc.
+# Copyright © 2013 Free Software Foundation, Inc.
 # This file is distributed under the same license as the bison package.
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2010.
-# Trần Ngọc Quân <vnwildman@gmail.com>, 2012.
+# Trần Ngọc Quân <vnwildman@gmail.com>, 2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: bison-2.6.90\n"
+"Project-Id-Version: bison-2.7.1\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
-"POT-Creation-Date: 2012-12-07 11:38+0100\n"
-"PO-Revision-Date: 2012-12-09 08:31+0700\n"
+"POT-Creation-Date: 2013-04-15 13:59+0200\n"
+"PO-Revision-Date: 2013-04-16 08:34+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Team-Website: <http://translationproject.org/team/vi.html>\n"
+"Language-Team-Website: <http://translationproject.org/team/vi.html>\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: LocFactoryEditor 1.8\n"
+"X-Generator: Poedit 1.5.5\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: src/complain.c:120 src/complain.c:131 src/complain.c:140 src/complain.c:188
@@ -302,7 +302,7 @@ msgstr "Hãy thông báo lỗi dịch cho <http://translationproject.org/team/vi
 
 #: src/getargs.c:412
 msgid "For complete documentation, run: info bison.\n"
-msgstr "Để đọc tài liệu dạng đầy đủ, chạy lệnh: info bison.\n"
+msgstr "Để đọc toàn bộ tài liệu về phần mềm này, hãy chạy lệnh: info bison.\n"
 
 #: src/getargs.c:428
 #, c-format
