@@ -1,13 +1,12 @@
 /*~
 /.dirstamp
-/Makefile
-/Makefile.in
 /bison.1
 /bison.aux
 /bison.cp
 /bison.cps
 /bison.dvi
 /bison.fn
+/bison.help
 /bison.html
 /bison.info
 /bison.ky
@@ -28,3 +27,4 @@
 /stamp-vti
 /version.texi
 /yacc.1
+/gendocs_template_min

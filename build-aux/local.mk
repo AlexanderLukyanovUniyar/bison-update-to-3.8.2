@@ -1,5 +1,5 @@
-## Copyright (C) 2006, 2009-2013 Free Software Foundation, Inc.
-
+# Copyright (C) 2000-2015 Free Software Foundation, Inc.
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -13,4 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-nodist_noinst_SCRIPTS = bench.pl
+EXTRA_DIST +=					\
+  build-aux/Darwin.valgrind			\
+  build-aux/Linux.valgrind			\
+  build-aux/cross-options.pl			\
+  build-aux/move-if-change			\
+  build-aux/prev-version.txt			\
+  build-aux/update-b4-copyright

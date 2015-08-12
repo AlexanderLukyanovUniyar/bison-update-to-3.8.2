@@ -50,6 +50,7 @@
 /include_next.m4
 /intdiv0.m4
 /intl.m4
+/intl.m4~
 /intldir.m4
 /intlmacosx.m4
 /intmax.m4
@@ -62,7 +63,6 @@
 /isnand.m4
 /isnanf.m4
 /isnanl.m4
-/iswblank.m4
 /javacomp.m4
 /javaexec.m4
 /largefile.m4
@@ -81,8 +81,6 @@
 /longlong.m4
 /malloc.m4
 /math_h.m4
-/mbchar.m4
-/mbiter.m4
 /mbrtowc.m4
 /mbsinit.m4
 /mbstate_t.m4
@@ -101,6 +99,7 @@
 /perror.m4
 /pipe2.m4
 /po.m4
+/po.m4~
 /posix_spawn.m4
 /printf-frexp.m4
 /printf-frexpl.m4
@@ -145,8 +144,6 @@
 /string_h.m4
 /strndup.m4
 /strnlen.m4
-/strtol.m4
-/strtoul.m4
 /strverscmp.m4
 /sys_ioctl_h.m4
 /sys_socket_h.m4
@@ -180,5 +177,10 @@
 /xstrndup.m4
 /obstack-printf.m4
 /extern-inline.m4
-/getdelim.m4
-/getline.m4
+/non-recursive-gnulib-prefix-hack.m4
+/absolute-header.m4
+/lstat.m4
+/unlink.m4
+/gettimeofday.m4
+/obstack.m4
+/sys_time_h.m4

@@ -1,5 +1,7 @@
-## Copyright (C) 2002, 2005-2013 Free Software Foundation, Inc.
+#! /bin/sh
 
+# Copyright (C) 2005-2015 Free Software Foundation, Inc.
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -13,18 +15,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-dist_pkgdata_DATA = README bison.m4 \
-   c-like.m4 \
-   c-skel.m4 c.m4 yacc.c glr.c \
-   c++-skel.m4 c++.m4 location.cc lalr1.cc glr.cc stack.hh \
-   java-skel.m4 java.m4 lalr1.java
+cat >input <<EOF
+toto := 1
+toto
+EOF
+run 0 1 -s
 
-m4sugardir = $(pkgdatadir)/m4sugar
-dist_m4sugar_DATA = m4sugar/m4sugar.m4 m4sugar/foreach.m4
 
-xsltdir = $(pkgdatadir)/xslt
-dist_xslt_DATA =				\
-   xslt/bison.xsl				\
-   xslt/xml2dot.xsl				\
-   xslt/xml2text.xsl				\
-   xslt/xml2xhtml.xsl
+cat >input <<EOF
+a := 1
+b := 2
+c := 3
+d := a + b * c
+d
+EOF
+run 0 7
+run 0 7 -p
+
+
+cat >input <<EOF
+a := 1
+b := 2
+c := 3
+d := (a + b) * c
+d
+EOF
+run 0 9
+
+
+cat >input <<EOF
+a := 1
+d := a + b * c
+EOF
+run 1 ''

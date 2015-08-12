@@ -35,6 +35,13 @@ of the .output file etc.  This excludes impossible error messages
 (comparable to assert/abort), and all the --trace output which is
 meant for the maintainers only.
 
+** Horizontal tabs
+Do not add horizontal tab characters to any file in Bison's repository
+except where required.  For example, do not use tabs to format C code.
+However, make files, ChangeLog, and some regular expressions require
+tabs.  Also, test cases might need to contain tabs to check that Bison
+properly processes tabs in its input.
+
 
 * Working from the repository
 
@@ -55,12 +62,21 @@ tools we depend upon, including:
 - Gettext <http://www.gnu.org/software/gettext/>
 - Graphviz <http://www.graphviz.org>
 - Gzip <http://www.gnu.org/software/gzip/>
+- Help2man <http://www.gnu.org/software/help2man/>
 - Perl <http://www.cpan.org/>
 - Rsync <http://samba.anu.edu.au/rsync/>
 - Tar <http://www.gnu.org/software/tar/>
+- Texinfo <http://www.gnu.org/software/texinfo/>
 
 Valgrind <http://valgrind.org/> is also highly recommended, if it supports
 your architecture.
+
+If you're using a GNU/Linux distribution, the easiest way to install the
+above packages depends on your system.  The following shell command should
+work for Debian-based systems such as Ubuntu:
+
+  sudo apt-get install \
+    autoconf automake autopoint flex graphviz help2man texinfo valgrind
 
 Bison is written using Bison grammars, so there are bootstrapping issues.
 The bootstrap script attempts to discover when the C code generated from the
@@ -87,15 +103,17 @@ to perform the first checkout of the submodules, run
 
        $ git submodule update --init
 
-Git submodule support is weak before versions 1.6 and later, you
-should probably upgrade Git if your version is older.
+Git submodule support is weak before versions 1.6 and later, upgrade Git if
+your version is older.
 
 The next step is to get other files needed to build, which are
 extracted from other source packages:
 
         $ ./bootstrap
 
-And there you are!  Just
+If it fails with missing symbols (e.g., "error: possibly undefined macro:
+AC_PROG_GNU_M4"), you are likely to have forgotten the submodule
+initialization part.  Otherwise, there you are!  Just
 
         $ ./configure
         $ make
@@ -169,6 +187,28 @@ decide whether to update.
 ** make check
 Use liberally.
 
+** TESTSUITEFLAGS
+
+The default is for make check to run all tests sequentially. This can be
+very time consumming when checking repeatedly or on slower setups. This can
+be sped up in two ways:
+
+Using -j, in a make-like fashion, for example:
+  $ make check TESTSUITEFLAGS='-j8'
+
+Running only the tests of a certain category, as specified in the AT files
+with AT_KEYWORDS([[category]]). Categories include:
+  - c++, for c++ parsers
+  - deprec, for tests concerning deprecated constructs.
+  - glr, for glr parsers
+  - java, for java parsers
+  - report, for automaton dumps
+
+To run a specific set of tests, use -k (for "keyword"). For example:
+  $ make check TESTSUITEFLAGS='-k c++'
+
+Both can be combined.
+
 ** Typical errors
 If the test suite shows failures such as the following one
 
@@ -239,6 +279,9 @@ release:
   instance, "-traditional" to check that the parsers are K&R.  Note
   that it does not make sense for glr.c, which should be ANSI, but
   currently is actually GNU C, nor for lalr1.cc.
+
+- Test with a very recent version of GCC for both C and C++.  Testing
+  with older versions that are still in use is nice too.
 
 
 * Release Procedure
@@ -408,7 +451,7 @@ Push these changes.
 
 -----
 
-Copyright (C) 2002-2005, 2007-2013 Free Software Foundation, Inc.
+Copyright (C) 2002-2005, 2007-2015 Free Software Foundation, Inc.
 
 This file is part of GNU Bison.
 

@@ -1,7 +1,16 @@
+*.eps
+*.log
+*.o
+*.pdf
+*.png
+*.stamp
+*.trs
+*~
+.deps
+.dirstamp
 /*.cache
 /*.flc
 /*.prj
-/*~
 /.tarball-version
 /.version
 /ABOUT-NLS
