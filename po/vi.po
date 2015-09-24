@@ -1,38 +1,56 @@
 # Vietnamese Translation for Bison.
-# Copyright © 2013 Free Software Foundation, Inc.
+# Bản dịch tiếng Việt dành cho Bison.
+# Copyright © 2015 Free Software Foundation, Inc.
 # This file is distributed under the same license as the bison package.
 # Clytie Siddall <clytie@riverland.net.au>, 2005-2010.
-# Trần Ngọc Quân <vnwildman@gmail.com>, 2013.
+# Trần Ngọc Quân <vnwildman@gmail.com>, 2013, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: bison-2.7.1\n"
+"Project-Id-Version: bison-3.0.4\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
-"POT-Creation-Date: 2013-04-15 13:59+0200\n"
-"PO-Revision-Date: 2013-04-16 08:34+0700\n"
+"POT-Creation-Date: 2015-01-23 13:55+0100\n"
+"PO-Revision-Date: 2015-01-24 07:30+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language-Team-Website: <http://translationproject.org/team/vi.html>\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.5.5\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"X-Language-Team-Website: <http://translationproject.org/team/vi.html>\n"
 
-#: src/complain.c:120 src/complain.c:131 src/complain.c:140 src/complain.c:188
-#: src/complain.c:198
-msgid "warning"
-msgstr "cảnh báo"
+#: src/complain.c:322
+msgid "fatal error"
+msgstr "lỗi nghiêm trọng"
 
-#: src/complain.c:151 src/complain.c:160 src/complain.c:167
+#: src/complain.c:323
 msgid "error"
 msgstr "lỗi"
 
-#: src/complain.c:208 src/complain.c:215
-msgid "fatal error"
-msgstr "lỗi nghiêm trọng"
+#: src/complain.c:324
+msgid "warning"
+msgstr "cảnh báo"
+
+#: src/complain.c:387
+#, c-format
+msgid "deprecated directive, use %s"
+msgstr "chỉ thị không còn được dùng nữa, dùng %s"
+
+#: src/complain.c:391
+#, c-format
+msgid "deprecated directive: %s, use %s"
+msgstr "chỉ thị không còn được dùng nữa: %s, dùng %s"
+
+#: src/complain.c:400
+#, c-format
+msgid "only one %s allowed per rule"
+msgstr "chỉ cho phép một %s cho mỗi quy tắc"
+
+#: src/complain.c:402 src/reader.c:140 src/symtab.c:253 src/symtab.c:266
+#, c-format
+msgid "previous declaration"
+msgstr "khai báo trước"
 
 #: src/conflicts.c:77
 #, c-format
@@ -49,99 +67,109 @@ msgstr "    Xung đột giữa quy tắc %d và thẻ bài %s được phân gi�
 msgid "    Conflict between rule %d and token %s resolved as an error"
 msgstr "    Xung đột giữa quy tắc %d và thẻ bài %s được phân giải là một lỗi (error)."
 
-#: src/conflicts.c:492
-#, c-format
-msgid "conflicts: %d shift/reduce, %d reduce/reduce\n"
-msgstr "xung đột: %d dịch/giảm, %d giảm/giảm\n"
-
-#: src/conflicts.c:495
-#, c-format
-msgid "conflicts: %d shift/reduce\n"
-msgstr "xung đột: %d dịch/giảm\n"
-
-#: src/conflicts.c:497
-#, c-format
-msgid "conflicts: %d reduce/reduce\n"
-msgstr "xung đột: %d giảm/giảm\n"
-
-#: src/conflicts.c:515
+#: src/conflicts.c:530
 #, c-format
 msgid "State %d "
 msgstr "Tình trạng %d "
 
-#: src/conflicts.c:582
+#: src/conflicts.c:533
+#, c-format
+msgid "conflicts: %d shift/reduce, %d reduce/reduce\n"
+msgstr "xung đột: %d dịch/giảm, %d giảm/giảm\n"
+
+#: src/conflicts.c:536
+#, c-format
+msgid "conflicts: %d shift/reduce\n"
+msgstr "xung đột: %d dịch/giảm\n"
+
+#: src/conflicts.c:538
+#, c-format
+msgid "conflicts: %d reduce/reduce\n"
+msgstr "xung đột: %d giảm/giảm\n"
+
+#: src/conflicts.c:569
 #, c-format
 msgid "%%expect-rr applies only to GLR parsers"
 msgstr "%%expect-rr chỉ áp dụng cho bộ phân tích kiểu GLR."
 
-#: src/conflicts.c:616
+#: src/conflicts.c:586
 #, c-format
-msgid "expected %d shift/reduce conflict"
-msgid_plural "expected %d shift/reduce conflicts"
-msgstr[0] "mong đợi %d lần xung đột dịch/giảm"
+msgid "shift/reduce conflicts: %d found, %d expected"
+msgstr "xung đột dịch/giảm: tìm thấy %d, cần %d"
 
-#: src/conflicts.c:621
+#: src/conflicts.c:591
 #, c-format
-msgid "expected %d reduce/reduce conflict"
-msgid_plural "expected %d reduce/reduce conflicts"
-msgstr[0] "mong đợi %d lần xung đột giảm/giảm"
+msgid "%d shift/reduce conflict"
+msgid_plural "%d shift/reduce conflicts"
+msgstr[0] "%d lần xung đột dịch/giảm"
 
-#: src/files.c:114
+#: src/conflicts.c:608
+#, c-format
+msgid "reduce/reduce conflicts: %d found, %d expected"
+msgstr "xung đột giảm/giảm: tìm thấy %d, cần %d"
+
+#: src/conflicts.c:613
+#, c-format
+msgid "%d reduce/reduce conflict"
+msgid_plural "%d reduce/reduce conflicts"
+msgstr[0] "%d lần xung đột giảm/giảm"
+
+#: src/files.c:123
 #, c-format
 msgid "%s: cannot open"
 msgstr "%s: không thể mở"
 
-#: src/files.c:130
+#: src/files.c:139
 #, c-format
 msgid "input/output error"
 msgstr "lỗi vào/ra"
 
-#: src/files.c:133
+#: src/files.c:142
 #, c-format
 msgid "cannot close file"
 msgstr "không thể đóng tập tin"
 
-#: src/files.c:352
+#: src/files.c:372
 #, c-format
 msgid "refusing to overwrite the input file %s"
 msgstr "từ chối ghi đè lên tập tin đầu vào %s"
 
-#: src/files.c:362
+#: src/files.c:382
 #, c-format
 msgid "conflicting outputs to file %s"
 msgstr "tập tin “%s” có nhiều kết xuất xung đột với nhau"
 
-#: src/getargs.c:292
+#: src/getargs.c:252
 #, c-format
-msgid "Try `%s --help' for more information.\n"
+msgid "Try '%s --help' for more information.\n"
 msgstr "Hãy chạy câu lệnh “%s --help” (trợ giúp) để xem thêm thông tin.\n"
 
-#: src/getargs.c:301
+#: src/getargs.c:261
 #, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
-msgstr "Sử dụng: %s [TÙY_CHỌN]... TẬP_TIN\n"
+msgstr "Cách dùng: %s [TÙY_CHỌN]… TẬP_TIN\n"
 
-#: src/getargs.c:302
+#: src/getargs.c:262
 msgid ""
 "Generate a deterministic LR or generalized LR (GLR) parser employing\n"
 "LALR(1), IELR(1), or canonical LR(1) parser tables.  IELR(1) and\n"
 "canonical LR(1) support is experimental.\n"
 "\n"
 msgstr ""
-"Tạo ra một bộ phân tích tất định LR hay RL được khái quát hoá dùng\n"
+"Tạo ra một bộ phân tích tất định LR hay RL được khái quát hóa dùng\n"
 "bảng phân tích LALR(1), IELR(1), hay canonical LR(1). Việc hỗ trợ  IELR(1) và\n"
 "canonical LR(1) chỉ là thử nghiệm.\n"
 "\n"
 
-#: src/getargs.c:309
+#: src/getargs.c:269
 msgid "Mandatory arguments to long options are mandatory for short options too.\n"
 msgstr "Mọi đối số bắt buộc phải sử dụng với tùy chọn dài cũng bắt buộc với tùy chọn ngắn.\n"
 
-#: src/getargs.c:312
+#: src/getargs.c:272
 msgid "The same is true for optional arguments.\n"
-msgstr "Cũng vậy với đối số còn tùy chọn.\n"
+msgstr "Cũng yêu cầu như thế đối với đối số tùy chọn.\n"
 
-#: src/getargs.c:316
+#: src/getargs.c:276
 msgid ""
 "\n"
 "Operation modes:\n"
@@ -158,20 +186,22 @@ msgstr ""
 "Chế độ thao tác:\n"
 "  -h, --help                 hiển thị trợ giúp này, sau đó thoát\n"
 "  -V, --version              xuất thông tin phiên bản, sau đó thoát\n"
-"      --print-localedir      xuất thư mục chứa dữ liệu phụ thuộc vào miền địa phương\n"
+"      --print-localedir      xuất thư mục chứa dữ liệu phụ thuộc vào miền\n"
+"                              địa phương\n"
 "      --print-datadir        xuất thư mục chứa khung sườn và XSLT\n"
 "  -y, --yacc                 mô phỏng POSIX Yacc\n"
 "  -W, --warnings[=LOẠI]      thông báo các cảnh báo thuộc về phân LOẠI này\n"
 "  -f, --feature[=TÍNH-NĂNG]  kích hoạt các TÍNH-NĂNG\n"
 "\n"
 
-#: src/getargs.c:329
+#: src/getargs.c:289
 #, c-format
 msgid ""
 "Parser:\n"
 "  -L, --language=LANGUAGE          specify the output programming language\n"
 "  -S, --skeleton=FILE              specify the skeleton to use\n"
-"  -t, --debug                      instrument the parser for debugging\n"
+"  -t, --debug                      instrument the parser for tracing\n"
+"                                   same as '-Dparse.trace'\n"
 "      --locations                  enable location support\n"
 "  -D, --define=NAME[=VALUE]        similar to '%define NAME \"VALUE\"'\n"
 "  -F, --force-define=NAME[=VALUE]  override '%define NAME \"VALUE\"'\n"
@@ -182,25 +212,24 @@ msgid ""
 msgstr ""
 "Bộ phân tích cú pháp:\n"
 "  -L, --language=NGÔN_NGỮ          chỉ định ngôn ngữ lập trình kết xuất\n"
-"                                   (đây là một tính năng vẫn còn thực nghiệm)\n"
 "  -S, --skeleton=TẬP_TIN           chỉ định khung sườn cần dùng\n"
 "  -t, --debug                      đặt phân tích để gỡ lỗi\n"
 "      --locations                  cho phép hỗ trợ về vị trí\n"
-"  -D, --define=NAME[=VALUE]        tương tự như `%define NAME “VALUE”'\n"
-"  -F, --force-define=NAME[=VALUE]  đè lên `%define NAME “VALUE”'\n"
+"  -D, --define=NAME[=VALUE]        tương tự như “%define NAME “VALUE””\n"
+"  -F, --force-define=TÊN[=GTRỊ]    đè lên “%define NAME “VALUE””\n"
 "  -p, --name-prefix=TIỀN_TỐ        đặt tiền tố nào vào trước ký hiệu ngoài\n"
-"                                   phản đối bởi '-Dapi.prefix=PREFIX'\n"
+"                                   bị phản đối bởi “-Dapi.prefix=PREFIX”\n"
 "  -l, --no-lines                   không tạo chỉ thị kiểu “#line”\n"
 "  -k, --token-table                bao gồm bảng các tên thẻ bài\n"
 
-#: src/getargs.c:346
+#: src/getargs.c:307
 msgid ""
 "Output:\n"
 "      --defines[=FILE]       also produce a header file\n"
 "  -d                         likewise but cannot specify FILE (for POSIX Yacc)\n"
 "  -r, --report=THINGS        also produce details on the automaton\n"
 "      --report-file=FILE     write report to FILE\n"
-"  -v, --verbose              same as `--report=state'\n"
+"  -v, --verbose              same as '--report=state'\n"
 "  -b, --file-prefix=PREFIX   specify a PREFIX for output files\n"
 "  -o, --output=FILE          leave output to FILE\n"
 "  -g, --graph[=FILE]         also output a graph of the automaton\n"
@@ -208,86 +237,92 @@ msgid ""
 "                             (the XML schema is experimental)\n"
 msgstr ""
 "Kết xuất:\n"
-"      --defines[=TẬP_TIN]    cũng tạo một tập tin phần đầu\n"
-"  -d                    cũng vậy nhưng không thể đặt TẬP_TIN (cho POSIX Yacc)\n"
+"      --defines[=TẬP_TIN]    đồng thời tạo một tập tin phần đầu\n"
+"  -d                         cũng vậy nhưng không thể chỉ định\n"
+"                              TẬP_TIN (cho POSIX Yacc)\n"
 "  -r, --report=CÁI           cũng hiện chi tiết về hàm tự động\n"
 "      --report-file=TẬP_TIN  ghi báo cáo vào tập tin này\n"
-"  -v, --verbose              tương đương với `--report=state'\n"
-"  -b, --file-prefix=TIỀN_TỐ  xác định một tiền tố cho các tập tin kết xuất\n"
+"  -v, --verbose              tương đương với “--report=state”\n"
+"  -b, --file-prefix=TIỀN_TỐ  chỉ định tiền tố cho các tập tin kết xuất\n"
 "  -o, --output=TẬP_TIN       xuất vào tập tin này\n"
 "  -g, --graph[=TẬP_TIN]      cũng xuất một đồ thị về hàm tự động\n"
 "  -x, --xml[=TẬP_TIN]        cũng xuất một báo cáo XML về hàm tự động\n"
 "                              (giản đồ XML vẫn còn là thực nghiệm)\n"
 
-#: src/getargs.c:361
+#: src/getargs.c:322
+#, c-format
 msgid ""
 "Warning categories include:\n"
-"  `midrule-values'  unset or unused midrule values\n"
-"  `yacc'            incompatibilities with POSIX Yacc\n"
-"  `conflicts-sr'    S/R conflicts (enabled by default)\n"
-"  `conflicts-rr'    R/R conflicts (enabled by default)\n"
-"  `deprecated'      obsolete constructs\n"
-"  `other'           all other warnings (enabled by default)\n"
-"  `all'             all the warnings\n"
-"  `no-CATEGORY'     turn off warnings in CATEGORY\n"
-"  `none'            turn off all the warnings\n"
-"  `error'           treat warnings as errors\n"
+"  'midrule-values'    unset or unused midrule values\n"
+"  'yacc'              incompatibilities with POSIX Yacc\n"
+"  'conflicts-sr'      S/R conflicts (enabled by default)\n"
+"  'conflicts-rr'      R/R conflicts (enabled by default)\n"
+"  'deprecated'        obsolete constructs\n"
+"  'empty-rule'        empty rules without %empty\n"
+"  'precedence'        useless precedence and associativity\n"
+"  'other'             all other warnings (enabled by default)\n"
+"  'all'               all the warnings except 'yacc'\n"
+"  'no-CATEGORY'       turn off warnings in CATEGORY\n"
+"  'none'              turn off all the warnings\n"
+"  'error[=CATEGORY]'  treat warnings as errors\n"
 msgstr ""
-"Các loại cảnh báo bao gồm:\n"
-" • midrule-values   giá trị ở giữa quy tắc mà chưa dùng hay đặt\n"
-" • yacc             sự không tương thích với POSIX YACC\n"
-" • `conflicts-sr'   xung đột S/R (bật theo mặc định)\n"
-" • `conflicts-rr'   xung đột R/R (bật theo mặc định)\n"
-" • `deprecated'     các chỉ lệnh đã cũ\n"
-" • `other'          mọi cảnh báo khác (bật theo mặc định)\n"
-" • all              tất cả các cảnh báo\n"
-" • no-LOẠI          tắt cảnh báo với LOẠI\n"
-" • none             tắt mọi cảnh báo\n"
-" • error            xử lý cảnh báo dưới dạng lỗi\n"
+"Các kiểu cảnh báo bao gồm:\n"
+" * midrule-values     giá trị ở giữa quy tắc mà chưa dùng hay đặt\n"
+" * yacc               sự không tương thích với POSIX YACC\n"
+" * “conflicts-sr”     xung đột S/R (bật theo mặc định)\n"
+" * “conflicts-rr”     xung đột R/R (bật theo mặc định)\n"
+" * “deprecated”       các chỉ lệnh cũ\n"
+" * “empty-rule”       quy tắc rỗng không cần %empty\n"
+" * “precedence”       quyền ưu tiên và tính kết hợp vô ích\n"
+" * “other”            mọi cảnh báo khác (bật theo mặc định)\n"
+" * “all”              tất cả các cảnh báo ngoại trừ “yacc”\n"
+" * “no-LOẠI”          tắt cảnh báo với LOẠI\n"
+" * “none”             tắt mọi cảnh báo\n"
+" * “error[=LOẠI]”     xử lý cảnh báo dưới dạng lỗi\n"
 
-#: src/getargs.c:376
+#: src/getargs.c:339
 msgid ""
 "THINGS is a list of comma separated words that can include:\n"
-"  `state'        describe the states\n"
-"  `itemset'      complete the core item sets with their closure\n"
-"  `lookahead'    explicitly associate lookahead tokens to items\n"
-"  `solved'       describe shift/reduce conflicts solving\n"
-"  `all'          include all the above information\n"
-"  `none'         disable the report\n"
+"  'state'        describe the states\n"
+"  'itemset'      complete the core item sets with their closure\n"
+"  'lookahead'    explicitly associate lookahead tokens to items\n"
+"  'solved'       describe shift/reduce conflicts solving\n"
+"  'all'          include all the above information\n"
+"  'none'         disable the report\n"
 msgstr ""
-"CÁI là danh sách những từ định giới bằng dấu phẩy có thể bao gồm:\n"
-" • state         diễn tả các tình trạng\n"
-" • itemset       điền nốt mỗi tập hợp mục lõi với kết thúc nó\n"
-" • look-ahead    liên quan dứt khoát mỗi thẻ bài nhìn trước đến mục\n"
-" • solved        diễn tả tiến trình giải sự xung đột kiểu dời/giảm\n"
-" • all           bao gồm tất cả thông tin trên\n"
-" • none          tắt báo cáo\n"
+"CÁI là danh sách những từ được ngăn cách bằng dấu phẩy, bao gồm:\n"
+" * “state”       diễn tả các tình trạng\n"
+" * “itemset”     tập hợp mục dùng để tự điền với kết thúc nó\n"
+" * “look-ahead”  liên quan rõ ràng mỗi thẻ bài nhìn trước đến mục\n"
+" * “solved”      diễn tả việc phân giải sự xung đột kiểu dịch/giảm\n"
+" * “all”         bao gồm tất cả thông tin trên\n"
+" * “none”        tắt báo cáo\n"
 
-#: src/getargs.c:387
+#: src/getargs.c:350
 msgid ""
 "FEATURE is a list of comma separated words that can include:\n"
-"  `caret'        show errors with carets\n"
-"  `all'          all of the above\n"
-"  `none'         disable all of the above\n"
+"  'caret'        show errors with carets\n"
+"  'all'          all of the above\n"
+"  'none'         disable all of the above\n"
 "  "
 msgstr ""
 "TÍNH-NĂNG là một danh sách các từ cách nhau bằng dấu phẩy, bao gồm:\n"
-" • `caret'       hiển thị lỗi bằng dấu ^\n"
-" • `all'         tất cả các thứ ở trên\n"
-" • `none'        tắt tất cả các thứ ở trên\n"
+" * “caret”       hiển thị lỗi bằng dấu ^\n"
+" * “all”         tất cả các thứ ở trên\n"
+" * “none”        tắt tất cả các thứ ở trên\n"
 "  "
 
-#: src/getargs.c:395
+#: src/getargs.c:358
 #, c-format
 msgid "Report bugs to <%s>.\n"
 msgstr "Hãy thông báo lỗi cho <%s>.\n"
 
-#: src/getargs.c:396
+#: src/getargs.c:359
 #, c-format
 msgid "%s home page: <%s>.\n"
 msgstr "Trang chủ %s: <%s>.\n"
 
-#: src/getargs.c:397
+#: src/getargs.c:360
 msgid "General help using GNU software: <http://www.gnu.org/gethelp/>.\n"
 msgstr "Hướng dẫn chung về phần mềm GNU: <http://www.gnu.org/gethelp/>.\n"
 
@@ -296,66 +331,62 @@ msgstr "Hướng dẫn chung về phần mềm GNU: <http://www.gnu.org/gethelp/
 #. form one of the URLs at http://translationproject.org/team/.
 #. Otherwise, replace the entire URL with your translation team's
 #. email address.
-#: src/getargs.c:410
+#: src/getargs.c:373
 msgid "Report translation bugs to <http://translationproject.org/team/>.\n"
 msgstr "Hãy thông báo lỗi dịch cho <http://translationproject.org/team/vi.html>.\n"
 
-#: src/getargs.c:412
+#: src/getargs.c:375
 msgid "For complete documentation, run: info bison.\n"
-msgstr "Để đọc toàn bộ tài liệu về phần mềm này, hãy chạy lệnh: info bison.\n"
+msgstr "Để xem toàn bộ tài liệu về phần mềm này, hãy chạy lệnh: info bison.\n"
 
-#: src/getargs.c:428
+#: src/getargs.c:391
 #, c-format
 msgid "bison (GNU Bison) %s"
 msgstr "bison (GNU Bison) %s"
 
-#: src/getargs.c:430
+#: src/getargs.c:393
 msgid "Written by Robert Corbett and Richard Stallman.\n"
 msgstr "Tác giả: Robert Corbett và Richard Stallman.\n"
 
-#: src/getargs.c:434
+#: src/getargs.c:397
 #, c-format
 msgid "Copyright (C) %d Free Software Foundation, Inc.\n"
 msgstr "Bản quyền © %d Tổ chức Phần mềm Tự do.\n"
 
-#: src/getargs.c:437
+#: src/getargs.c:400
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 "Chương trình này là phần mềm tự do; xem mã nguồn để tìm điều kiện sao chép.\n"
-"KHÔNG CÓ BẢO HÀNH GÌ CẢ, THẬM CHÍ KHÔNG CÓ BẢO ĐẢM ĐƯỢC NGỤ Ý\n"
-"KHẢ NĂNG BÁN HAY KHẢ NĂNG LÀM ĐƯỢC VIỆC DỨT KHOÁT.\n"
+"KHÔNG CÓ BẢO HÀNH GÌ CẢ, NGAY CẢ KHI NÓ ĐƯỢC BÁN HAY\n"
+"PHÙ HỢP CẢ VỚI MỤC ĐÍCH ĐẶC BIỆT.\n"
 
-#: src/getargs.c:458
+#: src/getargs.c:422
 #, c-format
 msgid "multiple skeleton declarations are invalid"
 msgstr "chỉ cho phép một khai báo khung sườn"
 
-#: src/getargs.c:476
+#: src/getargs.c:440
 #, c-format
 msgid "%s: invalid language"
 msgstr "%s: ngôn ngữ không hợp lệ"
 
-#: src/getargs.c:479
+#: src/getargs.c:443
 msgid "multiple language declarations are invalid"
-msgstr "chỉ cho phép một khai báo ngôn ngữ"
+msgstr "chỉ cho phép khai báo một ngôn ngữ"
 
-#: src/getargs.c:747
+#: src/getargs.c:724
 #, c-format
 msgid "%s: missing operand"
 msgstr "%s: thiếu toán hạng"
 
-#: src/getargs.c:749
+#: src/getargs.c:726
 #, c-format
 msgid "extra operand %s"
 msgstr "toán hạng bổ xung %s"
 
-#: src/gram.c:112
-msgid "empty"
-msgstr "rỗng"
-
-#: src/gram.c:201
+#: src/gram.c:185
 msgid "Grammar"
 msgstr "Ngữ pháp"
 
@@ -367,12 +398,12 @@ msgid ""
 "// Home page: <%s>.\n"
 "\n"
 msgstr ""
-"// Tạo ra bởi %s.\n"
-"// Báo cáo lỗi tới <%s>.\n"
+"// Tạo bởi %s.\n"
+"// Báo cáo lỗi cho <%s>.\n"
 "// Trang chủ: <%s>.\n"
 "\n"
 
-#: src/location.c:93 src/scan-gram.l:859
+#: src/location.c:93 src/scan-gram.l:932
 #, c-format
 msgid "line number overflow"
 msgstr "tràn số thứ tự dòng"
@@ -386,98 +417,98 @@ msgstr "tràn số thứ tự cột"
 msgid "rule useless in parser due to conflicts"
 msgstr "quy tắc vô ích trong bộ phân tích bởi vì các xung đột"
 
-#: src/muscle-tab.c:450
+#: src/muscle-tab.c:514
 #, c-format
 msgid "%%define variable %s redefined"
 msgstr "%%biến định nghĩa %s bị định nghĩa lại"
 
-#: src/muscle-tab.c:453
+#: src/muscle-tab.c:518
+#, c-format
 msgid "previous definition"
 msgstr "lời định nghĩa trước"
 
-#: src/muscle-tab.c:490 src/muscle-tab.c:504 src/muscle-tab.c:556
-#: src/muscle-tab.c:624
+#: src/muscle-tab.c:568 src/muscle-tab.c:669 src/muscle-tab.c:732
 #, c-format
 msgid "%s: undefined %%define variable %s"
 msgstr "%s: chưa định nghĩa %%define biến %s"
 
-#: src/muscle-tab.c:550
+#: src/muscle-tab.c:663
 #, c-format
 msgid "invalid value for %%define Boolean variable %s"
 msgstr "gặp giá trị sai đối với biến Bun %%define %s"
 
-#: src/muscle-tab.c:609
+#: src/muscle-tab.c:717
 #, c-format
 msgid "invalid value for %%define variable %s: %s"
 msgstr "gặp giá trị sai đối với biến %%define %s: %s"
 
-#: src/muscle-tab.c:613
+#: src/muscle-tab.c:722
 #, c-format
 msgid "accepted value: %s"
-msgstr "giá trị không được chấp nhận: %s"
+msgstr "giá trị được chấp nhận: %s"
 
-#: src/parse-gram.y:747
+#: src/parse-gram.y:811
 #, c-format
 msgid "missing identifier in parameter declaration"
-msgstr "thiếu dấu nhận diện trong khai báo tham số"
+msgstr "thiếu định danh trong khai báo tham số"
 
 #: src/print.c:47
 #, c-format
 msgid " type %d is %s\n"
 msgstr " kiểu %d là %s\n"
 
-#: src/print.c:164
+#: src/print.c:167
 #, c-format
 msgid "shift, and go to state %d\n"
-msgstr "dời, và chuyển sang trạng thái %d\n"
+msgstr "dịch, và chuyển sang trạng thái %d\n"
 
-#: src/print.c:166
+#: src/print.c:169
 #, c-format
 msgid "go to state %d\n"
 msgstr "chuyển sang tình trạng %d\n"
 
-#: src/print.c:203
+#: src/print.c:206
 msgid "error (nonassociative)\n"
 msgstr "lỗi (không kết hợp)\n"
 
-#: src/print.c:226
+#: src/print.c:229
 #, c-format
 msgid "reduce using rule %d (%s)"
 msgstr "rút gọn dùng quy tắc %d (%s)"
 
-#: src/print.c:228
+#: src/print.c:231
 #, c-format
 msgid "accept"
 msgstr "chấp nhận"
 
-#: src/print.c:264 src/print.c:338
+#: src/print.c:267 src/print.c:341
 msgid "$default"
 msgstr "$default"
 
-#: src/print.c:373 src/print_graph.c:78
+#: src/print.c:377 src/print_graph.c:61
 #, c-format
 msgid "State %d"
 msgstr "Trạng thái %d "
 
-#: src/print.c:409
+#: src/print.c:413
 msgid "Terminals, with rules where they appear"
-msgstr "Đồ kết thúc, với quy tắc nơi mà có"
+msgstr "“Ký hiệu tận cùng”. với quy tắc nơi mà chúng xuất hiện"
 
-#: src/print.c:436
+#: src/print.c:440
 msgid "Nonterminals, with rules where they appear"
-msgstr "Đồ không kết thúc, với quy tắc nơi mà có"
+msgstr "“Ký hiệu chưa tận cùng”, với quy tắc nơi mà có"
 
-#: src/print.c:465
+#: src/print.c:469
 #, c-format
 msgid " on left:"
 msgstr " bên trái:"
 
-#: src/print.c:482
+#: src/print.c:486
 #, c-format
 msgid " on right:"
 msgstr " bên phải:"
 
-#: src/print.c:510
+#: src/print.c:514
 msgid "Rules useless in parser due to conflicts"
 msgstr "Quy tắc vô ích trong cơ chế phân tích do xung đột"
 
@@ -491,66 +522,67 @@ msgstr "nhiều khai báo %s"
 msgid "result type clash on merge function %s: <%s> != <%s>"
 msgstr "kết quả mâu thuẫn kiểu khi hợp vào hàm %s: <%s> != <%s>"
 
-#: src/reader.c:139 src/symtab.c:156 src/symtab.c:166 src/symtab.c:938
-#: src/symtab.c:953 src/symtab.c:968 src/symtab.c:983
-msgid "previous declaration"
-msgstr "khai báo trước"
-
-#: src/reader.c:205
+#: src/reader.c:206
 #, c-format
 msgid "duplicated symbol name for %s ignored"
 msgstr "tên ký hiệu bị trùng lắp cho %s bị bỏ qua"
 
-#: src/reader.c:249
+#: src/reader.c:250
 #, c-format
 msgid "rule given for %s, which is a token"
 msgstr "đưa ra quy tắc cho %s, mà là thẻ bài"
 
-#: src/reader.c:304
+#: src/reader.c:306
 #, c-format
 msgid "type clash on default action: <%s> != <%s>"
 msgstr "kiểu xung đột ở hành động mặc định: <%s> != <%s>"
 
-#: src/reader.c:310
+#: src/reader.c:312
 #, c-format
 msgid "empty rule for typed nonterminal, and no action"
-msgstr "quy tắc rỗng cho đồ không kết thúc có kiểu, cũng không có hành động"
+msgstr "quy tắc rỗng cho “ký hiệu chưa tận cùng” có kiểu, cũng không có hành động"
 
-#: src/reader.c:328
+#: src/reader.c:329
 #, c-format
 msgid "unused value: $%d"
 msgstr "giá trị chưa dùng: $%d"
 
-#: src/reader.c:330
+#: src/reader.c:331
+#, c-format
 msgid "unset value: $$"
 msgstr "giá trị chưa đặt: $$"
 
-#: src/reader.c:341
+#: src/reader.c:340
+#, c-format
+msgid "%%empty on non-empty rule"
+msgstr "%%empty trên một quy tắc không-rỗng"
+
+#: src/reader.c:346
+#, c-format
+msgid "empty rule without %%empty"
+msgstr "quy tắc trống rỗng không có %%empty"
+
+#: src/reader.c:355
 #, c-format
 msgid "token for %%prec is not defined: %s"
 msgstr "chưa xác định thẻ bài cho %%prec: %s"
 
-#: src/reader.c:431 src/reader.c:445 src/reader.c:458
-#, c-format
-msgid "only one %s allowed per rule"
-msgstr "chỉ cho phép một %s cho mỗi quy tắc"
-
-#: src/reader.c:441 src/reader.c:456
+#: src/reader.c:473 src/reader.c:495
 #, c-format
 msgid "%s affects only GLR parsers"
 msgstr "%s chỉ ảnh hưởng đến cơ chế phân tích kiểu GLR"
 
-#: src/reader.c:443
+#: src/reader.c:476
 #, c-format
 msgid "%s must be followed by positive number"
 msgstr "%s phải có con số dương theo sau"
 
-#: src/reader.c:554
+#: src/reader.c:602
 #, c-format
 msgid "rule is too long"
 msgstr "quy tắc quá dài"
 
-#: src/reader.c:672
+#: src/reader.c:718
 #, c-format
 msgid "no rules in the input grammar"
 msgstr "không có quy tắc trong ngữ pháp nhập vào"
@@ -559,322 +591,309 @@ msgstr "không có quy tắc trong ngữ pháp nhập vào"
 msgid "rule useless in grammar"
 msgstr "quy tắc vô ích trong ngữ pháp"
 
-#: src/reduce.c:302
+#: src/reduce.c:303
 #, c-format
 msgid "nonterminal useless in grammar: %s"
-msgstr "đồ không kết thúc vô ích trong ngữ pháp: %s"
+msgstr "“ký hiệu chưa tận cùng” vô ích trong ngữ pháp: %s"
 
-#: src/reduce.c:350
+#: src/reduce.c:351
 msgid "Nonterminals useless in grammar"
-msgstr "Đồ không kết thúc vô ích trong ngữ pháp"
+msgstr "“Ký hiệu chưa tận cùng” vô ích trong ngữ pháp"
 
-#: src/reduce.c:363
+#: src/reduce.c:364
 msgid "Terminals unused in grammar"
-msgstr "Đồ kết thúc chưa dùng trong ngữ pháp"
+msgstr "“Ký hiệu tận cùng” chưa dùng trong ngữ pháp"
 
-#: src/reduce.c:372
+#: src/reduce.c:373
 msgid "Rules useless in grammar"
 msgstr "Quy tắc vô ích trong ngữ pháp"
 
-#: src/reduce.c:385
+#: src/reduce.c:386
 #, c-format
 msgid "%d nonterminal useless in grammar"
 msgid_plural "%d nonterminals useless in grammar"
-msgstr[0] "%d đồ không kết thúc vô ích trong ngữ pháp"
+msgstr[0] "%d “ký hiệu chưa tận cùng” vô ích trong ngữ pháp"
 
-#: src/reduce.c:390
+#: src/reduce.c:391
 #, c-format
 msgid "%d rule useless in grammar"
 msgid_plural "%d rules useless in grammar"
 msgstr[0] "%d quy tắc vô ích trong ngữ pháp"
 
-#: src/reduce.c:419
+#: src/reduce.c:420
 #, c-format
 msgid "start symbol %s does not derive any sentence"
 msgstr "ký hiệu bắt đầu %s không nhận được câu"
 
-#: src/scan-code.l:188
+#: src/scan-code.l:157
 #, c-format
 msgid "stray '%s'"
-msgstr "ký hiệu '%s' lạc"
+msgstr "ký hiệu “%s” lạc"
 
-#: src/scan-code.l:229
-msgid "a ';' might be needed at the end of action code"
-msgstr "một dấu ';' có lẽ là cần thiết tại cuối của câu lệnh hành động"
-
-#: src/scan-code.l:232
-msgid "future versions of Bison will not add the ';'"
-msgstr "phiên bản tiếp theo của Bison sẽ không thêm ';'"
-
-#: src/scan-code.l:254
-#, c-format
-msgid "use of YYFAIL, which is deprecated and will be removed"
-msgstr "sử dụng YYFAIL, việc này không được tán thành và sẽ bị gỡ bỏ"
-
-#: src/scan-code.l:431 src/scan-code.l:434
+#: src/scan-code.l:339
 #, c-format
 msgid "refers to: %c%s at %s"
 msgstr "tham chiếu đến: %c%s tại %s"
 
-#: src/scan-code.l:450
+#: src/scan-code.l:362
 #, c-format
 msgid "possibly meant: %c"
 msgstr "có lẽ có ý là: %c"
 
-#: src/scan-code.l:459
+#: src/scan-code.l:371
 #, c-format
 msgid ", hiding %c"
 msgstr ", ẩn %c"
 
-#: src/scan-code.l:467
+#: src/scan-code.l:379
 #, c-format
 msgid " at %s"
-msgstr " ở %s"
+msgstr " tại %s"
 
-#: src/scan-code.l:472
+#: src/scan-code.l:383
 #, c-format
 msgid ", cannot be accessed from mid-rule action at $%d"
 msgstr ", không thể truy cập được từ hành động quy-tắc-trung tại $%d"
 
-#: src/scan-code.l:521 src/scan-gram.l:783
+#: src/scan-code.l:440 src/scan-gram.l:855
 #, c-format
 msgid "integer out of range: %s"
 msgstr "số nguyên nằm ngoài phạm vi: %s"
 
-#: src/scan-code.l:610
+#: src/scan-code.l:530
 #, c-format
 msgid "invalid reference: %s"
 msgstr "sai tham chiếu: %s"
 
-#: src/scan-code.l:619
+#: src/scan-code.l:538
 #, c-format
 msgid "syntax error after '%c', expecting integer, letter, '_', '[', or '$'"
-msgstr "lỗi sai cú pháp sau '%c', cần số nguyên, chữ, '_', '[', hoặc '$'"
+msgstr "lỗi sai cú pháp sau “%c”. cần số nguyên, chữ, “_”. “[”. hoặc “$”"
 
-#: src/scan-code.l:626
+#: src/scan-code.l:544
 #, c-format
 msgid "symbol not found in production before $%d: %.*s"
 msgstr "ký hiệu không tìm thấy trong thủ tục trước $%d: %.*s"
 
-#: src/scan-code.l:633
+#: src/scan-code.l:549
 #, c-format
 msgid "symbol not found in production: %.*s"
 msgstr "ký hiệu không tìm thấy trong thủ tục: %.*s"
 
-#: src/scan-code.l:648
+#: src/scan-code.l:564
 #, c-format
 msgid "misleading reference: %s"
 msgstr "tham chiếu không đúng chỗ: %s"
 
-#: src/scan-code.l:663
+#: src/scan-code.l:580
 #, c-format
 msgid "ambiguous reference: %s"
 msgstr "tham chiếu chưa rõ ràng: %s"
 
-#: src/scan-code.l:700
+#: src/scan-code.l:616
 #, c-format
 msgid "explicit type given in untyped grammar"
 msgstr "đưa ra kiểu dứt khoát theo ngữ cảnh không đặt kiểu"
 
-#: src/scan-code.l:759
+#: src/scan-code.l:675
 #, c-format
 msgid "$$ for the midrule at $%d of %s has no declared type"
 msgstr "$$ cho quy tắc giữa ở $%d của %s không có kiểu được khai báo"
 
-#: src/scan-code.l:764
+#: src/scan-code.l:681
 #, c-format
 msgid "$$ of %s has no declared type"
 msgstr "$$ của %s không khai báo kiểu"
 
-#: src/scan-code.l:786
+#: src/scan-code.l:703
 #, c-format
 msgid "$%s of %s has no declared type"
 msgstr "$%s của %s không khai báo kiểu"
 
-#: src/scan-gram.l:149
+#: src/scan-gram.l:186
 #, c-format
 msgid "stray ',' treated as white space"
-msgstr "dấu phẩy ',' thất lạc được đối đãi như là khoảng trắng"
+msgstr "dấu phẩy “,” thất lạc được coi như là khoảng trắng"
 
-#: src/scan-gram.l:222
+#: src/scan-gram.l:276
 #, c-format
 msgid "invalid directive: %s"
 msgstr "chỉ thị không hợp lệ: %s"
 
-#: src/scan-gram.l:250
+#: src/scan-gram.l:302
 #, c-format
 msgid "invalid identifier: %s"
 msgstr "định danh không hợp lệ: %s"
 
-#: src/scan-gram.l:295
+#: src/scan-gram.l:354
 msgid "invalid character"
 msgid_plural "invalid characters"
 msgstr[0] "ký tự không hợp lệ"
 
-#: src/scan-gram.l:354
-#, c-format
-msgid "unexpected identifier in bracketed name: %s"
-msgstr "không cần một định danh trong tên đặt trong dấu ngoặc: %s"
-
-#: src/scan-gram.l:376
-#, c-format
-msgid "an identifier expected"
-msgstr "cần một định danh"
-
-#: src/scan-gram.l:381
-msgid "invalid character in bracketed name"
-msgid_plural "invalid characters in bracketed name"
-msgstr[0] "ký tự không hợp lệ trong tên đặt trong dấu ngoặc"
-
-#: src/scan-gram.l:481 src/scan-gram.l:502
-#, c-format
-msgid "empty character literal"
-msgstr "ký tự trống theo kiểu văn chương"
-
-#: src/scan-gram.l:486 src/scan-gram.l:507
-#, c-format
-msgid "extra characters in character literal"
-msgstr "các ký tự mở rộng trong câu chữ"
-
-#: src/scan-gram.l:518
+#: src/scan-gram.l:372
 #, c-format
 msgid "invalid null character"
 msgstr "ký tự vô giá trị không hợp lệ"
 
-#: src/scan-gram.l:531 src/scan-gram.l:541 src/scan-gram.l:561
+#: src/scan-gram.l:425
+#, c-format
+msgid "unexpected identifier in bracketed name: %s"
+msgstr "không cần một định danh trong tên đặt trong dấu ngoặc: %s"
+
+#: src/scan-gram.l:447
+#, c-format
+msgid "an identifier expected"
+msgstr "cần một định danh"
+
+#: src/scan-gram.l:452
+msgid "invalid character in bracketed name"
+msgid_plural "invalid characters in bracketed name"
+msgstr[0] "ký tự không hợp lệ trong tên đặt trong dấu ngoặc"
+
+#: src/scan-gram.l:544
+#, c-format
+msgid "empty character literal"
+msgstr "ký tự trống theo kiểu văn chương"
+
+#: src/scan-gram.l:550
+#, c-format
+msgid "extra characters in character literal"
+msgstr "các ký tự mở rộng trong câu chữ"
+
+#: src/scan-gram.l:596 src/scan-gram.l:606 src/scan-gram.l:626
 #, c-format
 msgid "invalid number after \\-escape: %s"
 msgstr "gặp số sai nằm sau \\-escape: %s"
 
-#: src/scan-gram.l:573
+#: src/scan-gram.l:638
 #, c-format
 msgid "invalid character after \\-escape: %s"
 msgstr "gặp ký tự sai nằm sau \\-escape: %s"
 
-#: src/scan-gram.l:901
+#: src/scan-gram.l:984
 #, c-format
 msgid "missing %s at end of file"
 msgstr "thiếu %s tại kết thúc tập tin"
 
-#: src/scan-gram.l:912
+#: src/scan-gram.l:995
 #, c-format
 msgid "missing %s at end of line"
 msgstr "thiếu %s tại cuối dòng"
 
-#: src/scan-skel.l:146
+#: src/scan-skel.l:139
 #, c-format
 msgid "unclosed %s directive in skeleton"
 msgstr "gặp chỉ thị %s chưa đóng trong khung sườn"
 
-#: src/scan-skel.l:291
+#: src/scan-skel.l:256
 #, c-format
 msgid "too few arguments for %s directive in skeleton"
 msgstr "quá ít đối số cho chỉ thị %s trong khung sườn"
 
-#: src/scan-skel.l:298
+#: src/scan-skel.l:263
 #, c-format
 msgid "too many arguments for %s directive in skeleton"
 msgstr "quá nhiều đối số cho chỉ thị %s trong khung sườn"
 
-#: src/symlist.c:211
-#, c-format
-msgid "invalid $ value: $%d"
-msgstr "giá trị $ không hợp lệ: $%d"
-
-#: src/symtab.c:71
+#: src/symtab.c:75
 #, c-format
 msgid "POSIX Yacc forbids dashes in symbol names: %s"
 msgstr "POSIX Yacc cấm chỉ sự va chạm trong các tên ký hiệu: %s"
 
-#: src/symtab.c:91
+#: src/symtab.c:97
 #, c-format
 msgid "too many symbols in input grammar (limit is %d)"
 msgstr "quá nhiều ký hiệu trong ngữ pháp nhập vào (giới hạn %d)"
 
-#: src/symtab.c:154
+#: src/symtab.c:250
 #, c-format
 msgid "%s redeclaration for %s"
 msgstr "%s khai báo lại cho %s"
 
-#: src/symtab.c:164
+#: src/symtab.c:263
 #, c-format
 msgid "%s redeclaration for <%s>"
 msgstr "%s khai báo lại cho <%s>"
 
-#: src/symtab.c:332
+#: src/symtab.c:392
 #, c-format
 msgid "symbol %s redefined"
 msgstr "ký hiệu %s đã được định nghĩa lại"
 
-#: src/symtab.c:346
+#: src/symtab.c:407
 #, c-format
 msgid "symbol %s redeclared"
 msgstr "ký hiệu %s đã được khai báo lại"
 
-#: src/symtab.c:367
+#: src/symtab.c:429
 #, c-format
 msgid "redefining user token number of %s"
 msgstr "đang định nghĩa lại số thứ tự thẻ bài người dùng của %s"
 
-#: src/symtab.c:395
+#: src/symtab.c:459
 #, c-format
 msgid "symbol %s is used, but is not defined as a token and has no rules"
 msgstr "ký hiệu %s được dùng, nhưng chưa được định nghĩa như là thẻ bài, cũng không có quy tắc"
 
-#: src/symtab.c:415
+#: src/symtab.c:497
+#, c-format
+msgid "useless %s for type <%s>"
+msgstr "%s vô ích cho kiểu <%s>"
+
+#: src/symtab.c:502
+#, c-format
+msgid "type <%s> is used, but is not associated to any symbol"
+msgstr "kiểu %s được dùng, nhưng chưa được tiếp hợp với bất kỳ ký hiệu nào"
+
+#: src/symtab.c:527
 #, c-format
 msgid "symbol %s used more than once as a literal string"
-msgstr "ký hiệu %s sử dụng cho nhiều hơn một chuỗi nghĩa chữ"
+msgstr "ký hiệu %s sử dụng cho nhiều hơn một chuỗi văn bản"
 
-#: src/symtab.c:418
+#: src/symtab.c:530
 #, c-format
 msgid "symbol %s given more than one literal string"
 msgstr "ký hiệu %s nhận nhiều hơn một chuỗi nghĩa chữ"
 
-#: src/symtab.c:535
+#: src/symtab.c:629
 #, c-format
 msgid "user token number %d redeclaration for %s"
 msgstr "số thẻ người dùng %d khai báo lại cho %s"
 
-#: src/symtab.c:539
+#: src/symtab.c:633
 #, c-format
 msgid "previous declaration for %s"
 msgstr "khai báo trước đây cho %s"
 
-#: src/symtab.c:915
+#: src/symtab.c:1014
 #, c-format
 msgid "the start symbol %s is undefined"
 msgstr "chưa định nghĩa ký hiệu bắt đầu %s"
 
-#: src/symtab.c:919
+#: src/symtab.c:1018
 #, c-format
 msgid "the start symbol %s is a token"
 msgstr "ký hiệu bắt đầu %s là một thẻ bài"
 
-#: src/symtab.c:935
+#: src/symtab.c:1193
 #, c-format
-msgid "redeclaration for default tagged %%destructor"
-msgstr "khai báo lại cho %%destructor có thẻ mặc định"
+msgid "useless precedence and associativity for %s"
+msgstr "quyền ưu tiên và tính kết hợp vô ích đối với %s"
 
-#: src/symtab.c:950
+#: src/symtab.c:1196
 #, c-format
-msgid "redeclaration for default tagless %%destructor"
-msgstr "khai báo lại cho %%destructor không có thẻ mặc định"
+msgid "useless precedence for %s"
+msgstr "quyền ưu tiên vô ích đối với %s"
 
-#: src/symtab.c:965
+#: src/symtab.c:1200
 #, c-format
-msgid "redeclaration for default tagged %%printer"
-msgstr "khai báo lại cho %%printer có thẻ mặc định"
-
-#: src/symtab.c:980
-#, c-format
-msgid "redeclaration for default tagless %%printer"
-msgstr "khai báo lại cho %%printer không có thẻ mặc định"
+msgid "useless associativity for %s, use %%precedence"
+msgstr "tính kết hợp vô ích đối với %s, dùng %%precedence"
 
 #: djgpp/subpipe.c:63 djgpp/subpipe.c:286 djgpp/subpipe.c:288
 #, c-format
 msgid "removing of '%s' failed"
-msgstr "việc gỡ bỏ của '%s' gặp lỗi"
+msgstr "việc gỡ bỏ của “%s” gặp lỗi"
 
 #: djgpp/subpipe.c:85 djgpp/subpipe.c:92
 #, c-format
@@ -919,12 +938,12 @@ msgstr "chuyển hướng stdout của m4 tới tập tin tạm gặp lỗi"
 #: djgpp/subpipe.c:234
 #, c-format
 msgid "subsidiary program '%s' interrupted"
-msgstr "chương trình chạy bổ trợ '%s' bị ngắt giữa chừng"
+msgstr "chương trình chạy bổ trợ “%s” bị ngắt giữa chừng"
 
 #: djgpp/subpipe.c:241
 #, c-format
 msgid "subsidiary program '%s' not found"
-msgstr "không tìm thấy chương trình chạy bổ trợ '%s'"
+msgstr "không tìm thấy chương trình chạy bổ trợ “%s”"
 
 #: djgpp/subpipe.c:265
 #, c-format
@@ -943,7 +962,7 @@ msgstr "đối số chưa rõ ràng %s cho %s"
 
 #: lib/argmatch.c:153
 msgid "Valid arguments are:"
-msgstr "Đối số hợp lệ:"
+msgstr "Các đối số hợp lệ là:"
 
 #: lib/bitset_stats.c:177
 #, c-format
@@ -1017,7 +1036,7 @@ msgstr "không thể mở tập tin thống kê (stats) để ghi"
 msgid "write error"
 msgstr "lỗi ghi"
 
-#: lib/error.c:188
+#: lib/error.c:191
 msgid "Unknown system error"
 msgstr "Lỗi hệ thống không rõ"
 
@@ -1039,7 +1058,7 @@ msgstr "%s: tùy chọn “%c%s” không cho phép đối số\n"
 #: lib/getopt.c:685 lib/getopt.c:704
 #, c-format
 msgid "%s: option '--%s' requires an argument\n"
-msgstr "%s: tùy chọn “--%s” yêu cầu một đối số\n"
+msgstr "%s: tùy chọn “--%s” cần có một đối số\n"
 
 #: lib/getopt.c:742 lib/getopt.c:745
 #, c-format
@@ -1076,21 +1095,21 @@ msgstr "%s: tùy chọn “-W %s” không cho phép đối số\n"
 msgid "%s: option '-W %s' requires an argument\n"
 msgstr "%s: tùy chọn “-W %s” yêu cầu một đối số\n"
 
-#: lib/obstack.c:413 lib/obstack.c:415 lib/xalloc-die.c:34
+#: lib/obstack.c:338 lib/obstack.c:340 lib/xalloc-die.c:34
 msgid "memory exhausted"
 msgstr "hết bộ nhớ"
 
-#: lib/spawn-pipe.c:140 lib/spawn-pipe.c:143 lib/spawn-pipe.c:264
-#: lib/spawn-pipe.c:267
+#: lib/spawn-pipe.c:135 lib/spawn-pipe.c:138 lib/spawn-pipe.c:259
+#: lib/spawn-pipe.c:262
 #, c-format
 msgid "cannot create pipe"
 msgstr "không thể tạo ống dẫn"
 
-#: lib/spawn-pipe.c:234 lib/spawn-pipe.c:348 lib/wait-process.c:282
+#: lib/spawn-pipe.c:229 lib/spawn-pipe.c:343 lib/wait-process.c:282
 #: lib/wait-process.c:356
 #, c-format
 msgid "%s subprocess failed"
-msgstr "tiến trình con %s bị lỗi"
+msgstr "tiến trình con %s gặp lỗi"
 
 #. TRANSLATORS:
 #. Get translations for open and closing quotation marks.
@@ -1156,13 +1175,40 @@ msgstr "tiến trình con %s"
 #: lib/wait-process.c:274 lib/wait-process.c:346
 #, c-format
 msgid "%s subprocess got fatal signal %d"
-msgstr "tiến trình con %s đã nhận tín hiệu nghiệm trọng %d"
+msgstr "tiến trình con %s đã nhận tín hiệu gặp lỗi nghiêm trọng %d"
+
+#~ msgid "invalid $ value: $%d"
+#~ msgstr "giá trị $ không hợp lệ: $%d"
+
+#~ msgid "empty"
+#~ msgstr "rỗng"
+
+#~ msgid "a ';' might be needed at the end of action code"
+#~ msgstr "một dấu “;” có lẽ là cần thiết tại cuối của câu lệnh hành động"
+
+#~ msgid "future versions of Bison will not add the ';'"
+#~ msgstr "phiên bản tiếp theo của Bison sẽ không thêm “;”"
+
+#~ msgid "use of YYFAIL, which is deprecated and will be removed"
+#~ msgstr "sử dụng YYFAIL, việc này không được tán thành và sẽ bị gỡ bỏ"
+
+#~ msgid "redeclaration for default tagged %%destructor"
+#~ msgstr "khai báo lại cho %%destructor có thẻ mặc định"
+
+#~ msgid "redeclaration for default tagless %%destructor"
+#~ msgstr "khai báo lại cho %%destructor không có thẻ mặc định"
+
+#~ msgid "redeclaration for default tagged %%printer"
+#~ msgstr "khai báo lại cho %%printer có thẻ mặc định"
+
+#~ msgid "redeclaration for default tagless %%printer"
+#~ msgstr "khai báo lại cho %%printer không có thẻ mặc định"
 
 #~ msgid "state %d"
 #~ msgstr "tình trạng %d"
 
 #~ msgid "stray '@'"
-#~ msgstr "lạc '@'"
+#~ msgstr "lạc “@”"
 
 #~ msgid "undefined %%define variable `%s' passed to muscle_percent_define_get_loc"
 #~ msgstr "biến %%define chưa xác định \"%s\" được gửi qua cho hàm \"muscle_percent_define_get_loc\""

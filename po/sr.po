@@ -1,13 +1,13 @@
 # Serbian translation for bison.
 # Copyright (C) 2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the bison package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012, 2013.
 msgid ""
 msgstr ""
-"Project-Id-Version: bison-2.6.2\n"
+"Project-Id-Version: bison-3.0\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
-"POT-Creation-Date: 2012-08-03 09:44+0200\n"
-"PO-Revision-Date: 2012-08-09 22:38+0200\n"
+"POT-Creation-Date: 2013-07-25 17:57+0200\n"
+"PO-Revision-Date: 2013-10-02 12:00+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
 "Language: sr\n"
@@ -16,14 +16,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/complain.c:116 src/complain.c:127 src/complain.c:136 src/complain.c:184
-#: src/complain.c:194
+#: src/complain.c:298
+msgid "fatal error"
+msgstr "кобна грешка"
+
+#: src/complain.c:299
+msgid "error"
+msgstr "грешка"
+
+#: src/complain.c:300
 msgid "warning"
 msgstr "упозорење"
 
-#: src/complain.c:204 src/complain.c:211
-msgid "fatal error"
-msgstr "кобна грешка"
+#: src/complain.c:363
+#, c-format
+msgid "deprecated directive, use %s"
+msgstr "застарела смерница, користите „%s“"
+
+#: src/complain.c:367
+#, c-format
+msgid "deprecated directive: %s, use %s"
+msgstr "застарела смерница: %s, користите „%s“"
+
+#: src/complain.c:376
+#, c-format
+msgid "only one %s allowed per rule"
+msgstr "дозвољен је само један „%s“ по правилу"
+
+#: src/complain.c:378 src/reader.c:140 src/symtab.c:217 src/symtab.c:229
+#, c-format
+msgid "previous declaration"
+msgstr "претходна објава"
 
 #: src/conflicts.c:77
 #, c-format
@@ -40,46 +63,56 @@ msgstr "    Сукоб правила „%d“ и симбола „%s“ је �
 msgid "    Conflict between rule %d and token %s resolved as an error"
 msgstr "    Сукоб правила „%d“ и симбола „%s“ је решен као грешка"
 
-#: src/conflicts.c:492
-#, c-format
-msgid "conflicts: %d shift/reduce, %d reduce/reduce\n"
-msgstr "сукоби: %d помак/смањење, %d смањење/смањење\n"
-
-#: src/conflicts.c:495
-#, c-format
-msgid "conflicts: %d shift/reduce\n"
-msgstr "сукоби: %d помак/смањење\n"
-
-#: src/conflicts.c:497
-#, c-format
-msgid "conflicts: %d reduce/reduce\n"
-msgstr "сукоби: %d смањење/смањење\n"
-
-#: src/conflicts.c:515
+#: src/conflicts.c:530
 #, c-format
 msgid "State %d "
 msgstr "Стање: %d "
 
-#: src/conflicts.c:582
+#: src/conflicts.c:533
+#, c-format
+msgid "conflicts: %d shift/reduce, %d reduce/reduce\n"
+msgstr "сукоби: %d помак/смањење, %d смањење/смањење\n"
+
+#: src/conflicts.c:536
+#, c-format
+msgid "conflicts: %d shift/reduce\n"
+msgstr "сукоби: %d помак/смањење\n"
+
+#: src/conflicts.c:538
+#, c-format
+msgid "conflicts: %d reduce/reduce\n"
+msgstr "сукоби: %d смањење/смањење\n"
+
+#: src/conflicts.c:569
 #, c-format
 msgid "%%expect-rr applies only to GLR parsers"
 msgstr "%%очекуј-рр се примењује само на ГЛР обрађиваче"
 
-#: src/conflicts.c:616
+#: src/conflicts.c:586
 #, c-format
-msgid "expected %d shift/reduce conflict"
-msgid_plural "expected %d shift/reduce conflicts"
-msgstr[0] "очекиван је %d сукоб помака/смањења"
-msgstr[1] "очекивана су %d сукоба помака/смањења"
-msgstr[2] "очекивано је %d сукоба помака/смањења"
+msgid "shift/reduce conflicts: %d found, %d expected"
+msgstr "сукоби помака/смањења: нађох %d, очекивах %d"
 
-#: src/conflicts.c:621
+#: src/conflicts.c:591
 #, c-format
-msgid "expected %d reduce/reduce conflict"
-msgid_plural "expected %d reduce/reduce conflicts"
-msgstr[0] "очекиван је %d сукоб смањења/смањења"
-msgstr[1] "очекивана су %d сукоба смањења/смањења"
-msgstr[2] "очекивано је %d сукоба смањења/смањења"
+msgid "%d shift/reduce conflict"
+msgid_plural "%d shift/reduce conflicts"
+msgstr[0] "%d сукоб помака/смањења"
+msgstr[1] "%d сукоба помака/смањења"
+msgstr[2] "%d сукоба помака/смањења"
+
+#: src/conflicts.c:608
+#, c-format
+msgid "reduce/reduce conflicts: %d found, %d expected"
+msgstr "сукоби смањења/смањења: нађох %d, очекивах %d"
+
+#: src/conflicts.c:613
+#, c-format
+msgid "%d reduce/reduce conflict"
+msgid_plural "%d reduce/reduce conflicts"
+msgstr[0] "%d сукоб смањења/смањења"
+msgstr[1] "%d сукоба смањења/смањења"
+msgstr[2] "%d сукоба смањења/смањења"
 
 #: src/files.c:114
 #, c-format
@@ -96,27 +129,27 @@ msgstr "улазна/излазна грешка"
 msgid "cannot close file"
 msgstr "не могу да затворим датотеку"
 
-#: src/files.c:352
+#: src/files.c:363
 #, c-format
 msgid "refusing to overwrite the input file %s"
 msgstr "одбијам да преснимим изворну датотеку „%s“"
 
-#: src/files.c:362
+#: src/files.c:373
 #, c-format
 msgid "conflicting outputs to file %s"
 msgstr "сукобљавам излазе у датотеку „%s“"
 
-#: src/getargs.c:271
+#: src/getargs.c:252
 #, c-format
-msgid "Try `%s --help' for more information.\n"
+msgid "Try '%s --help' for more information.\n"
 msgstr "Пробајте „%s --help“ за више података.\n"
 
-#: src/getargs.c:280
+#: src/getargs.c:261
 #, c-format
 msgid "Usage: %s [OPTION]... FILE\n"
 msgstr "Употреба: %s [ОПЦИЈА]... ДАТОТЕКА\n"
 
-#: src/getargs.c:281
+#: src/getargs.c:262
 msgid ""
 "Generate a deterministic LR or generalized LR (GLR) parser employing\n"
 "LALR(1), IELR(1), or canonical LR(1) parser tables.  IELR(1) and\n"
@@ -128,15 +161,15 @@ msgstr ""
 "ИЕЛР(1) и утврђени ЛР(1) је пробна.\n"
 "\n"
 
-#: src/getargs.c:288
+#: src/getargs.c:269
 msgid "Mandatory arguments to long options are mandatory for short options too.\n"
 msgstr "Обавезни аргументи за дуге опције су обавезни и за кратке опције такође.\n"
 
-#: src/getargs.c:291
+#: src/getargs.c:272
 msgid "The same is true for optional arguments.\n"
 msgstr "Исто је тачно и за опционалне аргументе.\n"
 
-#: src/getargs.c:295
+#: src/getargs.c:276
 msgid ""
 "\n"
 "Operation modes:\n"
@@ -146,6 +179,7 @@ msgid ""
 "      --print-datadir        output directory containing skeletons and XSLT\n"
 "  -y, --yacc                 emulate POSIX Yacc\n"
 "  -W, --warnings[=CATEGORY]  report the warnings falling in CATEGORY\n"
+"  -f, --feature[=FEATURE]    activate miscellaneous features\n"
 "\n"
 msgstr ""
 "\n"
@@ -156,16 +190,17 @@ msgstr ""
 "      --print-datadir          излазни директоријум који садржи структуру и ИксСЛТ\n"
 "  -y, --yacc                   опонаша ПОСИКС-ов Јацц\n"
 "  -W, --warnings[=КАТЕГОРИЈА]  извештава о упозорењима у КАТЕГОРИЈИ\n"
+"  -f, --feature[=ФУНКЦИЈА]     покреће разне функције\n"
 "\n"
 
-#: src/getargs.c:307
+#: src/getargs.c:289
 #, c-format
 msgid ""
 "Parser:\n"
 "  -L, --language=LANGUAGE          specify the output programming language\n"
-"                                   (this is an experimental feature)\n"
 "  -S, --skeleton=FILE              specify the skeleton to use\n"
-"  -t, --debug                      instrument the parser for debugging\n"
+"  -t, --debug                      instrument the parser for tracing\n"
+"                                   same as '-Dparse.trace'\n"
 "      --locations                  enable location support\n"
 "  -D, --define=NAME[=VALUE]        similar to '%define NAME \"VALUE\"'\n"
 "  -F, --force-define=NAME[=VALUE]  override '%define NAME \"VALUE\"'\n"
@@ -173,13 +208,12 @@ msgid ""
 "                                   deprecated by '-Dapi.prefix=PREFIX'\n"
 "  -l, --no-lines                   don't generate '#line' directives\n"
 "  -k, --token-table                include a table of token names\n"
-"\n"
 msgstr ""
 "Parser:\n"
 "  -L, --language=ЈЕЗИК                наводи излазни језик програмирања\n"
-"                                      (ово је пробна функција)\n"
 "  -S, --skeleton=ДАТОТЕКА             одређује скелет за коришћење\n"
-"  -t, --debug                         мери обрађивач за уклањање грешака\n"
+"  -t, --debug                         инструмент обрађивач за праћење\n"
+"                                      исти као „-Dparse.trace“\n"
 "      --locations                     укључује подршку места\n"
 "  -D, --define=НАЗИВ[=ВРЕДНОСТ]       слично као „%define НАЗИВ 'ВРЕДНОСТ'“\n"
 "  -F, --force-define=НАЗИВ[=ВЕДНОСТ]  преписује „%define НАЗИВ 'ВРЕДНОСТ'“\n"
@@ -189,20 +223,19 @@ msgstr ""
 "  -k, --token-table                   укључује табелу назива симбола\n"
 "\n"
 
-#: src/getargs.c:325
+#: src/getargs.c:307
 msgid ""
 "Output:\n"
 "      --defines[=FILE]       also produce a header file\n"
 "  -d                         likewise but cannot specify FILE (for POSIX Yacc)\n"
 "  -r, --report=THINGS        also produce details on the automaton\n"
 "      --report-file=FILE     write report to FILE\n"
-"  -v, --verbose              same as `--report=state'\n"
+"  -v, --verbose              same as '--report=state'\n"
 "  -b, --file-prefix=PREFIX   specify a PREFIX for output files\n"
 "  -o, --output=FILE          leave output to FILE\n"
 "  -g, --graph[=FILE]         also output a graph of the automaton\n"
 "  -x, --xml[=FILE]           also output an XML report of the automaton\n"
 "                             (the XML schema is experimental)\n"
-"\n"
 msgstr ""
 "Излаз:\n"
 "      --defines[=ДАТОТЕКА]    ствара датотеку заглавља\n"
@@ -215,43 +248,48 @@ msgstr ""
 "  -g, --graph[=ДАТОТЕКА]      такође даје график аутомата\n"
 "  -x, --xml[=ДАТОТЕКА]        такође даје ИксМЛ извештај о аутомату\n"
 "                              (ИксМЛ шема је испитивачка)\n"
-"\n"
 
-#: src/getargs.c:340
+#: src/getargs.c:322
+#, c-format
 msgid ""
 "Warning categories include:\n"
-"  `midrule-values'  unset or unused midrule values\n"
-"  `yacc'            incompatibilities with POSIX Yacc\n"
-"  `conflicts-sr'    S/R conflicts (enabled by default)\n"
-"  `conflicts-rr'    R/R conflicts (enabled by default)\n"
-"  `other'           all other warnings (enabled by default)\n"
-"  `all'             all the warnings\n"
-"  `no-CATEGORY'     turn off warnings in CATEGORY\n"
-"  `none'            turn off all the warnings\n"
-"  `error'           treat warnings as errors\n"
-"\n"
+"  'midrule-values'    unset or unused midrule values\n"
+"  'yacc'              incompatibilities with POSIX Yacc\n"
+"  'conflicts-sr'      S/R conflicts (enabled by default)\n"
+"  'conflicts-rr'      R/R conflicts (enabled by default)\n"
+"  'deprecated'        obsolete constructs\n"
+"  'empty-rule'        empty rules without %empty\n"
+"  'precedence'        useless precedence and associativity\n"
+"  'other'             all other warnings (enabled by default)\n"
+"  'all'               all the warnings except 'yacc'\n"
+"  'no-CATEGORY'       turn off warnings in CATEGORY\n"
+"  'none'              turn off all the warnings\n"
+"  'error[=CATEGORY]'  treat warnings as errors\n"
 msgstr ""
 "Категорије упозорења укључују:\n"
 "  „midrule-values“  неподешене или некоришћене вредности средњег правила\n"
 "  „yacc“            несагласности са ПОСИКС Јацц-ом\n"
 "  „conflicts-sr“    С/Р сукоби (унапред укључено)\n"
 "  „conflicts-rr“    Р/Р сукоби (унапред укључено)\n"
+"  „deprecated“      застарела конструкција\n"
+"  „empty-rule“      празна правила без „%empty“\n"
+"  „precedence“      непогодна предност и придруживост\n"
 "  „other“           сва друга упозорења (унапред укључено)\n"
 "  „all“             сва упозорења\n"
 "  „no-CATEGORY“     искључује упозорења у КАТЕГОРИЈИ\n"
 "  „none“            искључује сва упозорења\n"
-"  „error“           упозорења сматра грешкама\n"
+"  „error[=CATEGORY]“упозорења сматра грешкама\n"
 "\n"
 
-#: src/getargs.c:354
+#: src/getargs.c:339
 msgid ""
 "THINGS is a list of comma separated words that can include:\n"
-"  `state'        describe the states\n"
-"  `itemset'      complete the core item sets with their closure\n"
-"  `lookahead'    explicitly associate lookahead tokens to items\n"
-"  `solved'       describe shift/reduce conflicts solving\n"
-"  `all'          include all the above information\n"
-"  `none'         disable the report\n"
+"  'state'        describe the states\n"
+"  'itemset'      complete the core item sets with their closure\n"
+"  'lookahead'    explicitly associate lookahead tokens to items\n"
+"  'solved'       describe shift/reduce conflicts solving\n"
+"  'all'          include all the above information\n"
+"  'none'         disable the report\n"
 msgstr ""
 "СТВАРИ представљају зарезом одвојене речи у које могу да спадају:\n"
 "  „state“        описује стања\n"
@@ -261,30 +299,62 @@ msgstr ""
 "  „all“          укључује све горње податке\n"
 "  „none“         искључује извештај\n"
 
-#: src/getargs.c:364
-#, c-format
+#: src/getargs.c:350
 msgid ""
-"\n"
-"Report bugs to <%s>.\n"
+"FEATURE is a list of comma separated words that can include:\n"
+"  'caret'        show errors with carets\n"
+"  'all'          all of the above\n"
+"  'none'         disable all of the above\n"
+"  "
 msgstr ""
-"\n"
-"Грешке пријавите на <%s>.\n"
+"ФУНКЦИЈА је списак зарезом раздвојених речи који може да укључи:\n"
+"  „caret“        приказује грешке са каретима\n"
+"  „all“          све од горњег\n"
+"  „none“         искључује све од горњег\n"
+"  "
 
-#: src/getargs.c:380
+#: src/getargs.c:358
+#, c-format
+msgid "Report bugs to <%s>.\n"
+msgstr "Грешке пријавите на <%s>.\n"
+
+#: src/getargs.c:359
+#, c-format
+msgid "%s home page: <%s>.\n"
+msgstr "Матична страница „%s“: <%s>.\n"
+
+#: src/getargs.c:360
+msgid "General help using GNU software: <http://www.gnu.org/gethelp/>.\n"
+msgstr "Општа помоћ користећи ГНУ софтвер: <http://www.gnu.org/gethelp/>.\n"
+
+#. TRANSLATORS: Replace LANG_CODE in this URL with your language
+#. code <http://translationproject.org/team/LANG_CODE.html> to
+#. form one of the URLs at http://translationproject.org/team/.
+#. Otherwise, replace the entire URL with your translation team's
+#. email address.
+#: src/getargs.c:373
+msgid "Report translation bugs to <http://translationproject.org/team/>.\n"
+msgstr "Грешке у преводу пријавите на „<http://translationproject.org/team/>“.\n"
+
+#: src/getargs.c:375
+msgid "For complete documentation, run: info bison.\n"
+msgstr "За потпуну документацију, покрените: „info bison“.\n"
+
+#: src/getargs.c:391
 #, c-format
 msgid "bison (GNU Bison) %s"
 msgstr "бизон (Гну Бизон) %s"
 
-#: src/getargs.c:382
+#: src/getargs.c:393
 msgid "Written by Robert Corbett and Richard Stallman.\n"
 msgstr "Написали су Роберт Корбет и Ричард Столман.\n"
 
-#: src/getargs.c:386
+#: src/getargs.c:397
 #, c-format
 msgid "Copyright (C) %d Free Software Foundation, Inc.\n"
 msgstr "Ауторска права (C) %d Задужбина слободног софтвера, Доо.\n"
 
-#: src/getargs.c:389
+#: src/getargs.c:400
 msgid ""
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -292,39 +362,35 @@ msgstr ""
 "Ово је слободан софтвер; погледајте извор за услове умножавања.  Не постоји\n"
 "НИКАКВА гаранција; чак ни за ТРЖИШНУ ВРЕДНОСТ или за ИСПУЊАВАЊЕ ОДРЕЂЕНЕ ПОТРЕБЕ.\n"
 
-#: src/getargs.c:410
+#: src/getargs.c:422
 #, c-format
 msgid "multiple skeleton declarations are invalid"
 msgstr "вишеструке објаве скице су неисправне"
 
-#: src/getargs.c:428
+#: src/getargs.c:440
 #, c-format
 msgid "%s: invalid language"
 msgstr "%s: неисправан језик"
 
-#: src/getargs.c:431
+#: src/getargs.c:443
 msgid "multiple language declarations are invalid"
 msgstr "вишеструке објаве језика су неисправне"
 
-#: src/getargs.c:693
+#: src/getargs.c:724
 #, c-format
 msgid "%s: missing operand"
 msgstr "%s: недостаје операнд"
 
-#: src/getargs.c:695
+#: src/getargs.c:726
 #, c-format
 msgid "extra operand %s"
 msgstr "додатни операнд %s"
 
-#: src/gram.c:112
-msgid "empty"
-msgstr "празно"
-
-#: src/gram.c:201
+#: src/gram.c:185
 msgid "Grammar"
 msgstr "Основа"
 
-#: src/graphviz.c:43
+#: src/graphviz.c:45
 #, c-format
 msgid ""
 "// Generated by %s.\n"
@@ -337,7 +403,7 @@ msgstr ""
 "// Страница пројекта: <%s>.\n"
 "\n"
 
-#: src/location.c:93 src/scan-gram.l:855
+#: src/location.c:93 src/scan-gram.l:926
 #, c-format
 msgid "line number overflow"
 msgstr "прекорачење броја редова"
@@ -351,38 +417,37 @@ msgstr "прекорачење броја колона"
 msgid "rule useless in parser due to conflicts"
 msgstr "бескорисна правила у обрађивачу због сукоба"
 
-#: src/muscle-tab.c:436
+#: src/muscle-tab.c:513
 #, c-format
 msgid "%%define variable %s redefined"
 msgstr "%%define променљива „%s“ је поново одређена"
 
-#: src/muscle-tab.c:439
+#: src/muscle-tab.c:517
 #, c-format
 msgid "previous definition"
 msgstr "претходна одредница"
 
-#: src/muscle-tab.c:478 src/muscle-tab.c:492 src/muscle-tab.c:544
-#: src/muscle-tab.c:609
+#: src/muscle-tab.c:567 src/muscle-tab.c:668 src/muscle-tab.c:731
 #, c-format
 msgid "%s: undefined %%define variable %s"
 msgstr "%s: неодређена %%define променљива „%s“"
 
-#: src/muscle-tab.c:538
+#: src/muscle-tab.c:662
 #, c-format
 msgid "invalid value for %%define Boolean variable %s"
 msgstr "неисправна вредност %%define логичке променљиве „%s“"
 
-#: src/muscle-tab.c:596
+#: src/muscle-tab.c:716
 #, c-format
 msgid "invalid value for %%define variable %s: %s"
 msgstr "неисправна вредност %%define променљиве „%s“: %s"
 
-#: src/muscle-tab.c:599
+#: src/muscle-tab.c:721
 #, c-format
 msgid "accepted value: %s"
 msgstr "прихваћена вредност: %s"
 
-#: src/parse-gram.y:746
+#: src/parse-gram.y:809
 #, c-format
 msgid "missing identifier in parameter declaration"
 msgstr "недостаје указивач у објави параметра"
@@ -420,10 +485,10 @@ msgstr "прихвата"
 msgid "$default"
 msgstr "$основно"
 
-#: src/print.c:373
+#: src/print.c:373 src/print_graph.c:61
 #, c-format
-msgid "state %d"
-msgstr "стање %d"
+msgid "State %d"
+msgstr "Стање %d "
 
 #: src/print.c:409
 msgid "Terminals, with rules where they appear"
@@ -453,72 +518,72 @@ msgstr "Бескорисна правила у обрађивачу због с�
 msgid "multiple %s declarations"
 msgstr "вишеструке %s објаве"
 
-#: src/reader.c:132
+#: src/reader.c:133
 #, c-format
 msgid "result type clash on merge function %s: <%s> != <%s>"
 msgstr "неслагање врсте резултата функције спајања %s: <%s> != <%s>"
 
-#: src/reader.c:135 src/symtab.c:154 src/symtab.c:162 src/symtab.c:929
-#: src/symtab.c:942 src/symtab.c:955 src/symtab.c:968
-#, c-format
-msgid "previous declaration"
-msgstr "претходна објава"
-
-#: src/reader.c:201
+#: src/reader.c:206
 #, c-format
 msgid "duplicated symbol name for %s ignored"
 msgstr "занемарен је удвојени назив симбола за „%s“"
 
-#: src/reader.c:245
+#: src/reader.c:250
 #, c-format
 msgid "rule given for %s, which is a token"
 msgstr "дато је правило за %s, које је симбол"
 
-#: src/reader.c:300
+#: src/reader.c:306
 #, c-format
 msgid "type clash on default action: <%s> != <%s>"
 msgstr "неслагање врсте основне радње: <%s> != <%s>"
 
-#: src/reader.c:306
+#: src/reader.c:312
 #, c-format
 msgid "empty rule for typed nonterminal, and no action"
 msgstr "празно правило за укуцани нетерминал, и нема радње"
 
-#: src/reader.c:324
+#: src/reader.c:329
 #, c-format
 msgid "unused value: $%d"
 msgstr "неупотребљена вредност: $%d"
 
-#: src/reader.c:326
+#: src/reader.c:331
+#, c-format
 msgid "unset value: $$"
 msgstr "неподешена вредност: $$"
 
-#: src/reader.c:337
+#: src/reader.c:340
+#, c-format
+msgid "%%empty on non-empty rule"
+msgstr "„%%empty“ на не-празном правилу"
+
+#: src/reader.c:346
+#, c-format
+msgid "empty rule without %%empty"
+msgstr "празно правило без „%%empty“"
+
+#: src/reader.c:355
 #, c-format
 msgid "token for %%prec is not defined: %s"
 msgstr "симбол за %%prec није одређен: %s"
 
-#: src/reader.c:427 src/reader.c:441 src/reader.c:454
-#, c-format
-msgid "only one %s allowed per rule"
-msgstr "дозвољен је само један „%s“ по правилу"
-
-#: src/reader.c:437 src/reader.c:452
+#: src/reader.c:473 src/reader.c:495
 #, c-format
 msgid "%s affects only GLR parsers"
 msgstr "„%s“ има дејства само на ГЛР обрађиваче"
 
-#: src/reader.c:439
+#: src/reader.c:476
 #, c-format
 msgid "%s must be followed by positive number"
 msgstr "након %s мора да следи позитиван број"
 
-#: src/reader.c:550
+#: src/reader.c:602
 #, c-format
 msgid "rule is too long"
 msgstr "правило је предуго"
 
-#: src/reader.c:668
+#: src/reader.c:718
 #, c-format
 msgid "no rules in the input grammar"
 msgstr "нема правила у основи улаза"
@@ -527,24 +592,24 @@ msgstr "нема правила у основи улаза"
 msgid "rule useless in grammar"
 msgstr "правило је бескорисно у основи"
 
-#: src/reduce.c:302
+#: src/reduce.c:303
 #, c-format
 msgid "nonterminal useless in grammar: %s"
 msgstr "не-терминал је бескористан у основи: %s"
 
-#: src/reduce.c:350
+#: src/reduce.c:351
 msgid "Nonterminals useless in grammar"
 msgstr "Не-терминали су бескорисни у основи"
 
-#: src/reduce.c:363
+#: src/reduce.c:364
 msgid "Terminals unused in grammar"
 msgstr "Терминали су неупотребљени у основи"
 
-#: src/reduce.c:372
+#: src/reduce.c:373
 msgid "Rules useless in grammar"
 msgstr "Правила су бескорисна у основи"
 
-#: src/reduce.c:385
+#: src/reduce.c:386
 #, c-format
 msgid "%d nonterminal useless in grammar"
 msgid_plural "%d nonterminals useless in grammar"
@@ -552,7 +617,7 @@ msgstr[0] "%d не-терминал је бескористан у основи"
 msgstr[1] "%d не-терминала су бескорисна у основи"
 msgstr[2] "%d не-терминала је бескорисно у основи"
 
-#: src/reduce.c:390
+#: src/reduce.c:391
 #, c-format
 msgid "%d rule useless in grammar"
 msgid_plural "%d rules useless in grammar"
@@ -560,290 +625,284 @@ msgstr[0] "%d правило је бескорисно у основи"
 msgstr[1] "%d правила су бескорисна у основи"
 msgstr[2] "%d правила је бескорисно у основи"
 
-#: src/reduce.c:419
+#: src/reduce.c:420
 #, c-format
 msgid "start symbol %s does not derive any sentence"
 msgstr "почетни симбол %s не изводи никакав исказ"
 
-#: src/scan-code.l:188
+#: src/scan-code.l:157
 #, c-format
 msgid "stray '%s'"
 msgstr "залутало „%s“"
 
-#: src/scan-code.l:227
-#, c-format
-msgid "a ';' might be needed at the end of action code"
-msgstr "на крају кода радње може бити потребна тачка и зарез (;)"
-
-#: src/scan-code.l:228
-#, c-format
-msgid "future versions of Bison will not add the ';'"
-msgstr "будућа издања Бизона неће додавати „;“"
-
-#: src/scan-code.l:250
-#, c-format
-msgid "use of YYFAIL, which is deprecated and will be removed"
-msgstr "„YYFAIL“ је застарело у употреби и биће уклоњено"
-
-#: src/scan-code.l:427 src/scan-code.l:430
+#: src/scan-code.l:339
 #, c-format
 msgid "refers to: %c%s at %s"
 msgstr "односи се на: %c%s у %s"
 
-#: src/scan-code.l:446
+#: src/scan-code.l:351
 #, c-format
 msgid "possibly meant: %c"
 msgstr "могуће значење: %c"
 
-#: src/scan-code.l:455
+#: src/scan-code.l:360
 #, c-format
 msgid ", hiding %c"
 msgstr ", кријем %c"
 
-#: src/scan-code.l:463
+#: src/scan-code.l:368
 #, c-format
 msgid " at %s"
 msgstr " у %s"
 
-#: src/scan-code.l:468
+#: src/scan-code.l:372
 #, c-format
 msgid ", cannot be accessed from mid-rule action at $%d"
 msgstr ", не може бити приступљен из радње средњег правила у $%d"
 
-#: src/scan-code.l:520 src/scan-gram.l:777
+#: src/scan-code.l:429 src/scan-gram.l:849
 #, c-format
 msgid "integer out of range: %s"
 msgstr "цео број је ван опсега: %s"
 
-#: src/scan-code.l:609
+#: src/scan-code.l:519
 #, c-format
 msgid "invalid reference: %s"
 msgstr "неисправна референца: %s"
 
-#: src/scan-code.l:618
+#: src/scan-code.l:527
 #, c-format
 msgid "syntax error after '%c', expecting integer, letter, '_', '[', or '$'"
 msgstr "садржајна грешка након „%c“, очекујем цео број, слово, _, [, или $"
 
-#: src/scan-code.l:625
+#: src/scan-code.l:533
 #, c-format
 msgid "symbol not found in production before $%d: %.*s"
 msgstr "симбол није пронађен у производњи пре $%d: %.*s"
 
-#: src/scan-code.l:632
+#: src/scan-code.l:538
 #, c-format
 msgid "symbol not found in production: %.*s"
 msgstr "симбол није пронађен у производњи: %.*s"
 
-#: src/scan-code.l:647
+#: src/scan-code.l:553
 #, c-format
 msgid "misleading reference: %s"
 msgstr "неисправна референца: %s"
 
-#: src/scan-code.l:662
+#: src/scan-code.l:569
 #, c-format
 msgid "ambiguous reference: %s"
 msgstr "нејасна референца: %s"
 
-#: src/scan-code.l:699
+#: src/scan-code.l:608
 #, c-format
 msgid "explicit type given in untyped grammar"
 msgstr "дата је изричита врста у неуписаној основи"
 
-#: src/scan-code.l:758
+#: src/scan-code.l:667
 #, c-format
 msgid "$$ for the midrule at $%d of %s has no declared type"
 msgstr "$$ за средње правило при $%d од %s нема објављену врсту"
 
-#: src/scan-code.l:763
+#: src/scan-code.l:673
 #, c-format
 msgid "$$ of %s has no declared type"
 msgstr "$$ од %s нема објављену врсту"
 
-#: src/scan-code.l:785
+#: src/scan-code.l:696
 #, c-format
 msgid "$%s of %s has no declared type"
 msgstr "$%s од %s нема објављену врсту"
 
-#: src/scan-gram.l:149
+#: src/scan-gram.l:180
 #, c-format
 msgid "stray ',' treated as white space"
 msgstr "залутали зарез (,) је схваћен као размак"
 
-#: src/scan-gram.l:222
+#: src/scan-gram.l:270
 #, c-format
 msgid "invalid directive: %s"
 msgstr "неисправна директива: %s"
 
-#: src/scan-gram.l:250
+#: src/scan-gram.l:296
 #, c-format
 msgid "invalid identifier: %s"
 msgstr "неисправна одређивач: %s"
 
-#: src/scan-gram.l:294
-#, c-format
-msgid "invalid character: %s"
-msgstr "неисправан знак: %s"
+#: src/scan-gram.l:348
+msgid "invalid character"
+msgid_plural "invalid characters"
+msgstr[0] "неисправан знак"
+msgstr[1] "неисправни знаци"
+msgstr[2] "неисправни знаци"
 
-#: src/scan-gram.l:352
-#, c-format
-msgid "unexpected identifier in bracketed name: %s"
-msgstr "неочекивани одређивач у називу у заградама: %s"
-
-#: src/scan-gram.l:374
-#, c-format
-msgid "an identifier expected"
-msgstr "очекиван је одређивач"
-
-#: src/scan-gram.l:377
-#, c-format
-msgid "invalid character in bracketed name: %s"
-msgstr "неисправан знак у називу у заградама: %s"
-
-#: src/scan-gram.l:475 src/scan-gram.l:496
-#, c-format
-msgid "empty character literal"
-msgstr "дословност празног знака"
-
-#: src/scan-gram.l:480 src/scan-gram.l:501
-#, c-format
-msgid "extra characters in character literal"
-msgstr "додатни знаци у дословности знака"
-
-#: src/scan-gram.l:512
+#: src/scan-gram.l:366
 #, c-format
 msgid "invalid null character"
 msgstr "неисправан ништавни знак"
 
-#: src/scan-gram.l:525 src/scan-gram.l:535 src/scan-gram.l:555
+#: src/scan-gram.l:419
+#, c-format
+msgid "unexpected identifier in bracketed name: %s"
+msgstr "неочекивани одређивач у називу у заградама: %s"
+
+#: src/scan-gram.l:441
+#, c-format
+msgid "an identifier expected"
+msgstr "очекиван је одређивач"
+
+#: src/scan-gram.l:446
+msgid "invalid character in bracketed name"
+msgid_plural "invalid characters in bracketed name"
+msgstr[0] "неисправан знак у називу у заградама"
+msgstr[1] "неисправни знаци у називу у заградама"
+msgstr[2] "неисправни знаци у називу у заградама"
+
+#: src/scan-gram.l:538
+#, c-format
+msgid "empty character literal"
+msgstr "дословност празног знака"
+
+#: src/scan-gram.l:544
+#, c-format
+msgid "extra characters in character literal"
+msgstr "додатни знаци у дословности знака"
+
+#: src/scan-gram.l:590 src/scan-gram.l:600 src/scan-gram.l:620
 #, c-format
 msgid "invalid number after \\-escape: %s"
 msgstr "неисправан број након „\\-escape“: %s"
 
-#: src/scan-gram.l:567
+#: src/scan-gram.l:632
 #, c-format
 msgid "invalid character after \\-escape: %s"
 msgstr "неисправан знак након „\\-escape“: %s"
 
-#: src/scan-gram.l:891
+#: src/scan-gram.l:978
 #, c-format
 msgid "missing %s at end of file"
 msgstr "недостаје „%s“ на крају датотеке"
 
-#: src/scan-gram.l:902
+#: src/scan-gram.l:989
 #, c-format
 msgid "missing %s at end of line"
 msgstr "недостаје „%s“ на крају реда"
 
-#: src/scan-skel.l:146
+#: src/scan-skel.l:139
 #, c-format
 msgid "unclosed %s directive in skeleton"
 msgstr "незатворена %s смерница у костуру"
 
-#: src/scan-skel.l:291
+#: src/scan-skel.l:255
 #, c-format
 msgid "too few arguments for %s directive in skeleton"
 msgstr "премало аргумената за %s смерницу у костуру"
 
-#: src/scan-skel.l:298
+#: src/scan-skel.l:262
 #, c-format
 msgid "too many arguments for %s directive in skeleton"
 msgstr "превише аргумената за %s смерницу у костуру"
 
-#: src/symlist.c:211
+#: src/symlist.c:204
 #, c-format
 msgid "invalid $ value: $%d"
 msgstr "неисправна $ вредност: $%d"
 
-#: src/symtab.c:71
+#: src/symtab.c:75
 #, c-format
 msgid "POSIX Yacc forbids dashes in symbol names: %s"
 msgstr "ПОСИКС Јацц забрањује цртице у називима симбола: %s"
 
-#: src/symtab.c:91
+#: src/symtab.c:97
 #, c-format
 msgid "too many symbols in input grammar (limit is %d)"
 msgstr "превише симбола у улазној основи (ограничење је %d)"
 
-#: src/symtab.c:153
+#: src/symtab.c:214
 #, c-format
 msgid "%s redeclaration for %s"
 msgstr "%s поновни проглас за %s"
 
-#: src/symtab.c:161
+#: src/symtab.c:226
 #, c-format
 msgid "%s redeclaration for <%s>"
 msgstr "%s поновни проглас за <%s>"
 
-#: src/symtab.c:328
+#: src/symtab.c:355
 #, c-format
 msgid "symbol %s redefined"
 msgstr "симбол „%s“ је поново одређен"
 
-#: src/symtab.c:342
+#: src/symtab.c:370
 #, c-format
 msgid "symbol %s redeclared"
 msgstr "симбол „%s“ је поново објављен"
 
-#: src/symtab.c:363
+#: src/symtab.c:392
 #, c-format
 msgid "redefining user token number of %s"
 msgstr "поновно одређујем број симбола корисника од %s"
 
-#: src/symtab.c:391
+#: src/symtab.c:422
 #, c-format
 msgid "symbol %s is used, but is not defined as a token and has no rules"
 msgstr "коришћен је симбол „%s“, али није одређен као обележје и нема правила"
 
-#: src/symtab.c:411
+#: src/symtab.c:460
+#, c-format
+msgid "useless %s for type <%s>"
+msgstr "непотребно „%s“ за врсту <%s>"
+
+#: src/symtab.c:465
+#, c-format
+msgid "type <%s> is used, but is not associated to any symbol"
+msgstr "врста „%s“ је употребљена, али није придружена ниједном симболу"
+
+#: src/symtab.c:490
 #, c-format
 msgid "symbol %s used more than once as a literal string"
 msgstr "симбол %s је коришћен више пута као дословна ниска"
 
-#: src/symtab.c:414
+#: src/symtab.c:493
 #, c-format
 msgid "symbol %s given more than one literal string"
 msgstr "симболу %s је дата више од једне дословне ниске"
 
-#: src/symtab.c:530
+#: src/symtab.c:602
 #, c-format
 msgid "user token number %d redeclaration for %s"
 msgstr "поновна објава броја %d корисничког симбола за %s"
 
-#: src/symtab.c:532
+#: src/symtab.c:606
 #, c-format
 msgid "previous declaration for %s"
 msgstr "претходна објава за %s"
 
-#: src/symtab.c:908
+#: src/symtab.c:987
 #, c-format
 msgid "the start symbol %s is undefined"
 msgstr "полазни симбол „%s“ није одређен"
 
-#: src/symtab.c:912
+#: src/symtab.c:991
 #, c-format
 msgid "the start symbol %s is a token"
 msgstr "полазни симбол „%s“ је обележје"
 
-#: src/symtab.c:927
+#: src/symtab.c:1166
 #, c-format
-msgid "redeclaration for default tagged %%destructor"
-msgstr "поновна објава за основног означеног %%уништавача"
+msgid "useless precedence and associativity for %s"
+msgstr "непотребна предност и придруживост за „%s“"
 
-#: src/symtab.c:940
+#: src/symtab.c:1169
 #, c-format
-msgid "redeclaration for default tagless %%destructor"
-msgstr "поновна објава за основног неозначеног %%уништавача"
+msgid "useless precedence for %s"
+msgstr "непотребна предност за „%s“"
 
-#: src/symtab.c:953
+#: src/symtab.c:1173
 #, c-format
-msgid "redeclaration for default tagged %%printer"
-msgstr "поновна објава за основног означеног %%штампача"
-
-#: src/symtab.c:966
-#, c-format
-msgid "redeclaration for default tagless %%printer"
-msgstr "поновна објава за основног неозначеног %%штампача"
+msgid "useless associativity for %s, use %%precedence"
+msgstr "непотребна придруживост за „%s“, користите „%%precedence“"
 
 #: djgpp/subpipe.c:63 djgpp/subpipe.c:286 djgpp/subpipe.c:288
 #, c-format
@@ -1056,13 +1115,13 @@ msgid "memory exhausted"
 msgstr "меморија је потрошена"
 
 #
-#: lib/spawn-pipe.c:138 lib/spawn-pipe.c:141 lib/spawn-pipe.c:262
-#: lib/spawn-pipe.c:265
+#: lib/spawn-pipe.c:140 lib/spawn-pipe.c:143 lib/spawn-pipe.c:264
+#: lib/spawn-pipe.c:267
 #, c-format
 msgid "cannot create pipe"
 msgstr "не могу да направим спојку"
 
-#: lib/spawn-pipe.c:232 lib/spawn-pipe.c:346 lib/wait-process.c:282
+#: lib/spawn-pipe.c:234 lib/spawn-pipe.c:348 lib/wait-process.c:282
 #: lib/wait-process.c:356
 #, c-format
 msgid "%s subprocess failed"
@@ -1133,6 +1192,3 @@ msgstr "%s потпроцес"
 #, c-format
 msgid "%s subprocess got fatal signal %d"
 msgstr "%s потпроцес је добио кобни сигнал %d"
-
-#~ msgid "stray '@'"
-#~ msgstr "залутало „@“"

@@ -2,14 +2,14 @@
 # Copyright © 2002, 2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the bison package.
 # Denis Lackovic <delacko@fly.srk.fer.hr>, 2002.
-# Tomislav Krznar <tomislav.krznar@gmail.com>, 2012.
+# Tomislav Krznar <tomislav.krznar@gmail.com>, 2012, 2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: bison 2.6.90\n"
+"Project-Id-Version: bison 2.7.1\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
-"POT-Creation-Date: 2012-12-07 11:38+0100\n"
-"PO-Revision-Date: 2012-12-21 15:57+0100\n"
+"POT-Creation-Date: 2013-04-15 13:59+0200\n"
+"PO-Revision-Date: 2013-04-18 00:00+0200\n"
 "Last-Translator: Tomislav Krznar <tomislav.krznar@gmail.com>\n"
 "Language-Team: Croatian <lokalizacija@linux.hr>\n"
 "Language: hr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Gtranslator 2.91.5\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #: src/complain.c:120 src/complain.c:131 src/complain.c:140 src/complain.c:188
 #: src/complain.c:198
@@ -30,7 +30,7 @@ msgstr "greška"
 
 #: src/complain.c:208 src/complain.c:215
 msgid "fatal error"
-msgstr "fatalna greška"
+msgstr "kobna greška"
 
 #: src/conflicts.c:77
 #, c-format
@@ -1164,7 +1164,7 @@ msgstr "%s potproces"
 #: lib/wait-process.c:274 lib/wait-process.c:346
 #, c-format
 msgid "%s subprocess got fatal signal %d"
-msgstr "%s potproces je primio fatalni signal %d"
+msgstr "%s potproces je primio kobni signal %d"
 
 #~ msgid "state %d"
 #~ msgstr "stanje %d"
