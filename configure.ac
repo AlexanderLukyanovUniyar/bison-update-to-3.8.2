@@ -43,9 +43,7 @@ AC_CONFIG_MACRO_DIR([m4])
 # automatically contains a dash, which we also let disable gnits.
 AM_INIT_AUTOMAKE([1.14 dist-xz nostdinc
                  color-tests parallel-tests
-                 silent-rules]
-                 m4_bmatch(m4_defn([AC_PACKAGE_VERSION]), [[-_]],
-                           [gnu], [gnits]))
+                 silent-rules])
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([lib/config.h:lib/config.in.h])
 
