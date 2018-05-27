@@ -1,6 +1,6 @@
 # Configure template for GNU Bison.                   -*-Autoconf-*-
 #
-# Copyright (C) 2001-2015 Free Software Foundation, Inc.
+# Copyright (C) 2001-2015, 2018 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ m4_pattern_forbid([^gl_[A-Z]])
 AC_INIT([GNU Bison],
         m4_esyscmd([build-aux/git-version-gen .tarball-version]),
         [bug-bison@gnu.org])
-AC_SUBST([PACKAGE_COPYRIGHT_YEAR], [2015])
+AC_SUBST([PACKAGE_COPYRIGHT_YEAR], [2018])
 AC_DEFINE_UNQUOTED([PACKAGE_COPYRIGHT_YEAR], [$PACKAGE_COPYRIGHT_YEAR],
                    [The copyright year for this package])
 
@@ -80,7 +80,7 @@ AC_ARG_ENABLE([gcc-warnings],
 AM_CONDITIONAL([ENABLE_GCC_WARNINGS], [test "$enable_gcc_warnings" = yes])
 if test "$enable_gcc_warnings" = yes; then
   warn_common='-Wall -Wextra -Wno-sign-compare -Wcast-align -Wdocumentation
-    -Wformat -Wpointer-arith -Wwrite-strings'
+    -Wformat -Wnull-dereference -Wpointer-arith -Wwrite-strings'
   warn_c='-Wbad-function-cast -Wshadow -Wstrict-prototypes'
   warn_cxx='-Wnoexcept'
   # Warnings for the test suite only.
@@ -92,7 +92,7 @@ if test "$enable_gcc_warnings" = yes; then
   # -Wno-keyword-macro: We use the "#define private public" dirty
   # trick in the test suite to check some private implementation
   # details for lalr1.cc.
-  warn_tests='-Wundef -pedantic -Wsign-compare -fno-color-diagnostics
+  warn_tests='-Wundef -pedantic -Wdeprecated -Wsign-compare -fno-color-diagnostics
     -Wno-keyword-macro'
 
   AC_LANG_PUSH([C])

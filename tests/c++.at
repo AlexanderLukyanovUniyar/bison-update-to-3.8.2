@@ -1,6 +1,7 @@
 # Checking the C++ Features.                    -*- Autotest -*-
 
-# Copyright (C) 2004-2005, 2007-2015 Free Software Foundation, Inc.
+# Copyright (C) 2004-2005, 2007-2015, 2018 Free Software Foundation,
+# Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,7 +50,7 @@ check (const T& in, const std::string& s)
   os << in;
   if (os.str () != s)
     {
-      std::cerr << "fail: " << os.str () << ", expected: " << s << std::endl;
+      std::cerr << "fail: " << os.str () << ", expected: " << s << '\n';
       return false;
     }
   return true;
@@ -140,13 +141,13 @@ int main()
 {
   {
     yy::parser::symbol_type s = yy::parser::make_INT(12);
-    std::cerr << s.value.as<int>() << std::endl;
+    std::cerr << s.value.as<int>() << '\n';
   }
 
   {
     yy::parser::symbol_type s = yy::parser::make_INT(123);
     yy::parser::stack_symbol_type ss(1, s);
-    std::cerr << ss.value.as<int>() << std::endl;
+    std::cerr << ss.value.as<int>() << '\n';
   }
 
   {
@@ -268,7 +269,7 @@ typedef std::vector<std::string> strings_type;
 %%
 
 result:
-  list          { std::cout << $][1 << std::endl; }
+  list          { std::cout << $][1 << '\n'; }
 ;
 
 list:
@@ -504,7 +505,7 @@ void
 ]$1[::parser::error (const ]$1[::parser::location_type &loc,
                      const std::string &msg)
 {
-  std::cerr << "At " << loc << ": " << msg << std::endl;
+  std::cerr << "At " << loc << ": " << msg << '\n';
 }
 
 ]AT_MAIN_DEFINE[
@@ -572,7 +573,7 @@ AT_DATA_GRAMMAR([[input.y]],
 %nonassoc 'a' ;
 
 %destructor {
-  std::cerr << "Discarding 'a'." << std::endl;
+  std::cerr << "Discarding 'a'.\n";
 } 'a'
 
 %%
@@ -581,7 +582,7 @@ start: error-reduce consistent-error 'a' { USE ($3); };
 
 error-reduce:
   'a' 'a' consistent-error 'a' { USE (($1, $2, $4)); }
-| 'a' error { std::cerr << "Reducing 'a'." << std::endl; USE ($1); }
+| 'a' error { std::cerr << "Reducing 'a'.\n"; USE ($1); }
 ;
 
 consistent-error:
@@ -605,7 +606,7 @@ yylex (yy::parser::semantic_type *)
 void
 yy::parser::error (const std::string &m)
 {
-  std::cerr << m << std::endl;
+  std::cerr << m << '\n';
 }
 
 ]AT_MAIN_DEFINE[
@@ -633,6 +634,7 @@ AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc"])
 
 AT_DATA_GRAMMAR([[input.y]],
 [[%skeleton "lalr1.cc"
+%defines
 
 %code
 {
@@ -651,7 +653,7 @@ start:
 ;
 
 thing:
-  error   { std::cerr << "caught error" << std::endl; }
+  error   { std::cerr << "caught error\n"; }
 | item
 ;
 
@@ -663,6 +665,17 @@ item:
   }
 
 %%
+
+void
+yy::parser::error (const std::string &m)
+{
+  std::cerr << "error: " << m << '\n';
+}
+]AT_MAIN_DEFINE[
+]])
+
+AT_DATA_SOURCE([input-scan.cc],
+[[#include "input.hh"
 
 int
 yylex (yy::parser::semantic_type *)
@@ -677,16 +690,9 @@ yylex (yy::parser::semantic_type *)
       return res;
   }
 }
-
-void
-yy::parser::error (const std::string &m)
-{
-  std::cerr << "error: " << m << std::endl;
-}
-]AT_MAIN_DEFINE[
 ]])
 
-AT_FULL_COMPILE([[input]])
+AT_FULL_COMPILE([[input]], [[scan]])
 
 AT_PARSER_CHECK([[./input]], [[0]], [[]],
 [[error: invalid expression
@@ -764,6 +770,12 @@ $1
       Object::instances.erase (i);
     }
 
+    Object& operator= (const Object& that)
+    {
+      val = that.val;
+      return *this;
+    }
+
     Object& operator= (char v)
     {
       val = v;
@@ -797,7 +809,7 @@ $1
               std::cerr << sep << *i;
               sep = ", ";
             }
-          std::cerr << " }" << std::endl;
+          std::cerr << " }\n";
         }
     }
   };
@@ -929,11 +941,11 @@ main (int argc, const char *argv[])
   }
   catch (const std::exception& e)
   {
-    std::cerr << "exception caught: " << e.what () << std::endl;
+    std::cerr << "exception caught: " << e.what () << '\n';
   }
   catch (...)
   {
-    std::cerr << "unknown exception caught" << std::endl;
+    std::cerr << "unknown exception caught\n";
   }
   Object::log (YY_NULLPTR, "end");
   assert (Object::empty());
