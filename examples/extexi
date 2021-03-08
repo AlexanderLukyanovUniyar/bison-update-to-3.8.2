@@ -3,7 +3,7 @@
 
 # This file is part of GNU Bison
 
-# Copyright (C) 1992, 2000-2001, 2005-2006, 2009-2015, 2018 Free
+# Copyright (C) 1992, 2000-2001, 2005-2006, 2009-2015, 2018-2021 Free
 # Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Usage: extexi [OPTION...] input-file.texi ... -- [FILES to extract]
 
@@ -32,8 +32,23 @@
 # output before block 2, even if the latter appears before).  The same
 # number may be used several time, in which case the order of
 # appearance is used.
+#
+# Use @ignore for code to extract that must not be part of the
+# documentation.  For instance:
+#
+#      @ignore
+#      @comment file: calc++/scanner.ll
+#      @example
+#      // Work around an incompatibility in Flex.
+#      # undef yywrap
+#      # define yywrap() 1
+#      @end example
+#      @end ignore
 
 use strict;
+
+use File::Basename qw(dirname);
+use File::Path qw(make_path);
 
 # Whether we generate synclines.
 my $synclines = 0;
@@ -45,7 +60,11 @@ sub normalize($)
 {
   local ($_) = @_;
 
-  s/^\@(c |comment|dots|end (ignore|group)|ignore|group).*//mg;
+  # If we just remove this lines, then the compiler's tracking of
+  # #lines is broken.  Leave lines that that accepted by all our tools
+  # (including flex, hence the leading space), and that will be easy
+  # to remove (see the Make examples-unline recipe).
+  s{^\@(c |comment|dots|end (ignore|group)|ignore|group).*}{ /**/}mg;
   s/\@value\{VERSION\}/$ENV{VERSION}/g;
   s/^\@(error|result)\{\}//mg;
   s/\@([{}@])/$1/g;
@@ -65,9 +84,24 @@ sub message($)
     }
 }
 
-# basename => full file name for files we should extract.
-my %file_wanted;
+# The list of files we should extract.
+my @file_wanted;
 
+# Whether we should extract that file, and then under which path.
+sub file_wanted ($)
+{
+  my ($f) = @_;
+  for my $file (@file_wanted)
+    {
+      # No endswith in Perl 5...
+      return $file if $f eq substr($file, -length($f));
+    }
+  undef
+}
+
+# process ($in)
+# -------------
+# Read input file $in, and generate the outputs.
 sub process ($)
 {
   my ($in) = @_;
@@ -89,9 +123,9 @@ sub process ($)
         {
           my $f = $1;
           $block = $2 || 1;
-          if ($file_wanted{$f})
+          if (file_wanted($f))
             {
-              $file = $file_wanted{$f};
+              $file = file_wanted($f);
               message(" GEN $file");
             }
           else
@@ -106,13 +140,13 @@ sub process ($)
               # Bison supports synclines, but not Flex.
               $input .= sprintf ("#line %s \"$in\"\n", $. + 1)
                 if $synclines && $file =~ /\.[chy]*$/;
-              next;
             }
           elsif (/^\@end (small)?example$/)
             {
               die "no contents: $file"
                 if $input eq "";
 
+              $file{$file}{$block} .= "\n" if defined $file{$file}{$block};
               $file{$file}{$block} .= normalize($input);
               $file = $input = undef;
               ++$block;
@@ -127,7 +161,7 @@ sub process ($)
   # Output the files.
   for my $file (keys %file)
     {
-      # No spurious end of line: use printf.
+      make_path (dirname ($file));
       my $o = new IO::File(">$file")
         or die "$file: cannot create: $?";
       print $o $file{$file}{$_}
@@ -141,8 +175,7 @@ for my $arg (@ARGV)
 {
   if ($seen_dash)
     {
-      use File::Basename;
-      $file_wanted{basename($arg)} = $arg;
+      push @file_wanted, $arg;
     }
   elsif ($arg eq '--')
     {

@@ -1,7 +1,7 @@
 # Checking the C++ Features.                    -*- Autotest -*-
 
-# Copyright (C) 2004-2005, 2007-2015, 2018 Free Software Foundation,
-# Inc.
+# Copyright (C) 2004-2005, 2007-2015, 2018-2021 Free Software
+# Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,16 +14,16 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 AT_BANNER([[C++ Features.]])
 
 
-## --------------- ##
-## C++ Locations.  ##
-## --------------- ##
+## -------------------------- ##
+## C++ Locations Unit Tests.  ##
+## -------------------------- ##
 
-AT_SETUP([C++ Locations])
+AT_SETUP([C++ Locations Unit Tests])
 
 AT_BISON_OPTION_PUSHDEFS([%locations %skeleton "lalr1.cc"])
 AT_DATA_GRAMMAR([[input.y]],
@@ -46,76 +46,83 @@ template <typename T>
 bool
 check (const T& in, const std::string& s)
 {
+  const static bool verbose = getenv ("DEBUG");
   std::stringstream os;
   os << in;
-  if (os.str () != s)
+  if (os.str () == s)
+    {
+      if (verbose)
+        std::cerr << os.str () << '\n';
+      return true;
+    }
+  else
     {
       std::cerr << "fail: " << os.str () << ", expected: " << s << '\n';
       return false;
     }
-  return true;
 }
 
 int
 main (void)
 {
+  const std::string fn = "foo.txt";
   int fail = 0;
-  ]AT_YYLTYPE[ loc;  fail += check (loc, "1.1");
-                     fail += check (loc + 10, "1.1-10");
-  loc += 10;         fail += check (loc, "1.1-10");
-  loc += -5;         fail += check (loc, "1.1-5");
-                     fail += check (loc - 5, "1.1");
-  loc -= 5;          fail += check (loc, "1.1");
+  ]AT_YYLTYPE[ loc (&fn);  fail += check (loc, "foo.txt:1.1");
+                           fail += check (loc + 10, "foo.txt:1.1-10");
+  loc += 10;               fail += check (loc, "foo.txt:1.1-10");
+  loc += -5;               fail += check (loc, "foo.txt:1.1-5");
+                           fail += check (loc - 5, "foo.txt:1.1");
+  loc -= 5;                fail += check (loc, "foo.txt:1.1");
   // Check that we don't go below.
-  // http://lists.gnu.org/archive/html/bug-bison/2013-02/msg00000.html
-  loc -= 10;         fail += check (loc, "1.1");
+  // https://lists.gnu.org/r/bug-bison/2013-02/msg00000.html
+  loc -= 10;         fail += check (loc, "foo.txt:1.1");
 
-  loc.columns (10); loc.lines (10); fail += check (loc, "1.1-11.0");
-  loc.lines (-2);                   fail += check (loc, "1.1-9.0");
-  loc.lines (-10);                  fail += check (loc, "1.1");
+  loc.columns (10); loc.lines (10); fail += check (loc, "foo.txt:1.1-11.0");
+  loc.lines (-2);                   fail += check (loc, "foo.txt:1.1-9.0");
+  loc.lines (-10);                  fail += check (loc, "foo.txt:1.1");
 
   ]AT_YYLTYPE[ loc2 (YY_NULLPTR, 5, 10);
                    fail += check (loc2, "5.10");
-                   fail += check (loc + loc2, "1.1-5.9");
-  loc += loc2;     fail += check (loc, "1.1-5.9");
+                   fail += check (loc + loc2, "foo.txt:1.1-5.9");
+  loc += loc2;     fail += check (loc, "foo.txt:1.1-5.9");
   return !fail;
 }
 ]])
 
-AT_FULL_COMPILE([input])
-AT_PARSER_CHECK([./input], 0)
+AT_FOR_EACH_CXX([
+  AT_FULL_COMPILE([input])
+  AT_PARSER_CHECK([input], 0)
+])
 AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
 
 
-## --------------------------- ##
-## C++ Variant-based Symbols.  ##
-## --------------------------- ##
+## -------------------------------------- ##
+## C++ Variant-based Symbols Unit Tests.  ##
+## -------------------------------------- ##
 
-AT_SETUP([C++ Variant-based Symbols])
+# Not checking the grammar, only the variants and variant based
+# symbols.
+
+AT_SETUP([C++ Variant-based Symbols Unit Tests])
 
 AT_KEYWORDS([variant])
 
 AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc" %debug $1])
 # Store strings and integers in a vector of strings.
-AT_DATA_GRAMMAR([list.y],
+AT_DATA_GRAMMAR([list.yy],
 [[%skeleton "lalr1.cc"
 %define api.value.type variant
 %define parse.assert
 %debug
 
-%code top
-{
-  // Get access to stack_symbol_type for the tests.
-# define private public
-}
 %code provides
 {
   ]AT_YYLEX_DECLARE[
 }
 
 %token <int> INT "int"
-%type < std::vector<int> > exp
+%type <std::vector<int>> exp
 
 %printer { yyo << $$; } <int>
 %printer
@@ -126,10 +133,18 @@ AT_DATA_GRAMMAR([list.y],
           yyo << ", ";
         yyo << *i;
       }
-  } < std::vector<int> >
+  } <std::vector<int>>
 
 %code requires { #include <vector> }
-%code { int yylex (yy::parser::semantic_type* yylval); }
+%code { int yylex (yy::parser::semantic_type* lvalp); }
+
+// A hack which relies on internal hooks to check stack_symbol_type,
+// which is private.
+%code yy_bison_internal_hook {
+  public:
+    typedef stack_symbol_type yy_stack_symbol_type;
+    typedef stack_type yy_stack_type;
+}
 
 %%
 exp: "int" { $$.push_back ($1); }
@@ -137,36 +152,125 @@ exp: "int" { $$.push_back ($1); }
 ]AT_YYERROR_DEFINE[
 ]AT_YYLEX_DEFINE[
 
+template <typename Exp, typename Eff>
+void assert_eq (const Exp& exp, const Eff& eff)
+{
+  if (getenv ("DEBUG"))
+    std::cerr << "Assert: " << exp << " == " << eff << '\n';
+  if (exp != eff)
+    std::cerr << "Assertion failed: " << exp << " != " << eff << '\n';
+}
+
 int main()
 {
+  using yy::parser;
+  // symbol_type: construction, accessor.
   {
-    yy::parser::symbol_type s = yy::parser::make_INT(12);
-    std::cerr << s.value.as<int>() << '\n';
+    parser::symbol_type s = parser::make_INT (12);
+    assert_eq (s.kind (), parser::symbol_kind::S_INT);
+    assert_eq (parser::symbol_name (s.kind ()), std::string ("\"int\""));
+    assert_eq (s.name (), std::string ("\"int\""));
+    assert_eq (s.value.as<int> (), 12);
   }
 
+  // symbol_type: move constructor.
+#if 201103L <= YY_CPLUSPLUS
   {
-    yy::parser::symbol_type s = yy::parser::make_INT(123);
-    yy::parser::stack_symbol_type ss(1, s);
-    std::cerr << ss.value.as<int>() << '\n';
+    auto s = parser::make_INT (42);
+    auto s2 = std::move (s);
+    assert_eq (s2.value.as<int> (), 42);
+    // Used to crash here, because s was improperly cleared, and
+    // its destructor tried to delete its (moved) value.
+  }
+#endif
+
+  // symbol_type: copy constructor.
+  {
+    parser::symbol_type s = parser::make_INT (51);
+    parser::symbol_type s2 = s;
+    assert_eq (s.value.as<int> (), 51);
+    assert_eq (s2.value.as<int> (), 51);
   }
 
+  // stack_symbol_type: construction, accessor.
+  typedef parser::yy_stack_symbol_type stack_symbol_type;
   {
-    yy::parser::stack_type st;
-    for (int i = 0; i < 100; ++i)
+#if 201103L <= YY_CPLUSPLUS
+    auto ss = stack_symbol_type (1, parser::make_INT(123));
+#else
+    parser::symbol_type s = parser::make_INT (123);
+    stack_symbol_type ss(1, s);
+#endif
+    assert_eq (ss.value.as<int> (), 123);
+  }
+
+  // Pushing on the stack.
+  // Sufficiently many so that it will be resized.
+  // Probably 3 times (starting at 200).
+  {
+    parser::yy_stack_type st;
+    const int mucho = 1700;
+    const int int_reduction_state = 1; // Read list.output to find it.
+    for (int i = 0; i < mucho; ++i)
       {
-        yy::parser::symbol_type s(yy::parser::make_INT(i));
-        yy::parser::stack_symbol_type ss(1, s);
-        st.push(ss);
+#if 201103L <= YY_CPLUSPLUS
+        st.push(stack_symbol_type{int_reduction_state,
+                                  parser::make_INT (i)});
+#else
+        parser::symbol_type s = parser::make_INT (i);
+        stack_symbol_type ss (int_reduction_state, s);
+        st.push (ss);
+#endif
+      }
+    for (int i = mucho - 1; 0 <= i; --i)
+      {
+        assert_eq (st[0].value.as<int>(), i);
+        st.pop ();
       }
   }
 }
 ]])
 
-AT_FULL_COMPILE([list])
-AT_PARSER_CHECK([./list], 0, [],
-[12
-123
+AT_BISON_CHECK([[-o list.cc list.yy]])
+AT_FOR_EACH_CXX([
+  AT_COMPILE_CXX([list])
+  AT_PARSER_CHECK([list])
 ])
+
+AT_BISON_OPTION_POPDEFS
+AT_CLEANUP
+
+## --------------------------------------------------- ##
+## Multiple occurrences of $n and api.value.automove.  ##
+## --------------------------------------------------- ##
+
+AT_SETUP([Multiple occurrences of $n and api.value.automove])
+
+AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc"])
+
+AT_DATA_GRAMMAR([input.yy],
+[[%skeleton "lalr1.cc"
+%define api.value.automove
+%token <int> NUMBER "number"
+%type <int> exp
+%%
+exp:
+  "number"          { $$ = $1; $$; }
+| "twice" exp       { $$ = $2 + $2; }
+| "thrice" exp[val] { $$ = $2 + $val + $2; }
+]])
+
+AT_BISON_CHECK([[-fcaret input.yy]], [0], [],
+[[input.yy:16.33-34: warning: multiple occurrences of $2 with api.value.automove [-Wother]
+   16 | | "twice" exp       { $$ = $2 + $2; }
+      |                                 ^~
+input.yy:17.33-36: warning: multiple occurrences of $2 with api.value.automove [-Wother]
+   17 | | "thrice" exp[val] { $$ = $2 + $val + $2; }
+      |                                 ^~~~
+input.yy:17.40-41: warning: multiple occurrences of $2 with api.value.automove [-Wother]
+   17 | | "thrice" exp[val] { $$ = $2 + $val + $2; }
+      |                                        ^~
+]])
 
 AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
@@ -185,6 +289,8 @@ AT_CLEANUP
 m4_pushdef([AT_TEST],
 [AT_SETUP([Variants $1])
 
+AT_KEYWORDS([variant])
+
 AT_BISON_OPTION_PUSHDEFS([%debug $1])
 # Store strings and integers in a vector of strings.
 AT_DATA_GRAMMAR([list.y],
@@ -192,13 +298,6 @@ AT_DATA_GRAMMAR([list.y],
 %define api.value.type variant
 ]m4_bpatsubst([$1], [\\n], [
 ])[
-
-%code requires // code for the .hh file
-{
-#include <vector>
-#include <string>
-typedef std::vector<std::string> strings_type;
-}
 
 %code top // code for the .cc file.
 {
@@ -208,8 +307,51 @@ typedef std::vector<std::string> strings_type;
 #include <sstream>
 #include <string>
 
+  class string
+  {
+    public:
+      string () {}
 
-  typedef std::vector<std::string> strings_type;
+      string (const std::string& s)
+        : val_(s)
+      {}
+
+      string (const string& s)
+        : val_(s.val_)
+      {}
+
+      string& operator= (const string& s)
+      {
+        val_ = s.val_;
+        return *this;
+      }
+
+#if defined __cplusplus && 201103L <= __cplusplus
+      string (string&& s) noexcept
+        : val_(std::move(s.val_))
+      {
+        s.val_.clear();
+      }
+
+      string& operator= (string&& s)
+      {
+        val_ = std::move(s.val_);
+        s.val_.clear ();
+        return *this;
+      }
+#endif
+
+      friend
+      std::ostream& operator<< (std::ostream& o, const string& s)
+      {
+        return o << s.val_;
+      }
+
+    private:
+      std::string val_;
+  };
+
+  typedef std::vector<string> strings_type;
 
   namespace yy
   {
@@ -233,39 +375,36 @@ typedef std::vector<std::string> strings_type;
 {
   namespace yy
   {
-    static]AT_TOKEN_CTOR_IF([[
-    parser::symbol_type yylex ()]], [[
-    parser::token_type yylex (parser::semantic_type* yylval]AT_LOCATION_IF([,
-                              parser::location_type* yylloc])[)]])[;
+    static
+    ]AT_YYLEX_PROTOTYPE[;
 
     // Conversion to string.
     template <typename T>
       inline
-      std::string
+      string
       to_string (const T& t)
     {
       std::ostringstream o;
       o << t;
-      return o.str ();
+      return string (o.str ());
     }
   }
 }
 
-%token <::std::string> TEXT;
+%token <::string> TEXT;
 %token <int> NUMBER;
 %token END_OF_FILE 0;
 %token COMMA ","
 
-%type <::std::string> item;
-// Using the template type to exercize its parsing.
 // Starting with :: to ensure we don't output "<::" which starts by the
 // digraph for the left square bracket.
-%type <::std::vector<std::string>> list;
+%type <::string> item;
+// Using the template type to exercise its parsing.
+%type <::std::vector<string>> list;
 
-%printer { yyo << $$; }
-  <int> <::std::string> <::std::vector<std::string>>;
+%printer { yyo << $$; } <int> <::string> <::std::vector<string>>;
 %destructor { std::cerr << "Destroy: " << $$ << '\n'; } <*>;
-%destructor { std::cerr << "Destroy: \"" << $$ << "\"\n"; } <::std::string>;
+%destructor { std::cerr << "Destroy: \"" << $$ << "\"\n"; } <::string>;
 %%
 
 result:
@@ -274,13 +413,13 @@ result:
 
 list:
   item          { $$.push_back ($][1); }
-| list "," item { std::swap ($$, $][1); $$.push_back ($][3); }
-| list error    { std::swap ($$, $][1); }
+| list "," item { $$ = $][1; $$.push_back ($][3); }
+| list error    { $$ = $][1; }
 ;
 
 item:
-  TEXT          { std::swap ($$, $][1); }
-| NUMBER        { if ($][1 == 3) YYERROR; else $$ = to_string ($][1); }
+  TEXT          { $$ = $][1; }
+| NUMBER        { int v = $][1; if (v == 3) YYERROR; else $$ = to_string (v); }
 ;
 %%
 ]AT_TOKEN_CTOR_IF([],
@@ -293,29 +432,25 @@ item:
 #define STAGE_MAX 5
 namespace yy
 {
-  static]AT_TOKEN_CTOR_IF([[
-  parser::symbol_type yylex ()]], [[
-  parser::token_type yylex (parser::semantic_type* yylval]AT_LOCATION_IF([,
-                            parser::location_type* yylloc])[)]])[
-  {]AT_LOCATION_IF([
-    typedef parser::location_type location;])[
+  static
+  ]AT_YYLEX_PROTOTYPE[
+  {
     // The 5 is a syntax error whose recovery requires that we discard
     // the lookahead.  This tests a regression, see
-    // <http://savannah.gnu.org/support/?108481>.
+    // <https://savannah.gnu.org/support/?108481>.
     static char const *input = "0,1,2,3,45,6";
     switch (int stage = *input++)
     {
       case 0:]AT_TOKEN_CTOR_IF([[
         return parser::make_END_OF_FILE (]AT_LOCATION_IF([location ()])[);]],
 [AT_LOCATION_IF([
-        *yylloc = location ();])[
+        *llocp = location ();])[
         return parser::token::END_OF_FILE;]])[
 
-      case ',':
-        ]AT_TOKEN_CTOR_IF([[
-        return parser::make_COMMA (]AT_LOCATION_IF([location ()])[);]], [[
-]AT_LOCATION_IF([
-        *yylloc = location ();])[
+      case ',':]AT_TOKEN_CTOR_IF([[
+        return parser::make_COMMA (]AT_LOCATION_IF([location ()])[);]],
+[AT_LOCATION_IF([
+        *llocp = location ();])[
         return parser::token::COMMA;]])[
 
       default:
@@ -323,20 +458,18 @@ namespace yy
         if (stage % 2)
          {]AT_TOKEN_CTOR_IF([[
            return parser::make_NUMBER (stage]AT_LOCATION_IF([, location ()])[);]], [[
-           yylval->BUILD (int, stage);]AT_LOCATION_IF([
-           *yylloc = location ();])[
+           lvalp->BUILD (int, stage);]AT_LOCATION_IF([
+           *llocp = location ();])[
            return parser::token::NUMBER;]])[
          }
        else
          {]AT_TOKEN_CTOR_IF([[
            return parser::make_TEXT (to_string (stage)]AT_LOCATION_IF([, location ()])[);]], [[
-           yylval->BUILD (std::string, to_string (stage));]AT_LOCATION_IF([
-           *yylloc = location ();])[
+           lvalp->BUILD (string, to_string (stage));]AT_LOCATION_IF([
+           *llocp = location ();])[
            return parser::token::TEXT;]])[
          }
     }
-
-    abort ();
   }
 }
 
@@ -344,46 +477,238 @@ namespace yy
 ]AT_MAIN_DEFINE[
 ]])
 
+AT_DATA_SOURCE([[modern.cc]],
+[[#include <iostream>
+int main()
+{
+#if defined __cplusplus && 201103L <= __cplusplus
+  std::cout << "Modern C++: " << __cplusplus << '\n';
+  return 0;
+#else
+  std::cout << "Legac++\n";
+  return 1;
+#endif
+}
+]])
+
+AT_FOR_EACH_CXX([
 AT_FULL_COMPILE([list])
-AT_PARSER_CHECK([./list], 0,
+
+# Are we compiling with modern C++ enabled?
+AT_COMPILE_CXX([modern])
+here=. # Pacify cfg.mk's sc_at_parser_check.
+AT_CHECK([$here/modern], [ignore], [ignore])
+if test $at_status = 0; then
+  modern=true
+else
+  modern=false
+fi
+
+if AT_AUTOMOVE_IF([$modern], [false]); then
+  AT_PARSER_CHECK([list], 0,
 [[(0, 1, 2, 4, 6)
 ]],
 [[Destroy: ""
-Destroy: "0"
+Destroy: ""
 Destroy: 1
-Destroy: "1"
+Destroy: ""
 Destroy: ()
 Destroy: ""
-Destroy: "2"
+Destroy: ""
 Destroy: ()
 Destroy: ""
 Destroy: 3
 Destroy: ()
 Destroy: ""
-Destroy: "4"
+Destroy: ""
 Destroy: ()
 Destroy: ()
 Destroy: 5
 Destroy: ()
 Destroy: ""
-Destroy: "6"
+Destroy: ""
 Destroy: ()
 Destroy: (0, 1, 2, 4, 6)
 ]])
+else
+  AT_PARSER_CHECK([list], 0,
+[[(0, 1, 2, 4, 6)
+]],
+[[Destroy: "0"
+Destroy: "0"
+Destroy: 1
+Destroy: "1"
+Destroy: (0)
+Destroy: "2"
+Destroy: "2"
+Destroy: (0, 1)
+Destroy: ""
+Destroy: 3
+Destroy: (0, 1, 2)
+Destroy: "4"
+Destroy: "4"
+Destroy: (0, 1, 2)
+Destroy: (0, 1, 2, 4)
+Destroy: 5
+Destroy: (0, 1, 2, 4)
+Destroy: "6"
+Destroy: "6"
+Destroy: (0, 1, 2, 4)
+Destroy: (0, 1, 2, 4, 6)
+]])
+fi
+])
 
 AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
 ])
 
-AT_TEST([[%skeleton "lalr1.cc" ]])
+AT_TEST([[%skeleton "lalr1.cc"]])
 AT_TEST([[%skeleton "lalr1.cc" %define parse.assert]])
+AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %define api.value.automove]])
 AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %locations]])
 AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %code {\n#define TWO_STAGE_BUILD\n}]])
 AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %define api.token.constructor]])
 AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %define api.token.constructor %define api.token.prefix {TOK_}]])
 AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %define api.token.constructor %define api.token.prefix {TOK_} %locations]])
+AT_TEST([[%skeleton "lalr1.cc" %define parse.assert %define api.token.constructor %define api.token.prefix {TOK_} %locations %define api.value.automove]])
 
 m4_popdef([AT_TEST])
+
+
+
+## ------------------------------------ ##
+## Variants and Typed Midrule Actions.  ##
+## ------------------------------------ ##
+
+AT_SETUP([Variants and Typed Midrule Actions])
+
+# See https://lists.gnu.org/r/bug-bison/2017-06/msg00000.html.
+#
+# Check that typed midrule actions behave properly (pre-construction
+# of $$ before the user action, support of %printer and %destructor,
+# etc.).
+
+AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc"])
+
+AT_DATA_GRAMMAR([[input.y]],
+[[%skeleton "lalr1.cc"
+%defines
+
+%debug
+%define parse.assert
+%define api.value.type variant
+%define api.token.constructor
+%define parse.error verbose
+
+%code
+{
+  #include <iostream>
+  namespace yy
+  {
+    static yy::parser::symbol_type yylex();
+  }
+}
+
+%token <int> NUMBER;
+%type <int> expr;
+%token EOI 0;
+%printer { yyo << $$; } <int>;
+%destructor { std::cerr << "destroy: " << $$ << '\n'; } <int>
+%%
+expr:
+  NUMBER { $$ = $1 * 10; }
+| expr <int>{ $$ = 20; } NUMBER
+  {
+    std::cerr << "expr: " << $1 << ' ' << $2 << ' ' << $3 << '\n';
+    $$ = 40;
+  }
+;
+
+%%
+namespace yy
+{
+  parser::symbol_type yylex()
+  {
+    static int loc = 0;
+    switch (loc++)
+      {
+      case 0:
+        return parser::make_NUMBER (1);
+      case 1:
+        return parser::make_NUMBER (30);
+      default:
+        return parser::make_EOI ();
+      }
+  }
+
+  void parser::error(const std::string& message)
+  {
+    std::cerr << message << '\n';
+  }
+}
+
+int main()
+{
+  yy::parser p;
+  p.set_debug_level (1);
+  return p.parse();
+}
+]])
+
+AT_FOR_EACH_CXX([
+AT_FULL_COMPILE([[input]])
+# This used to print "Discarding 'a'." again at the end.
+AT_PARSER_CHECK([[input]], [[0]], [[]],
+[[Starting parse
+Entering state 0
+Stack now 0
+Reading a token
+Next token is token NUMBER (1)
+Shifting token NUMBER (1)
+Entering state 1
+Stack now 0 1
+Reducing stack by rule 1 (line 34):
+   $1 = token NUMBER (1)
+-> $$ = nterm expr (10)
+destroy: 1
+Entering state 2
+Stack now 0 2
+Reading a token
+Next token is token NUMBER (30)
+Reducing stack by rule 2 (line 35):
+-> $$ = nterm @1 (20)
+Entering state 4
+Stack now 0 2 4
+Next token is token NUMBER (30)
+Shifting token NUMBER (30)
+Entering state 5
+Stack now 0 2 4 5
+Reducing stack by rule 3 (line 35):
+   $1 = nterm expr (10)
+   $2 = nterm @1 (20)
+   $3 = token NUMBER (30)
+expr: 10 20 30
+-> $$ = nterm expr (40)
+destroy: 30
+destroy: 20
+destroy: 10
+Entering state 2
+Stack now 0 2
+Reading a token
+Next token is token EOI ()
+Shifting token EOI ()
+Entering state 3
+Stack now 0 2 3
+Stack now 0 2 3
+Cleanup: popping token EOI ()
+Cleanup: popping nterm expr (40)
+destroy: 40
+]])
+])
+
+AT_BISON_OPTION_POPDEFS
+AT_CLEANUP
 
 
 ## ----------------------- ##
@@ -397,14 +722,15 @@ m4_define([AT_CHECK_DOXYGEN],
          [m4_fatal([invalid argument: $1])])
 AT_SETUP([Doxygen $1 Documentation])
 
-AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc"])
+AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc" %locations])
 AT_DATA([input.yy],
-[[%skeleton "lalr1.cc"
+[[%require "3.2"
+%skeleton "lalr1.cc"
 %locations
 %defines
 %debug
 %%
-exp: /* empty */;
+exp: %empty;
 %%
 ]AT_YYERROR_DEFINE[
 ]])
@@ -456,7 +782,7 @@ EXTRACT_PRIVATE        = AT_DOXYGEN_PRIVATE
 EXTRACT_STATIC         = AT_DOXYGEN_PRIVATE
 ])
 
-AT_CHECK([doxygen --version || exit 77], 0, ignore)
+AT_REQUIRE([doxygen --version], 0, ignore)
 AT_CHECK([doxygen], 0, [], [ignore])
 
 AT_BISON_OPTION_POPDEFS
@@ -484,12 +810,10 @@ AT_DATA_GRAMMAR([[input.yy]],
 [[%language "C++"
 %define api.namespace {]$1[}
 %union { int i; }
-%define global_tokens_and_yystype
 %locations
 
 %code {
-  // YYSTYPE contains a namespace reference.
-  int yylex (YYSTYPE *lval, const ]$1[::parser::location_type*) {
+  int yylex (]$1[::parser::semantic_type *lval, const ]$1[::parser::location_type*) {
     lval->i = 3;
     return 0;
   }
@@ -515,8 +839,9 @@ void
 AT_BISON_CHECK([[-o input.cc input.yy]])
 
 m4_if([$#], [1],
-[AT_COMPILE_CXX([[input]])
-AT_PARSER_CHECK([[./input]])])
+[AT_FOR_EACH_CXX([
+  AT_COMPILE_CXX([[input]])
+  AT_PARSER_CHECK([[input]])])])
 AT_BISON_OPTION_POPDEFS
 ])
 
@@ -546,6 +871,7 @@ AT_TEST([[foo::bar::(baz /* Pacify Emacs ) */]], [[-]])
 AT_CLEANUP
 
 m4_popdef([AT_TEST])
+
 
 ## -------------------------------------- ##
 ## Syntax error discarding no lookahead.  ##
@@ -587,7 +913,7 @@ error-reduce:
 
 consistent-error:
   'a'
-| /*empty*/ %prec 'a'
+| %empty %prec 'a'
 ;
 
 // Provide another context in which all rules are useful so that this
@@ -612,13 +938,15 @@ yy::parser::error (const std::string &m)
 ]AT_MAIN_DEFINE[
 ]])
 
+AT_FOR_EACH_CXX([
 AT_FULL_COMPILE([[input]])
 # This used to print "Discarding 'a'." again at the end.
-AT_PARSER_CHECK([[./input]], [[1]], [[]],
+AT_PARSER_CHECK([[input]], [[1]], [[]],
 [[syntax error
 Discarding 'a'.
 Reducing 'a'.
 ]])
+])
 
 AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
@@ -628,12 +956,14 @@ AT_CLEANUP
 ## Syntax error as exception.  ##
 ## --------------------------- ##
 
-AT_SETUP([[Syntax error as exception]])
+# AT_TEST([BISON-DIRECTIVES = ''])
+m4_pushdef([AT_TEST],
+[AT_SETUP([[Syntax error as exception: $1]])
 
-AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc"])
+AT_BISON_OPTION_PUSHDEFS([$1 %debug])
 
-AT_DATA_GRAMMAR([[input.y]],
-[[%skeleton "lalr1.cc"
+AT_DATA_GRAMMAR([[input.yy]],
+[[$1
 %defines
 
 %code
@@ -642,26 +972,28 @@ AT_DATA_GRAMMAR([[input.y]],
   int yylex (yy::parser::semantic_type *);
 }
 
-%define api.value.type variant
 %define parse.error verbose
 %define parse.trace
 %%
 
-start:
-  thing
-| start thing
+start: with-recovery | '!' without-recovery;
+
+with-recovery:
+  %empty
+| with-recovery item
+| with-recovery error   { std::cerr << "caught error\n"; }
 ;
 
-thing:
-  error   { std::cerr << "caught error\n"; }
-| item
+without-recovery:
+  %empty
+| without-recovery item
 ;
 
 item:
   'a'
 | 's'
   {
-    throw yy::parser::syntax_error ("invalid expression");
+    throw syntax_error ("invalid expression");
   }
 
 %%
@@ -674,16 +1006,20 @@ yy::parser::error (const std::string &m)
 ]AT_MAIN_DEFINE[
 ]])
 
-AT_DATA_SOURCE([input-scan.cc],
-[[#include "input.hh"
+# Another file to check syntax_error's linkage.
+AT_DATA_SOURCE([scan.cc],
+[[#include <cstdio>  // getchar
+#include "input.hh"
 
+// 'a': valid item, 's': syntax error, 'l': lexical error.
 int
-yylex (yy::parser::semantic_type *)
+yylex (yy::parser::semantic_type *lval)
 {
-  // 's': syntax error, 'l': lexical error.
-  static char const *input = "asal";
-  switch (int res = *input++)
+  switch (int res = getchar ())
   {
+    // Don't choke on echo's \n.
+    case '\n':
+      return yylex (lval);
     case 'l':
       throw yy::parser::syntax_error ("invalid character");
     default:
@@ -692,17 +1028,43 @@ yylex (yy::parser::semantic_type *)
 }
 ]])
 
-AT_FULL_COMPILE([[input]], [[scan]])
+AT_BISON_CHECK([[-o input.cc input.yy]])
 
-AT_PARSER_CHECK([[./input]], [[0]], [[]],
+AT_FOR_EACH_CXX([
+  AT_LANG_COMPILE([[input]], [[input.cc scan.cc]])
+
+  # Leave enough valid tokens to make sure we recovered from the
+  # previous error, otherwise we might hide some error messages
+  # (discarded during error recoevery).
+  echo "asaaalaa" >in
+  AT_PARSER_CHECK([[input < in]], [[0]], [[]],
 [[error: invalid expression
 caught error
 error: invalid character
 caught error
 ]])
 
+  echo "!as" >in
+  AT_PARSER_CHECK([[input < in]], [1], [],
+[[error: invalid expression
+]])
+
+  echo "!al" >in
+  AT_PARSER_CHECK([[input < in]], [1], [],
+[[error: invalid character
+]])
+
+]) # AT_FOR_EACH_CXX
+
 AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
+])
+
+AT_TEST([%skeleton "lalr1.cc"])
+AT_TEST([%skeleton "glr.cc"])
+
+m4_popdef([AT_TEST])
+
 
 
 ## ------------------ ##
@@ -723,7 +1085,7 @@ AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc" $1])
 AT_DATA_GRAMMAR([[input.yy]],
 [[%skeleton "lalr1.cc"
 %debug
-%error-verbose
+%define parse.error verbose
 $1
 %code requires
 {
@@ -870,10 +1232,10 @@ list:
 
 item:
   'a'     { $$ = $][1; }
-| 'e'     { YYUSE ($$); YYUSE ($][1); error ("syntax error"); }
+| 'e'     { YY_USE ($$); YY_USE ($][1); error ("syntax error"); }
 // Not just 'E', otherwise we reduce when 'E' is the lookahead, and
 // then the stack is emptied, defeating the point of the test.
-| 'E' 'a' { YYUSE ($][1); $$ = $][2; }
+| 'E' 'a' { YY_USE ($][1); $$ = $][2; }
 | 'R'     { ]AT_VARIANT_IF([], [$$ = YY_NULLPTR; delete $][1]; )[YYERROR; }
 | 'p'     { $$ = $][1; }
 | 's'     { $$ = $][1; throw std::runtime_error ("reduction"); }
@@ -894,14 +1256,15 @@ yylex (yy::parser::semantic_type *lvalp)
   // 'R': call YYERROR in the action
   // 's': reduction throws.
   // 'T': call YYABORT in the action
-  switch (int res = *input++)
+  switch (char res = *input++)
   {
   case 'l':
     throw std::runtime_error ("yylex");
   default:
-    lvalp->]AT_VARIANT_IF([build (Object (res))],
+    lvalp->]AT_VARIANT_IF([build<Object> (res)],
                           [obj = new Object (res)])[;
-    // Fall through.
+    goto zero;
+  zero:
   case 0:
     return res;
   }
@@ -953,36 +1316,39 @@ main (int argc, const char *argv[])
 }
 ]])
 AT_BISON_CHECK([[-o input.cc --report=all input.yy]])
+
+AT_FOR_EACH_CXX([
 AT_COMPILE_CXX([[input]])
 
-AT_PARSER_CHECK([[./input aaaas]], [[2]], [[]],
+AT_PARSER_CHECK([[input aaaas]], [[2]], [[]],
 [[exception caught: reduction
 ]])
 
-AT_PARSER_CHECK([[./input aaaal]], [[2]], [[]],
+AT_PARSER_CHECK([[input aaaal]], [[2]], [[]],
 [[exception caught: yylex
 ]])
 
-AT_PARSER_CHECK([[./input i]], [[2]], [[]],
+AT_PARSER_CHECK([[input i]], [[2]], [[]],
 [[exception caught: initial-action
 ]])
 
-AT_PARSER_CHECK([[./input aaaap]])
+AT_PARSER_CHECK([[input aaaap]])
 
-AT_PARSER_CHECK([[./input --debug aaaap]], [[2]], [[]], [[stderr]])
+AT_PARSER_CHECK([[input --debug aaaap]], [[2]], [[]], [[stderr]])
 AT_CHECK([[grep '^exception caught: printer$' stderr]], [], [ignore])
 
-AT_PARSER_CHECK([[./input aaaae]], [[2]], [[]],
+AT_PARSER_CHECK([[input aaaae]], [[2]], [[]],
 [[exception caught: syntax error
 ]])
 
-AT_PARSER_CHECK([[./input aaaaE]], [[2]], [[]],
-[[exception caught: syntax error, unexpected $end, expecting 'a'
+AT_PARSER_CHECK([[input aaaaE]], [[2]], [[]],
+[[exception caught: syntax error, unexpected end of file, expecting 'a'
 ]])
 
-AT_PARSER_CHECK([[./input aaaaT]], [[1]])
+AT_PARSER_CHECK([[input aaaaT]], [[1]])
 
-AT_PARSER_CHECK([[./input aaaaR]], [m4_if([$2], [with], [0], [1])])
+AT_PARSER_CHECK([[input aaaaR]], [m4_if([$2], [with], [0], [1])])
+])
 
 AT_BISON_OPTION_POPDEFS
 
@@ -1002,6 +1368,7 @@ m4_popdef([AT_TEST])
 
 AT_SETUP([[C++ GLR parser identifier shadowing]])
 
+AT_BISON_OPTION_PUSHDEFS
 AT_DATA_GRAMMAR([input.yy], [
 %skeleton "glr.cc"
 
@@ -1014,7 +1381,7 @@ AT_DATA_GRAMMAR([input.yy], [
 
 %code
 {
-  int yylex (yy::parser::semantic_type *yylval);
+  int yylex (yy::parser::semantic_type *lvalp);
 }
 
 %%
@@ -1022,12 +1389,12 @@ exp: ZERO
 
 %%
 
-int yylex (yy::parser::semantic_type *yylval)
+int yylex (yy::parser::semantic_type *lvalp)
 {
   // Note: this argument is unused, but named on purpose.  There used to be a
   // bug with a macro that erroneously expanded this identifier to
   // yystackp->yyval.
-  YYUSE (yylval);
+  YY_USE (lvalp);
   return yy::parser::token::ZERO;
 }
 
@@ -1039,6 +1406,157 @@ int main ()
 ])
 
 AT_BISON_CHECK([[-o input.cc input.yy]])
-AT_COMPILE_CXX([[input]])
+AT_FOR_EACH_CXX([AT_COMPILE_CXX([[input]])])
+
+AT_BISON_OPTION_POPDEFS
+AT_CLEANUP
+
+
+
+## ------------------ ##
+## Shared locations.  ##
+## ------------------ ##
+
+AT_SETUP([Shared locations])
+
+# AT_TEST([PREFIX], [DIRECTIVES])
+# -------------------------------
+# Generate and compile to *.o.  Make sure there is no (allowed) YY*
+# nor yy* identifiers in the header after applying api.prefix.  Check
+# that headers can be compiled by a C++ compiler.
+m4_pushdef([AT_TEST],
+[AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc" %define api.namespace {$1} $2])
+AT_LOC_PUSHDEF([begin.line], [begin.column], [end.line], [end.column])
+AT_DATA_GRAMMAR([$1.yy],
+[[%skeleton "lalr1.cc"
+%define api.namespace {$1}
+$2
+%code {
+  ]AT_YYERROR_DECLARE[
+  ]AT_YYLEX_DECLARE[
+}
+%%
+exp: '0';
+%%
+]AT_YYERROR_DEFINE[
+]AT_YYLEX_DEFINE(["0"])[
+]])
+
+AT_BISON_CHECK([-fcaret -o $1.cc $1.yy])
+AT_LANG_COMPILE([$1.o], [], [-Iinclude])
+
+AT_LOC_POPDEF
+AT_BISON_OPTION_POPDEFS
+])
+
+mkdir -p include/ast
+
+AT_TEST([x1],
+        [%defines
+         %locations
+         %define api.location.file "include/ast/loc.hh"
+         %define api.location.include {<ast/loc.hh>}])
+
+# Check the CPP guard and Doxyen comments.
+AT_CHECK([sed -ne '/INCLUDED/p;/\\file/{p;n;p;}' include/ast/loc.hh], [],
+[[ ** \file ast/loc.hh
+ ** Define the x1::location class.
+#ifndef YY_YY_AST_LOC_HH_INCLUDED
+# define YY_YY_AST_LOC_HH_INCLUDED
+#endif // !YY_YY_AST_LOC_HH_INCLUDED
+]])
+
+AT_TEST([x2],
+        [%defines
+         %locations
+         %code requires {#include <ast/loc.hh>}
+         %define api.location.type {x1::location}])
+
+m4_popdef([AT_TEST])
+
+AT_DATA([main.cc],
+[AT_DATA_SOURCE_PROLOGUE
+[#include "x1.hh"
+#include "x2.hh"
+
+#define RUN(S)                                  \
+  do {                                          \
+    S::parser parser;                           \
+    int res = parser.parse();                   \
+    if (res)                                    \
+      std::cerr << #S": " << res << '\n';       \
+  } while (false)
+
+int
+main (void)
+{
+  RUN(x1);
+  RUN(x2);
+}
+]])# main.cc
+
+
+AT_COMPILE_CXX([parser], [[x[12].o main.cc]], [-Iinclude])
+AT_PARSER_CHECK([parser], [0])
+
+AT_CLEANUP
+
+
+
+## ---------------- ##
+## Default action.  ##
+## ---------------- ##
+
+# In C++ we generate explicitly the code for the default action
+# instead of simply copying blindly the semantic value buffer.  This
+# is important when copying raw memory is not enough, as exemplified
+# by move-only types.
+
+AT_SETUP([Default action])
+AT_KEYWORDS([action])
+
+AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc"
+%define api.token.constructor
+%define api.value.type variant])
+
+AT_DATA_GRAMMAR([test.y],
+[[%code requires {
+#include <memory> // unique_ptr
+}
+%code {
+  ]AT_YYERROR_DECLARE[
+  ]AT_YYLEX_DECLARE[
+}
+]AT_BISON_OPTIONS[
+%define api.value.automove
+%token ONE TWO EOI 0
+%type <std::unique_ptr<int>> ONE TWO one two one.opt two.opt
+%%
+exp: one.opt two.opt { std::cout << *$][1 << ", " << *$][2 << '\n'; }
+one.opt: one | %empty {}
+two.opt: two | %empty {}
+one: ONE
+two: TWO
+%%
+]AT_YYERROR_DEFINE[
+]AT_YYLEX_DEFINE(["12"],
+[ if (res == '1')
+    return yy::parser::make_ONE (std::make_unique<int> (10));
+  else if (res == '2')
+    return yy::parser::make_TWO (std::make_unique<int> (20));
+  else
+    return yy::parser::make_EOI ();
+])[
+]AT_MAIN_DEFINE[
+]])
+
+AT_LANG_FOR_EACH_STD([
+  AT_REQUIRE_CXX_STD(14, [echo "$at_std not supported"; continue])
+  AT_FULL_COMPILE([[test]], [], [], [], [-fcaret])
+  AT_PARSER_CHECK([[test]], 0, [[10, 20
+]])
+])
+
+AT_BISON_OPTION_POPDEFS
 
 AT_CLEANUP

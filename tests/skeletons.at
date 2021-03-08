@@ -1,6 +1,7 @@
 # Checking skeleton support.                     -*- Autotest -*-
 
-# Copyright (C) 2007, 2009-2015, 2018 Free Software Foundation, Inc.
+# Copyright (C) 2007, 2009-2015, 2018-2021 Free Software Foundation,
+# Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +14,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 AT_BANNER([[Skeleton Support.]])
 
@@ -91,7 +92,7 @@ m4_pushdef([AT_GRAM],
   int yylex (void);
 %}
 
-%error-verbose
+%define parse.error verbose
 %token 'a'
 
 %%
@@ -118,14 +119,14 @@ AT_GRAM])
 
 AT_BISON_CHECK([[--skeleton=yacc.c -o input-cmd-line.c input-cmd-line.y]])
 AT_COMPILE([[input-cmd-line]])
-AT_PARSER_CHECK([[./input-cmd-line]], [[1]], [],
-[[syntax error, unexpected 'a', expecting $end
+AT_PARSER_CHECK([[input-cmd-line]], [[1]], [],
+[[syntax error, unexpected 'a', expecting end of file
 ]])
 
 AT_BISON_CHECK([[-o input-gram.c input-gram.y]])
 AT_COMPILE([[input-gram]])
-AT_PARSER_CHECK([[./input-gram]], [[1]], [],
-[[syntax error, unexpected 'a', expecting $end
+AT_PARSER_CHECK([[input-gram]], [[1]], [],
+[[syntax error, unexpected 'a', expecting end of file
 ]])
 
 m4_popdef([AT_GRAM])
@@ -306,11 +307,11 @@ use strict;
 my $M4 = "m4";
 my $DNL = "d"."nl";
 print "${M4}_divert_push(0)$DNL\n";
-print '@output(@,@)', "\n";
+print '@output(@,@,@)', "\n";
 (print "garbage"x10, "\n") for (1..1000);
 print "${M4}_divert_pop(0)\n";
 ]])
-AT_CHECK([[$PERL gen-skel.pl > skel.c || exit 77]])
+AT_PERL_REQUIRE([[gen-skel.pl > skel.c]])
 
 AT_DATA([[input.y]],
 [[%skeleton "./skel.c"

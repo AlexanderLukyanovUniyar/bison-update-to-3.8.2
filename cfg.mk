@@ -1,18 +1,18 @@
-# Customize maint.mk                           -*- makefile -*-
-# Copyright (C) 2008-2015, 2018 Free Software Foundation, Inc.
+## Customize maint.mk                           -*- makefile -*-
+## Copyright (C) 2008-2015, 2018-2021 Free Software Foundation, Inc.
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Update version, then recompile so that tests/bison --version be
 # up-to-date, then compile our parser again with our up-to-date bison.
@@ -26,15 +26,18 @@ regen: _version
 manual_title = The Yacc-compatible Parser Generator
 gendocs_options_ = -I $(abs_top_srcdir)/doc -I $(abs_top_builddir)/doc
 
-# It's useful to run maintainer-*check* targets during development, but we
+# By default, propagate -j from make to Bison's test suite.
+TESTSUITEFLAGS = $(filter -j%,$(MAKEFLAGS))
+
+# It's useful to run maintainer-check* targets during development, but we
 # don't want to wait on a recompile because of an update to $(VERSION).  Thus,
-# override the _is-dist-target from GNUmakefile so that maintainer-*check*
+# override the _is-dist-target from GNUmakefile so that maintainer-check*
 # targets are filtered out.
-_is-dist-target = $(filter-out %clean maintainer-check% maintainer-%-check, \
+_is-dist-target = $(filter-out %clean maintainer-check%, \
   $(filter maintainer-% dist% alpha beta major,$(MAKECMDGOALS)))
 
 url_dir_list = \
-  ftp://$(gnu_rel_host)/gnu/bison
+  https://$(gnu_rel_host)/gnu/bison
 
 # Tests not to run as part of "make distcheck".
 local-checks-to-skip =			\
@@ -48,7 +51,7 @@ gnulib_dir = $(srcdir)/gnulib
 bootstrap-tools = autoconf,automake,flex,gettext,gnulib
 
 announcement_Cc_ = \
-  bug-bison@gnu.org, help-bison@gnu.org, bison-patches@gnu.org, \
+  bug-bison@gnu.org, bison-announce@gnu.org, \
   coordinator@translationproject.org
 
 update-copyright: update-b4-copyright update-package-copyright-year
@@ -59,18 +62,6 @@ update-copyright-env = \
 ## -------------------- ##
 ## More syntax-checks.  ##
 ## -------------------- ##
-
-# At least for Mac OS X's grep, the order between . and [ in "[^.[]"
-# matters:
-# $ LC_ALL=fr_FR grep -nE '[^[.]' /dev/null
-# $ LC_ALL=C grep -nE '[^[.]' /dev/null
-# grep: invalid collating element or class
-# $ LC_ALL=fr_FR grep -nE '[^.[]' /dev/null
-# $ LC_ALL=C grep -nE '[^.[]' /dev/null
-sc_at_parser_check:
-	@prohibit='AT_PARSER_CHECK\(\[+[^.[]|AT_CHECK\(\[+\./'		\
-	halt='use AT_PARSER_CHECK for and only for generated parsers'	\
-	  $(_sc_search_regexp)
 
 # Indent only with spaces.
 # Taken from Coreutils.
@@ -135,7 +126,7 @@ _sed_rm_comments_q = $(subst ','\'',$(_sed_remove_comments))
 
 _space_before_paren_exempt =? \\n\\$$
 _space_before_paren_exempt = \
-  (^ *\#|(LA)?LR\([01]\)|percent_(code|define)|b4_syncline|m4_(define|init)|symbol)
+  (^ *\#|(LA)?LR\([01]\)|percent_(code|define)|b4_syncline|m4_(define|init))
 # Ensure that there is a space before each open parenthesis in C code.
 sc_space_before_open_paren:
 	@if $(VC_LIST_EXCEPT) | grep -l '\.[ch]$$' > /dev/null; then	\
@@ -156,26 +147,31 @@ sc_space_before_open_paren:
 ## syntax-checks exceptions.  ##
 ## -------------------------- ##
 
+# po-check: we use gnulib-po, so we don't need/want them in our POTFILE.
+generated_files =
+
 exclude = \
   $(foreach a,$(1),$(eval $(subst $$,$$$$,exclude_file_name_regexp--sc_$(a))))
-$(call exclude,                                                         \
-  bindtextdomain=^lib/main.c$$                                          \
-  preprocessor_indentation=^data/|^lib/|^src/parse-gram.[ch]$$          \
-  program_name=^lib/main.c$$                                            \
-  prohibit_always-defined_macros=^data/yacc.c$$|^djgpp/                 \
-  prohibit_always-defined_macros+=?|^lib/timevar.c$$                    \
-  prohibit_always-defined_macros+=?|^src/(parse-gram.c|system.h)$$      \
-  prohibit_always-defined_macros+=?|^tests/regression.at$$              \
-  prohibit_always_true_header_tests=^djgpp/subpipe.h$$|^lib/timevar.c$$ \
-  prohibit_always_true_header_tests+=?|^m4/timevar.m4$$                 \
-  prohibit_defined_have_decl_tests=?|^lib/timevar.c$$                   \
-  prohibit_doubled_word=^tests/named-refs.at$$                          \
-  prohibit_magic_number_exit=^doc/bison.texi$$                          \
-  prohibit_magic_number_exit+=?|^tests/(conflicts|regression).at$$      \
-  prohibit_strcmp=^doc/bison\.texi|tests/local\.at$$                    \
-  prohibit_tab_based_indentation=\.(am|mk)$$|^djgpp/|^\.git             \
-  require_config_h_first=^(lib/yyerror|data/(glr|yacc))\.c$$            \
-  space_before_open_paren=^(data/|djgpp/)                               \
-  two_space_separator_in_usage=^(bootstrap)                             \
-  unmarked_diagnostics=^(djgpp/|doc/bison.texi$$|tests/c\+\+\.at$$)     \
+
+$(call exclude,                                                                 \
+  bindtextdomain=^lib/main.c$$                                                  \
+  cast_of_argument_to_free=^src/muscle-tab.c$$                                  \
+  copyright_check=gnulib/lib/version-etc.c$$                                    \
+  error_message_uppercase=etc/bench.pl.in$$                                     \
+  po_check=^tests|(^po/POTFILES.in|.md)$$                                       \
+  preprocessor_indentation=^data/|^lib/|^src/parse-gram.[ch]$$                  \
+  program_name=^lib/main.c$$                                                    \
+  prohibit_always-defined_macros=^data/skeletons/yacc.c$$                       \
+  prohibit_always-defined_macros+=?|^src/(parse-gram.c|system.h)$$              \
+  prohibit_always-defined_macros+=?|^tests/regression.at$$                      \
+  prohibit_doubled_word=^tests/named-refs.at$$                                  \
+  prohibit_magic_number_exit=^doc/bison.texi$$                                  \
+  prohibit_magic_number_exit+=?|^tests/(conflicts|regression).at$$              \
+  prohibit_strcmp=^doc/bison\.texi|examples|tests                               \
+  prohibit_tab_based_indentation=install-icc.sh|\.(am|mk)$$|^\.git|tests/input.at|Makefile$$   \
+  require_config_h=^(lib/yyerror|data/skeletons/(glr|yacc))\.c$$                \
+  require_config_h_first=^(lib/yyerror|data/skeletons/(glr|yacc))\.c$$          \
+  space_before_open_paren=^data/skeletons/                                      \
+  two_space_separator_in_usage=^(bootstrap|build-aux/install-icc.sh)            \
+  unmarked_diagnostics=^(doc/bison.texi$$|tests/c\+\+\.at$$)                    \
 )

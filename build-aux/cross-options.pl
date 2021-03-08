@@ -1,5 +1,24 @@
 #! /usr/bin/env perl
 
+# Generate a release announcement message.
+
+# Copyright (C) 2007-2021 Free Software Foundation, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Written by Akim Demaille.
+
 use warnings;
 use 5.005;
 use strict;
@@ -12,7 +31,7 @@ while (<STDIN>)
 {
     if (/^\s*             # Initial spaces.
         (?:(-\w),\s+)?    # $1: $short: Possible short option.
-        (--[-\w]+)        # $2: $long:  Long option.
+        (--[-\w]+)        # $2: $long:  Mandatory long option.
         (\[?)             # $3: $opt:   '[' iff the argument is optional.
         (?:=(\S+))?       # $4: $arg:   Possible argument name.
         \s                # Spaces.
@@ -32,10 +51,9 @@ while (<STDIN>)
             # if $opt, $arg contains the closing ].
             substr ($arg, -1) = ''
                 if $opt eq '[';
-            $arg =~ s/^=//;
             $arg = lc ($arg);
             my $dir_arg = $arg;
-            # If the argument is compite (e.g., for --define[=NAME[=VALUE]]),
+            # If the argument is complete (e.g., for --define[=NAME[=VALUE]]),
             # put each word in @var, to build @var{name}[=@var{value}], not
             # @var{name[=value]}].
             $arg =~ s/(\w+)/\@var{$1}/g;
@@ -48,7 +66,11 @@ while (<STDIN>)
             # are strings and have the same syntax as on the command line.
             if ($dir_arg eq 'name[=value]')
             {
-                $dir_arg = '@var{name} ["@var{value}"]';
+                # -D/-F do not add quotes to the argument.
+                $dir_arg =
+                    $dir eq "%define"
+                    ? '@var{name} [@var{value}]'
+                    : '@var{name} ["@var{value}"]';
             }
             else
             {
@@ -68,12 +90,15 @@ while (<STDIN>)
 my $sep = '';
 foreach my $long (sort keys %option)
 {
-    # Avoid trailing spaces.
-    print $sep;
-    $sep = "\n";
-    print '@item @option{', $long, "}\n\@tab";
-    print ' @option{', $option{$long}, '}' if $option{$long};
-    print "\n\@tab";
-    print ' @code{', $directive{$long}, '}' if $directive{$long};
-    print "\n";
+    # Couldn't find a means to escape @ in the format (for @item, @tab), so
+    # pass it as a literal to print.
+format STDOUT =
+@item @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< @tab @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< @tab @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+{
+  '@', '@option{' . $long . '}',
+  '@', $option{$long} ? ('@option{' . $option{$long} . '}') : '',
+  '@', $directive{$long} ? ('@code{' . $directive{$long} . '}') : ''
+}
+.
+    write;
 }
