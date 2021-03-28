@@ -70,6 +70,13 @@ fi
 
 %build
 ./bootstrap --no-git --skip-po --gnulib-srcdir=%_datadir/gnulib
+
+# Use translations from gnulib.
+if [ -f %_datadir/gnulib/build-aux/po/LINGUAS ]; then
+	rm gnulib-po/LINGUAS
+	cp -p %_datadir/gnulib/build-aux/po/{LINGUAS,*.po} gnulib-po/
+fi
+
 %configure --disable-silent-rules
 touch src/scan-????.l
 %make_build
@@ -77,7 +84,7 @@ touch src/scan-????.l
 %install
 %makeinstall_std
 
-%find_lang %name
+%find_lang --output=%name.lang %name %name-gnulib
 %find_lang %name-runtime
 
 %check
