@@ -59,7 +59,7 @@ ls runtime-po/*.po | sed 's|.*/||; s|\.po$||' > runtime-po/LINGUAS
 
 # Install submodule files.
 rm m4/m4.m4 data/m4sugar/{foreach,m4sugar}.m4 build-aux/move-if-change
-ln -s %_aclocaldir/m3.m4 m4/
+ln -s %_aclocaldir/m4.m4 m4/
 ln -s %_datadir/autoconf/m4sugar/{foreach,m4sugar}.m4 data/m4sugar/
 ln -s %_datadir/gnulib/build-aux/move-if-change build-aux/
 
