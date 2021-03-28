@@ -63,6 +63,11 @@ ln -s %_aclocaldir/m3.m4 m4/
 ln -s %_datadir/autoconf/m4sugar/{foreach,m4sugar}.m4 data/m4sugar/
 ln -s %_datadir/gnulib/build-aux/move-if-change build-aux/
 
+# Use bootstrap script from gnulib.
+if grep -qs ^bootstrap_sync=true bootstrap.conf; then
+	ln -snf %_datadir/gnulib/build-aux/bootstrap .
+fi
+
 %build
 ./bootstrap --no-git --skip-po --gnulib-srcdir=%_datadir/gnulib
 %configure --disable-silent-rules
