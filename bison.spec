@@ -87,6 +87,10 @@ touch src/scan-????.l
 %find_lang --output=%name.lang %name %name-gnulib
 %find_lang %name-runtime
 
+%define _unpackaged_files_terminate_build 1
+%define _stripped_files_terminate_build 1
+%set_verify_elf_method strict
+
 %check
 %make_build -k check
 
