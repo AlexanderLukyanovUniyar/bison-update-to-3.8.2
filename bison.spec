@@ -20,8 +20,8 @@ Requires: %name-runtime = %version-%release
 Provides: byacc = %version-%release
 Obsoletes: byacc
 
-BuildRequires: flex, gcc-c++, help2man, makeinfo
-BuildRequires: gnulib >= 0.1.2305.95c96
+BuildRequires: flex, gcc-c++, gperf, help2man, makeinfo
+BuildRequires: gnulib >= 0.1.4516.e639e5
 
 %description
 Bison is a general purpose parser generator which converts a grammar
