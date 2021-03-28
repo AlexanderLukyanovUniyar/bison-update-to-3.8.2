@@ -1,2 +1,3 @@
 tar: . name=@name@-@version@-@release@
 tar: po-current:po name=po-@version@-@release@ base=po
+tar: runtime-po-current:runtime-po name=runtime-po-@version@-@release@ base=runtime-po

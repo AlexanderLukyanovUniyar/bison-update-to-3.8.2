@@ -12,6 +12,8 @@ Url: https://www.gnu.org/software/bison/
 Source0: %srcname.tar
 # git://git.altlinux.org/people/ldv/packages/bison refs/heads/po-current
 Source1: po-%version-%release.tar
+# git://git.altlinux.org/people/ldv/packages/bison refs/heads/runtime-po-current
+Source2: runtime-po-%version-%release.tar
 
 Requires: m4 >= 0:1.4
 Requires: %name-runtime = %version-%release
@@ -46,13 +48,14 @@ See the Internationalization in the Bison manual section for more
 information.
 
 %prep
-%setup -n %srcname -a1
+%setup -n %srcname -a1 -a2
 
 # Build scripts expect to find the bison version in this file.
 echo -n %version > .tarball-version
 
-# Generate LINGUAS file.
+# Generate LINGUAS files.
 ls po/*.po | sed 's|.*/||; s|\.po$||' > po/LINGUAS
+ls runtime-po/*.po | sed 's|.*/||; s|\.po$||' > runtime-po/LINGUAS
 
 # Install submodule files.
 rm m4/m4.m4 data/m4sugar/{foreach,m4sugar}.m4 build-aux/move-if-change
