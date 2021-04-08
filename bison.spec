@@ -1,5 +1,5 @@
 Name: bison
-Version: 3.0.5
+Version: 3.7.6
 Release: alt1
 
 Summary: A GNU general-purpose parser generator
@@ -111,6 +111,11 @@ touch src/scan-????.l
 %files -f %name-runtime.lang runtime
 
 %changelog
+* Thu Apr 08 2021 Dmitry V. Levin <ldv@altlinux.org> 3.7.6-alt1
+- bison: v3.0.5 -> v3.7.6 (closes: #39846).
+- gnulib BR: v0.1-2305-g95c96b6dd -> v0.1-4516-ge639e557f.
+- Updated translations from translationproject.org.
+
 * Wed Dec 26 2018 Dmitry V. Levin <ldv@altlinux.org> 3.0.5-alt1
 - bison: v3.0.4-14-g8bf276d -> v3.0.5.
 - gnulib: v0.1-585-g2fda85e -> v0.1-2305-g95c96b6dd.
