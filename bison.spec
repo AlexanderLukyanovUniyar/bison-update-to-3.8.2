@@ -77,7 +77,12 @@ if [ -f %_datadir/gnulib/build-aux/po/LINGUAS ]; then
 	cp -p %_datadir/gnulib/build-aux/po/{LINGUAS,*.po} gnulib-po/
 fi
 
-%configure --disable-silent-rules
+# Since bison is not a threaded executable,
+# configure gnulib with --disable-threads.
+# This is not just a harmless optimization that saves a few cycles
+# but also a workaround that fixes GNU ld errors on ppc64le reported by
+# eu-elflint --gnu-ld /usr/bin/bison
+%configure --disable-silent-rules --disable-threads
 touch src/scan-????.l
 %make_build
 
