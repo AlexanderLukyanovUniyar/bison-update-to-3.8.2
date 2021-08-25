@@ -1,6 +1,6 @@
 Name: bison
 Version: 3.7.6
-Release: alt1
+Release: alt2
 
 Summary: A GNU general-purpose parser generator
 License: GPLv3+
@@ -112,6 +112,9 @@ touch src/scan-????.l
 %files -f %name-runtime.lang runtime
 
 %changelog
+* Wed Aug 25 2021 Dmitry V. Levin <ldv@altlinux.org> 3.7.6-alt2
+- Added -ffat-lto-objects to %optflags_lto.
+
 * Thu Apr 08 2021 Dmitry V. Levin <ldv@altlinux.org> 3.7.6-alt1
 - bison: v3.0.5 -> v3.7.6 (closes: #39846).
 - gnulib BR: v0.1-2305-g95c96b6dd -> v0.1-4516-ge639e557f.
