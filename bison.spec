@@ -69,6 +69,7 @@ if grep -qs ^bootstrap_sync=true bootstrap.conf; then
 fi
 
 %build
+%{?optflags_lto:%global optflags_lto %optflags_lto -ffat-lto-objects}
 ./bootstrap --no-git --skip-po --gnulib-srcdir=%_datadir/gnulib
 
 # Use translations from gnulib.
