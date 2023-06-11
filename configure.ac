@@ -15,12 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# In order for some versions of Sun Studio to compile our C++ test cases
-# correctly, we need Autoconf 2.64 or better to handle the restrict
-# keyword in at least string.h from gnulib.  We need Autoconf 2.68 or
-# better to avoid a typo in the 'configure --help' entry for the YACC
-# environment variable.
-AC_PREREQ([2.68])
+AC_PREREQ([2.71])
 m4_pattern_forbid([^_?(gl_[A-Z]|AX_|BISON_)])
 m4_pattern_allow([^BISON_USE_NLS$])
 
@@ -47,12 +42,14 @@ AC_CONFIG_MACRO_DIR([m4])
 # automatically contains a dash, which we also let disable gnits.
 AM_INIT_AUTOMAKE([1.15 dist-lzip dist-xz nostdinc
                  color-tests parallel-tests
-                 silent-rules])
+                 silent-rules]
+                 m4_bmatch(m4_defn([AC_PACKAGE_VERSION]), [[-_]],
+                           [gnu], [gnits]))
 AM_SILENT_RULES([yes])
 AC_CONFIG_HEADERS([lib/config.h:lib/config.in.h])
 
 # Checks for the compiler.
-AC_PROG_CC_STDC
+AC_PROG_CC
 AC_PROG_CXX
 
 # Gnulib (early checks).
@@ -82,7 +79,8 @@ BISON_CXXSTD([03])
 BISON_CXXSTD([11])
 BISON_CXXSTD([14])
 BISON_CXXSTD([17])
-BISON_CXXSTD([2a])
+BISON_CXXSTD([20])
+BISON_CXXSTD([2b])
 AM_CONDITIONAL([ENABLE_CXX11], [test x"$CXX11_CXXFLAGS" != x])
 AM_CONDITIONAL([ENABLE_CXX14], [test x"$CXX14_CXXFLAGS" != x])
 AC_LANG_POP([C++])
@@ -131,7 +129,7 @@ if test "$enable_gcc_warnings" = yes; then
   warn_common='-Wall -Wextra
     -Wcast-align -Wchar-subscripts
     -fparse-all-comments -Wdocumentation
-    -Wformat -Wimplicit-fallthrough -Wnull-dereference
+    -Wformat -Wimplicit-fallthrough -Wmismatched-dealloc -Wnull-dereference
     -Wno-sign-compare -Wno-tautological-constant-out-of-range-compare
     -Wpointer-arith -Wshadow -Wstrict-aliasing
     -Wwrite-strings
@@ -249,7 +247,7 @@ AM_CONDITIONAL([ENABLE_JAVA], [test x"$CONF_JAVAC" != x && test x"$CONF_JAVA" !=
 
 
 AC_ARG_ENABLE([yacc],
-  [AC_HELP_STRING([--disable-yacc],
+  [AS_HELP_STRING([--disable-yacc],
      [do not build a yacc command or an -ly library])],
   , [enable_yacc=yes])
 AM_CONDITIONAL([ENABLE_YACC], [test "$enable_yacc" = yes])

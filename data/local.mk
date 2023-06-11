@@ -28,6 +28,7 @@ dist_skeletons_DATA =                           \
   data/skeletons/c.m4                           \
   data/skeletons/glr.c                          \
   data/skeletons/glr.cc                         \
+  data/skeletons/glr2.cc                        \
   data/skeletons/java-skel.m4                   \
   data/skeletons/java.m4                        \
   data/skeletons/lalr1.cc                       \
@@ -40,7 +41,6 @@ dist_skeletons_DATA =                           \
 
 # Experimental support for the D language.
 dist_skeletons_DATA +=                          \
-  data/skeletons/README-D.txt                   \
   data/skeletons/d-skel.m4                      \
   data/skeletons/d.m4                           \
   data/skeletons/lalr1.d

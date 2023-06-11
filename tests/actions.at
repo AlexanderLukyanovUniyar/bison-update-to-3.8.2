@@ -334,10 +334,10 @@ exp: { ]AT_CXX_IF([[std::cerr << @$ << '\n']],
 
 ]AT_YYLEX_PROTOTYPE[
 {]AT_PURE_IF([
-  YY_USE(lvalp);
-  YY_USE(llocp);], [AT_CXX_IF([
-  YY_USE(lvalp);
-  YY_USE(llocp);])])[
+  YY_USE (lvalp);
+  YY_USE (llocp);], [AT_CXX_IF([
+  YY_USE (lvalp);
+  YY_USE (llocp);])])[
   return 'x';
 }
 
@@ -371,6 +371,7 @@ AT_TEST([glr.c])
 AT_TEST([glr.c], [%define api.pure])
 AT_TEST([lalr1.cc])
 AT_TEST([glr.cc])
+AT_TEST([glr2.cc])
 
 ## A very different test, based on PostgreSQL's implementation of the
 ## locations.  See
@@ -474,7 +475,7 @@ AT_CLEANUP
 ])
 
 ## FIXME: test Java and D.
-m4_map_args([AT_TEST], [yacc.c], [glr.c], [lalr1.cc], [glr.cc])
+m4_map_args([AT_TEST], [yacc.c], [glr.c], [lalr1.cc], [glr.cc], [glr2.cc])
 
 m4_popdef([AT_TEST])
 
@@ -974,7 +975,7 @@ Parsing FAILED.
 # -------------------------------------
 # Upon stack overflow, all symbols on the stack should be destroyed.
 # Only check for yacc.c.
-AT_YACC_IF([
+AT_YACC_C_IF([
 AT_PARSER_CHECK([input '(x)(x)(x)(x)(x)(x)(x)'], 2, [],
 [[sending: '(' (0@0-9)
 sending: 'x' (1@10-19)
@@ -1049,11 +1050,14 @@ AT_CHECK_PRINTER_AND_DESTRUCTOR([], [ with union])
 AT_CHECK_PRINTER_AND_DESTRUCTOR([%glr-parser])
 AT_CHECK_PRINTER_AND_DESTRUCTOR([%glr-parser], [ with union])
 
-AT_CHECK_PRINTER_AND_DESTRUCTOR([%defines %skeleton "lalr1.cc"])
-AT_CHECK_PRINTER_AND_DESTRUCTOR([%defines %skeleton "lalr1.cc"], [ with union])
+AT_CHECK_PRINTER_AND_DESTRUCTOR([%header %skeleton "lalr1.cc"])
+AT_CHECK_PRINTER_AND_DESTRUCTOR([%header %skeleton "lalr1.cc"], [ with union])
 
-AT_CHECK_PRINTER_AND_DESTRUCTOR([%defines %skeleton "glr.cc"])
-AT_CHECK_PRINTER_AND_DESTRUCTOR([%defines %skeleton "glr.cc"], [ with union])
+AT_CHECK_PRINTER_AND_DESTRUCTOR([%header %skeleton "glr.cc"])
+AT_CHECK_PRINTER_AND_DESTRUCTOR([%header %skeleton "glr.cc"], [ with union])
+
+AT_CHECK_PRINTER_AND_DESTRUCTOR([%header %skeleton "glr2.cc"])
+AT_CHECK_PRINTER_AND_DESTRUCTOR([%header %skeleton "glr2.cc"], [ with union])
 
 
 
@@ -1773,8 +1777,6 @@ AT_DATA_GRAMMAR([[input.y]],
     float fval;
   } sem_type;
 
-# define YYSTYPE sem_type
-
 ]AT_CXX_IF([[
 # include <cstdio> // EOF.
 # include <iostream>
@@ -1795,6 +1797,8 @@ AT_DATA_GRAMMAR([[input.y]],
   }
 ]])[
 }
+
+%define api.value.type {sem_type}
 
 %code
 {
@@ -1823,10 +1827,7 @@ float: UNTYPED INT
 };
 %%
 ]AT_YYERROR_DEFINE[
-]AT_YYLEX_DEFINE(AT_CXX_IF([[{yy::parser::token::UNTYPED,
-                                 yy::parser::token::INT,
-                                  EOF}]],
-                               [[{UNTYPED, INT, EOF}]]),
+]AT_YYLEX_DEFINE([[{]AT_TOKEN([UNTYPED])[, ]AT_TOKEN([INT])[, EOF}]],
                  [AT_VAL.ival = toknum * 10;
                   AT_VAL.fval = YY_CAST (float, toknum) / 10.0f;])[
 ]AT_MAIN_DEFINE[
@@ -1852,7 +1853,7 @@ AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
 ])
 
-m4_map_args([AT_TEST], [yacc.c], [glr.c], [lalr1.cc], [glr.cc])
+m4_map_args([AT_TEST], [yacc.c], [glr.c], [lalr1.cc], [glr.cc], [glr2.cc])
 m4_popdef([AT_TEST])
 
 ## -------------------------------------------------- ##

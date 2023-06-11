@@ -36,6 +36,8 @@ m4_define([AT_CHECK_FILES],
 # -----------------------------------------------------------------
 m4_define([AT_CHECK_OUTPUT],
 [AT_SETUP([[Output files: ]$2 $3])[
+]m4_bmatch([$3], [--html],
+           [AT_SKIP_IF([[test x"$XSLTPROC" = x]])])[
 ]$7[
 for file in ]$1 $4[; do
   case $file in
@@ -90,53 +92,62 @@ AT_CHECK_OUTPUT([foo.y], [%define api.header.include {"./foo.h"}], [-dv -y],
 AT_CHECK_OUTPUT([foo.y], [], [-dv -o foo.tab.c],
                 [foo.output foo.tab.c foo.tab.h])
 
+AT_CHECK_OUTPUT([foo.y], [], [--fixed-output-files -dv -g --html],
+                [y.gv y.html y.output y.tab.c y.tab.h y.xml])
+AT_CHECK_OUTPUT([foo.y], [], [-Hfoo.header -v -gfoo.gv --html=foo.html],
+                [foo.gv foo.header foo.html foo.output foo.tab.c foo.xml])
+
 AT_CHECK_OUTPUT([foo.y], [], [-dv -g --xml --fixed-output-files],
-                [y.dot y.output y.tab.c y.tab.h y.xml])
+                [y.gv y.output y.tab.c y.tab.h y.xml])
 AT_CHECK_OUTPUT([foo.y], [], [-dv -g --xml -y],
-                [y.dot y.output y.tab.c y.tab.h y.xml])
+                [y.gv y.output y.tab.c y.tab.h y.xml])
 AT_CHECK_OUTPUT([foo.y], [%require "3.4"], [-dv -g --xml -y],
                 [y.gv y.output y.tab.c y.tab.h y.xml])
 # With '-o y.tab.c', we expect 'y.output' etc. (for compatibility with Yacc).
 AT_CHECK_OUTPUT([foo.y], [], [-dv -g --xml -o y.tab.c],
-                [y.dot y.output y.tab.c y.tab.h y.xml])
+                [y.gv y.output y.tab.c y.tab.h y.xml])
 
 AT_CHECK_OUTPUT([foo.y], [], [-dv -b bar],
                 [bar.output bar.tab.c bar.tab.h])
 AT_CHECK_OUTPUT([foo.y], [], [-dv -g -o foo.c],
-                [foo.c foo.dot foo.h foo.output])
+                [foo.c foo.gv foo.h foo.output])
 
 
-AT_CHECK_OUTPUT([foo.y], [%defines %verbose],      [],
+AT_CHECK_OUTPUT([foo.y], [%header %verbose],      [],
                 [foo.output foo.tab.c foo.tab.h])
-AT_CHECK_OUTPUT([foo.y], [%defines %verbose %yacc],[],
+AT_CHECK_OUTPUT([foo.y], [%header %verbose %yacc],[],
                 [y.output y.tab.c y.tab.h])
 
-AT_CHECK_OUTPUT([foo.yy], [%defines %verbose %yacc],[],
+AT_CHECK_OUTPUT([foo.yy], [%header %verbose %yacc],[],
                 [y.output y.tab.c y.tab.h])
 
 # Exercise %output and %file-prefix including deprecated '='
-AT_CHECK_OUTPUT([foo.y], [%file-prefix "bar" %defines %verbose],      [],
+AT_CHECK_OUTPUT([foo.y], [%file-prefix "bar" %header %verbose],      [],
                 [bar.output bar.tab.c bar.tab.h])
-AT_CHECK_OUTPUT([foo.y], [%output "bar.c" %defines %verbose %yacc],[],
+AT_CHECK_OUTPUT([foo.y], [%output "bar.c" %header %verbose %yacc],[],
                 [bar.c bar.h bar.output])
 AT_CHECK_OUTPUT([foo.y],
-                [%file-prefix "baz" %output "bar.c" %defines %verbose %yacc],
+                [%file-prefix "baz" %output "bar.c" %header %verbose %yacc],
                 [],
                 [bar.c bar.h bar.output])
 
 
 # Check priorities of extension control.
-AT_CHECK_OUTPUT([foo.yy], [%defines %verbose], [],
+AT_CHECK_OUTPUT([foo.yy], [%header %verbose], [],
                 [foo.output foo.tab.cc foo.tab.hh])
 
-AT_CHECK_OUTPUT([foo.yy], [%defines %verbose ], [-o foo.c],
+AT_CHECK_OUTPUT([foo.yy], [%header %verbose ], [-o foo.c],
                 [foo.c foo.h foo.output])
 
 AT_CHECK_OUTPUT([foo.yy], [],
-                [--defines=foo.hpp -o foo.c++],
+                [--header=foo.hpp -o foo.c++],
                 [foo.c++ foo.hpp])
 
-AT_CHECK_OUTPUT([foo.yy], [%defines "foo.hpp"],
+AT_CHECK_OUTPUT([foo.yy], [],
+                [--header=foo.hpp -o foo.c++],
+                [foo.c++ foo.hpp])
+
+AT_CHECK_OUTPUT([foo.yy], [%header "foo.hpp"],
                 [-o foo.c++],
                 [foo.c++ foo.hpp])
 
@@ -147,16 +158,24 @@ AT_CHECK_OUTPUT([foo.yy], [],
 # Do not generate code when there are early errors (even warnings as
 # errors).
 AT_CHECK_OUTPUT([foo.y], [%type <foo> useless],
-                [--defines --graph --xml --report=all -Wall -Werror],
-                [foo.dot foo.output foo.xml],
+                [--header --graph --xml --report=all -Wall -Werror],
+                [foo.gv foo.output foo.xml],
                 [1])
 
 # Do not generate code when there are late errors (even warnings as
 # errors).
 AT_CHECK_OUTPUT([foo.y], [%define useless],
-                [--defines --graph --xml --report=all -Wall -Werror],
-                [foo.dot foo.output foo.xml],
+                [--header --graph --xml --report=all -Wall -Werror],
+                [foo.gv foo.output foo.xml],
                 [1])
+
+# %header was spelled %defines before.
+AT_CHECK_OUTPUT([foo.yy], [%defines],
+                [-o foo.c++],
+                [foo.c++ foo.h++])
+AT_CHECK_OUTPUT([foo.yy], [%defines "foo.hpp"],
+                [-o foo.c++],
+                [foo.c++ foo.hpp])
 
 
 ## ------------ ##
@@ -175,48 +194,48 @@ AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc"], [],
 AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc" %verbose], [],
                 [foo.output foo.tab.cc])
 
-AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc" %defines %verbose], [],
+AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc" %header %verbose], [],
                 [foo.output foo.tab.cc foo.tab.hh stack.hh])
 
 AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc" %verbose %locations], [],
                 [foo.output foo.tab.cc])
 
-AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc" %defines %verbose %locations], [],
+AT_CHECK_OUTPUT([foo.yy], [%skeleton "lalr1.cc" %header %verbose %locations], [],
                 [foo.output foo.tab.cc foo.tab.hh location.hh position.hh stack.hh])
 
-AT_CHECK_OUTPUT([subdir/foo.yy], [%skeleton "lalr1.cc" %defines %verbose], [],
+AT_CHECK_OUTPUT([subdir/foo.yy], [%skeleton "lalr1.cc" %header %verbose], [],
                 [foo.output foo.tab.cc foo.tab.hh stack.hh],
                 [], [AT_CHECK_NO_SUBDIR_PART([foo.tab])])
 
-AT_CHECK_OUTPUT([subdir/foo.yy], [%skeleton "lalr1.cc" %defines %verbose %locations],
+AT_CHECK_OUTPUT([subdir/foo.yy], [%skeleton "lalr1.cc" %header %verbose %locations],
                 [-o subdir/foo.cc],
                 [subdir/foo.cc subdir/foo.hh subdir/foo.output subdir/location.hh subdir/position.hh subdir/stack.hh],
                 [], [AT_CHECK_NO_SUBDIR_PART([subdir/foo])])
 
 AT_CHECK_OUTPUT([gram_dir/foo.yy],
-                [%skeleton "lalr1.cc" %defines %verbose %file-prefix "output_dir/foo"],
+                [%skeleton "lalr1.cc" %header %verbose %file-prefix "output_dir/foo"],
                 [],
                 [output_dir/foo.output output_dir/foo.tab.cc output_dir/foo.tab.hh output_dir/stack.hh])
 
 AT_CHECK_OUTPUT([gram_dir/foo.yy],
-                [%skeleton "lalr1.cc" %defines %locations %verbose %file-prefix "output_dir/foo"],
+                [%skeleton "lalr1.cc" %header %locations %verbose %file-prefix "output_dir/foo"],
                 [],
                 [output_dir/foo.output output_dir/foo.tab.cc output_dir/foo.tab.hh output_dir/location.hh output_dir/position.hh output_dir/stack.hh])
 
 # %require "3.2" => no position.hh not stack.hh.
 AT_CHECK_OUTPUT([foo.yy],
-                [%skeleton "lalr1.cc" %defines %locations %define api.location.file none %require "3.2"],
+                [%skeleton "lalr1.cc" %header %locations %define api.location.file none %require "3.2"],
                 [],
                 [foo.tab.cc foo.tab.hh])
 
 AT_CHECK_OUTPUT([foo.yy],
-                [%skeleton "lalr1.cc" %defines %locations %define api.location.file "foo.loc.hh" %require "3.2"],
+                [%skeleton "lalr1.cc" %header %locations %define api.location.file "foo.loc.hh" %require "3.2"],
                 [],
                 [foo.loc.hh foo.tab.cc foo.tab.hh])
 
 # Absolute paths.
 AT_CHECK_OUTPUT([foo.yy],
-                [%skeleton "lalr1.cc" %defines %locations %define api.location.file "$at_dir/foo.loc.hh" %require "3.2"],
+                [%skeleton "lalr1.cc" %header %locations %define api.location.file "$at_dir/foo.loc.hh" %require "3.2"],
                 [],
                 [foo.loc.hh foo.tab.cc foo.tab.hh])
 
@@ -251,12 +270,12 @@ AT_CHECK_CONFLICTING_OUTPUT([foo.y],
 ]])
 
 AT_CHECK_CONFLICTING_OUTPUT([foo.y],
-[%defines "foo.output"], [-v],
+[%header "foo.output"], [-v],
 [[foo.y: warning: conflicting outputs to file 'foo.output' [-Wother]
 ]])
 
 AT_CHECK_CONFLICTING_OUTPUT([foo.y],
-[%skeleton "lalr1.cc" %defines %locations], [--graph="location.hh"],
+[%skeleton "lalr1.cc" %header %locations], [--graph="location.hh"],
 [[foo.y: warning: conflicting outputs to file 'location.hh' [-Wother]
 ]])
 
@@ -284,7 +303,7 @@ AT_DATA_GRAMMAR([glr.y],
 %%
 start: {};
 ]])
-AT_BISON_CHECK([-o "AS_ESCAPE([$1.c])" --defines="AS_ESCAPE([$1.h])" glr.y])
+AT_BISON_CHECK([-o "AS_ESCAPE([$1.c])" --header="AS_ESCAPE([$1.h])" glr.y])
 AT_CHECK([ls "AS_ESCAPE([$1.c])" "AS_ESCAPE([$1.h])"], [], [ignore])
 AT_COMPILE([glr.o], [-c "AS_ESCAPE([$1.c])"])
 $2
@@ -295,7 +314,7 @@ AT_DATA_GRAMMAR([cxx.y],
 %%
 start: {};
 ]])
-AT_BISON_CHECK([-o "AS_ESCAPE([$1.cc])" --defines="AS_ESCAPE([$1.hh])" cxx.y])
+AT_BISON_CHECK([-o "AS_ESCAPE([$1.cc])" --header="AS_ESCAPE([$1.hh])" cxx.y])
 AT_CHECK([ls "AS_ESCAPE([$1.cc])" "AS_ESCAPE([$1.hh])"], [], [ignore])
 AT_COMPILE_CXX([cxx.o], [-c "AS_ESCAPE([$1.cc])"])
 $2
@@ -331,7 +350,7 @@ m4_pushdef([AT_TEST],
 AT_KEYWORDS([[graph]])
 AT_DATA([[input.y]], [$2])
 AT_BISON_CHECK([[-rall --graph input.y]], [0], [[]], [[ignore]])
-AT_CHECK([[grep -v // input.dot]], [0],
+AT_CHECK([[grep -v // input.gv]], [0],
 [$3])
 AT_CLEANUP
 ])
@@ -725,6 +744,7 @@ m4_popdef([AT_TEST])
 AT_SETUP([C++ Output File Prefix Mapping])
 
 # AT_TEST([PREFIX], [DIRECTIVES])
+# -------------------------------
 m4_pushdef([AT_TEST],
 [AT_BISON_OPTION_PUSHDEFS([%skeleton "lalr1.cc" %define api.namespace {$1} $2])
 AT_LOC_PUSHDEF([begin.line], [begin.column], [end.line], [end.column])
@@ -753,7 +773,7 @@ AT_BISON_OPTION_POPDEFS
 mkdir -p out/include/ast
 
 AT_TEST([x1],
-        [%defines
+        [%header
          %locations
          %define api.location.file "include/ast/loc.hh"
          ])
@@ -784,7 +804,7 @@ AT_CHECK([[sed -ne 's/^#line [0-9][0-9]* "/#line "/p;/INCLUDED/p;/\\file/{p;n;p;
 ]])
 
 AT_TEST([x2],
-        [%defines
+        [%header
          %locations
          %code requires {#include "include/ast/loc.hh"}
          %define api.location.type {x1::location}])

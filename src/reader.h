@@ -38,7 +38,22 @@ typedef struct merger_list
   location type_declaration_loc;
 } merger_list;
 
-void grammar_start_symbol_set (symbol *sym, location loc);
+void free_merger_functions (void);
+extern merger_list *merge_functions;
+
+/* List of the start symbols.  */
+extern symbol_list *start_symbols;
+
+/* Fetch (or create) a token "YY_PARSE_foo" for start symbol "foo".
+
+   We don't use the simple "YY_FOO" because (i) we might get clashes
+   with some of our symbols (e.g., cast => YY_CAST), and (ii) upcasing
+   introduces possible clashes between terminal FOO and nonterminal
+   foo.  */
+symbol *switching_token (const symbol *start);
+
+void grammar_start_symbols_add (symbol_list *syms);
+
 void grammar_current_rule_begin (symbol *lhs, location loc,
                                  named_ref *lhs_named_ref);
 void grammar_current_rule_end (location loc);
@@ -57,10 +72,9 @@ void grammar_current_rule_action_append (const char *action, location loc,
                                          named_ref *nref, uniqstr tag);
 /* Attach a PREDICATE to the current rule.  */
 void grammar_current_rule_predicate_append (const char *predicate, location loc);
-void reader (const char *gram);
-void free_merger_functions (void);
 
-extern merger_list *merge_functions;
+/* Read in the grammar specification.  */
+void reader (const char *gram);
 
 /* Was %union seen?  */
 extern bool union_seen;

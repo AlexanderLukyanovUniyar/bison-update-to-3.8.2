@@ -18,7 +18,6 @@
 ## Parser generation.  ##
 ## ------------------- ##
 
-%D%/parser.stamp: $(dependencies)
 SUFFIXES += .yy .stamp
 .yy.stamp:
 	$(AM_V_YACC)rm -f $@
@@ -26,12 +25,13 @@ SUFFIXES += .yy .stamp
 	$(AM_V_at)$(YACCCOMPILE) -o $*.cc $<
 	$(AM_V_at)mv -f $@.tmp $@
 
+%D%/parser.stamp: $(dependencies)
 $(calcxx_sources_generated): %D%/parser.stamp
 	@test -f $@ || rm -f %D%/parser.stamp
 	@test -f $@ || $(MAKE) $(AM_MAKEFLAGS) %D%/parser.stamp
 CLEANFILES +=					\
   $(calcxx_sources_generated)			\
-  %D%/parser.dot				\
+  %D%/parser.gv					\
   %D%/parser.output				\
   %D%/parser.stamp				\
   %D%/scanner.cc

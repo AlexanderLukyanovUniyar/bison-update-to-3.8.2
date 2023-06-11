@@ -405,7 +405,7 @@ m4_pushdef([AT_CONSISTENT_ERRORS_CHECK], [
 
 AT_SETUP([[parse.error=verbose and consistent errors: ]$1])
 
-AT_BISON_OPTION_PUSHDEFS([$1 AT_CXX_IF([[%defines]], [[%define api.pure]])])
+AT_BISON_OPTION_PUSHDEFS([$1 AT_CXX_IF([[%header]], [[%define api.pure]])])
 
 AT_DATA_GRAMMAR([input.y],
 [AT_JAVA_IF([[
@@ -421,9 +421,9 @@ AT_DATA_GRAMMAR([input.y],
   #define USE(Var)
 }
 
-]AT_CXX_IF([[%defines]], [[%define api.pure]])])[
+]AT_CXX_IF([[%header]], [[%define api.pure]])])[
 
-]AT_YACC_IF([[
+]AT_YACC_C_IF([[
 %code {
   #if defined __GNUC__ && 8 <= __GNUC__
   # pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
@@ -440,7 +440,7 @@ AT_DATA_GRAMMAR([input.y],
 ]$2[
 
 ]AT_JAVA_IF([[%code lexer {
-  ]AT_YYLEX_DEFINE([$3], [[return new Integer(1)]])[
+  ]AT_YYLEX_DEFINE(["$3"], [[return new Integer(1)]])[
   ]AT_YYERROR_DEFINE[
 };
 %%
@@ -867,12 +867,12 @@ State 5
       Example: exp OP exp . OP exp
       Shift derivation
         exp
-        `-> exp OP exp
-                   `-> exp . OP exp
+        `-> 1: exp OP exp
+                      `-> 1: exp . OP exp
       Reduce derivation
         exp
-        `-> exp              OP exp
-            `-> exp OP exp .
+        `-> 1: exp                 OP exp
+               `-> 1: exp OP exp .
 
 ]])
 
@@ -1093,7 +1093,7 @@ AT_CLEANUP
 ])
 
 ## FIXME: test Java and D.
-m4_map_args([AT_TEST], [yacc.c], [glr.c], [lalr1.cc], [glr.cc])
+m4_map_args([AT_TEST], [yacc.c], [glr.c], [lalr1.cc], [glr.cc], [glr2.cc])
 
 m4_popdef([AT_TEST])
 
@@ -1215,12 +1215,12 @@ State 1
       Example: '0' .
       First reduce derivation
         exp
-        `-> num
-            `-> '0' .
+        `-> 1: num
+               `-> 3: '0' .
       Second reduce derivation
         exp
-        `-> id
-            `-> '0' .
+        `-> 2: id
+               `-> 4: '0' .
 
 
 
@@ -1720,7 +1720,7 @@ State 0
     0 $accept: . start $end
     1 start: . resolved_conflict 'a' reported_conflicts 'a'
     2 resolved_conflict: . 'a' unreachable1
-    3                  | . %empty  ['a']
+    3                  | %empty .  ['a']
 
     $default  reduce using rule 3 (resolved_conflict)
 
@@ -1756,7 +1756,7 @@ State 4
     1 start: resolved_conflict 'a' . reported_conflicts 'a'
     8 reported_conflicts: . 'a'
     9                   | . 'a'
-   10                   | . %empty  ['a']
+   10                   | %empty .  ['a']
 
     'a'  shift, and go to state 5
 
@@ -1765,32 +1765,32 @@ State 4
     reported_conflicts  go to state 6
 
     shift/reduce conflict on token 'a':
-       10 reported_conflicts: . %empty
+       10 reported_conflicts: %empty .
         8 reported_conflicts: . 'a'
       First example: resolved_conflict . 'a' 'a'
       Shift derivation
         start
-        `-> resolved_conflict reported_conflicts 'a'
-                              `-> . 'a'
+        `-> 1: resolved_conflict reported_conflicts 'a'
+                                 `-> 8: . 'a'
       Second example: resolved_conflict . 'a'
       Reduce derivation
         start
-        `-> resolved_conflict reported_conflicts 'a'
-                              `-> .
+        `-> 1: resolved_conflict reported_conflicts 'a'
+                                 `-> 10: %empty .
 
     shift/reduce conflict on token 'a':
-       10 reported_conflicts: . %empty
+       10 reported_conflicts: %empty .
         9 reported_conflicts: . 'a'
       First example: resolved_conflict . 'a' 'a'
       Shift derivation
         start
-        `-> resolved_conflict reported_conflicts 'a'
-                              `-> . 'a'
+        `-> 1: resolved_conflict reported_conflicts 'a'
+                                 `-> 9: . 'a'
       Second example: resolved_conflict . 'a'
       Reduce derivation
         start
-        `-> resolved_conflict reported_conflicts 'a'
-                              `-> .
+        `-> 1: resolved_conflict reported_conflicts 'a'
+                                 `-> 10: %empty .
 
 
 
@@ -1809,10 +1809,10 @@ State 5
       Example: 'a' .
       First reduce derivation
         reported_conflicts
-        `-> 'a' .
+        `-> 8: 'a' .
       Second reduce derivation
         reported_conflicts
-        `-> 'a' .
+        `-> 9: 'a' .
 
 
 
@@ -1891,11 +1891,11 @@ AT_CHECK([[cat input.output | sed -n '/^State 0$/,/^State 1$/p']], 0,
     6      | . empty_c1 'c'
     7      | . empty_c2 'c'
     8      | . empty_c3 'c'
-    9 empty_a: . %empty  ['a']
-   10 empty_b: . %empty  []
-   11 empty_c1: . %empty  []
-   12 empty_c2: . %empty  []
-   13 empty_c3: . %empty  ['c']
+    9 empty_a: %empty .  ['a']
+   10 empty_b: %empty .  []
+   11 empty_c1: %empty .  []
+   12 empty_c2: %empty .  []
+   13 empty_c3: %empty .  ['c']
 
     'b'  shift, and go to state 1
 
@@ -1957,7 +1957,8 @@ empty_c3: %prec 'c' ;
 ]])
 
 AT_BISON_CHECK([[--trace=cex -fcaret --report=all -o input.c input.y]], 0, [],
-[[init: 0.000000
+[[bison (GNU Bison) ]AT_PACKAGE_VERSION[
+init: 0.000000
 # state items: 26
 State 0:
     0 $accept: . start $end
@@ -1972,46 +1973,46 @@ State 0:
 
     2 start: . empty_a 'a'
     ->     2 start: empty_a . 'a'
-    =>     9 empty_a: . %empty
+    =>     9 empty_a: %empty .
     <-     0 $accept: . start $end
 
     3 start: . 'b'  DISABLED
 
     4 start: . empty_b 'b'
     ->     4 start: empty_b . 'b'
-    =>    10 empty_b: . %empty
+    =>    10 empty_b: %empty .
     <-     0 $accept: . start $end
 
     5 start: . 'c'  DISABLED
 
     6 start: . empty_c1 'c'
     ->     6 start: empty_c1 . 'c'
-    =>    11 empty_c1: . %empty
+    =>    11 empty_c1: %empty .
     <-     0 $accept: . start $end
 
     7 start: . empty_c2 'c'
     ->     7 start: empty_c2 . 'c'
-    =>    12 empty_c2: . %empty
+    =>    12 empty_c2: %empty .
     <-     0 $accept: . start $end
 
     8 start: . empty_c3 'c'
     ->     8 start: empty_c3 . 'c'
-    =>    13 empty_c3: . %empty
+    =>    13 empty_c3: %empty .
     <-     0 $accept: . start $end
 
-    9 empty_a: . %empty
+    9 empty_a: %empty .
     <-     2 start: . empty_a 'a'
 
-   10 empty_b: . %empty
+   10 empty_b: %empty .
     <-     4 start: . empty_b 'b'
 
-   11 empty_c1: . %empty
+   11 empty_c1: %empty .
     <-     6 start: . empty_c1 'c'
 
-   12 empty_c2: . %empty
+   12 empty_c2: %empty .
     <-     7 start: . empty_c2 'c'
 
-   13 empty_c3: . %empty
+   13 empty_c3: %empty .
     <-     8 start: . empty_c3 'c'
 
 State 1:
@@ -2113,16 +2114,16 @@ input.y:17.11-19: warning: rule useless in parser due to conflicts [-Wother]
 REDUCE ITEM PATH:
     0 $accept: . start $end
     7 start: . empty_c2 'c'
-   12 empty_c2: . %empty
+   12 empty_c2: %empty .
 CONFLICT 1 (size 1 depth 0 rc 2)
-   12 empty_c2: . %empty
-   12 empty_c2: . %empty
+   12 empty_c2: %empty .
+   12 empty_c2: %empty .
 
     .
 
 CONFLICT 2 (size 1 depth 0 rc 2)
-   13 empty_c3: . %empty
-   13 empty_c3: . %empty
+   13 empty_c3: %empty .
+   13 empty_c3: %empty .
 
     .
 
@@ -2132,18 +2133,18 @@ CONFLICT 1 (size 2 depth -1 rc 4)
     7 start: empty_c2 . 'c'
 
     empty_c2
-    `-> .
+    `-> 12: %empty .
 
 CONFLICT 2 (size 1 depth 0 rc 3)
-   13 empty_c3: . %empty
-   13 empty_c3: . %empty
+   13 empty_c3: %empty .
+   13 empty_c3: %empty .
 
     .
 
 
 CONFLICT 1 (size 1 depth 0 rc 3)
-   12 empty_c2: . %empty
-   12 empty_c2: . %empty
+   12 empty_c2: %empty .
+   12 empty_c2: %empty .
 
     .
 
@@ -2152,7 +2153,7 @@ CONFLICT 2 (size 2 depth -1 rc 2)
     8 start: empty_c3 . 'c'
 
     empty_c3
-    `-> .
+    `-> 13: %empty .
 
 
 CONFLICT 1 (size 2 depth -1 rc 3)
@@ -2160,14 +2161,14 @@ CONFLICT 1 (size 2 depth -1 rc 3)
     7 start: empty_c2 . 'c'
 
     empty_c2
-    `-> .
+    `-> 12: %empty .
 
 CONFLICT 2 (size 2 depth -1 rc 2)
     8 start: . empty_c3 'c'
     8 start: empty_c3 . 'c'
 
     empty_c3
-    `-> .
+    `-> 13: %empty .
 
 
 CONFLICT 1 (size 3 depth -1 rc 2)
@@ -2175,14 +2176,14 @@ CONFLICT 1 (size 3 depth -1 rc 2)
     7 start: empty_c2 'c' .
 
     empty_c2
-    `-> .
+    `-> 12: %empty .
 
 CONFLICT 2 (size 3 depth -1 rc 2)
     8 start: . empty_c3 'c'
     8 start: empty_c3 'c' .
 
     empty_c3
-    `-> .
+    `-> 13: %empty .
 
 
 CONFLICT 1 (size 2 depth -1 rc 4)
@@ -2190,15 +2191,15 @@ CONFLICT 1 (size 2 depth -1 rc 4)
     0 $accept: start . $end
 
     start
-    `-> empty_c2 'c'
-        `-> .
+    `-> 7: empty_c2         'c'
+           `-> 12: %empty .
 
 CONFLICT 2 (size 3 depth -1 rc 3)
     8 start: . empty_c3 'c'
     8 start: empty_c3 'c' .
 
     empty_c3
-    `-> .
+    `-> 13: %empty .
 
 
 CONFLICT 1 (size 3 depth -1 rc 3)
@@ -2206,15 +2207,15 @@ CONFLICT 1 (size 3 depth -1 rc 3)
     7 start: empty_c2 'c' .
 
     empty_c2
-    `-> .
+    `-> 12: %empty .
 
 CONFLICT 2 (size 2 depth -1 rc 2)
     0 $accept: . start $end
     0 $accept: start . $end
 
     start
-    `-> empty_c3 'c'
-        `-> .
+    `-> 8: empty_c3         'c'
+           `-> 13: %empty .
 
 
 CONFLICT 1 (size 2 depth -1 rc 3)
@@ -2222,16 +2223,16 @@ CONFLICT 1 (size 2 depth -1 rc 3)
     0 $accept: start . $end
 
     start
-    `-> empty_c2 'c'
-        `-> .
+    `-> 7: empty_c2         'c'
+           `-> 12: %empty .
 
 CONFLICT 2 (size 2 depth -1 rc 2)
     0 $accept: . start $end
     0 $accept: start . $end
 
     start
-    `-> empty_c3 'c'
-        `-> .
+    `-> 8: empty_c3         'c'
+           `-> 13: %empty .
 
 
 ]])
@@ -2247,11 +2248,11 @@ AT_CHECK([[cat input.output | sed -n '/^State 0$/,/^State 1$/p']], 0,
     6      | . empty_c1 'c'
     7      | . empty_c2 'c'
     8      | . empty_c3 'c'
-    9 empty_a: . %empty  []
-   10 empty_b: . %empty  []
-   11 empty_c1: . %empty  []
-   12 empty_c2: . %empty  ['c']
-   13 empty_c3: . %empty  ['c']
+    9 empty_a: %empty .  []
+   10 empty_b: %empty .  []
+   11 empty_c1: %empty .  []
+   12 empty_c2: %empty .  ['c']
+   13 empty_c3: %empty .  ['c']
 
     'a'  error (nonassociative)
     'b'  error (nonassociative)
@@ -2272,17 +2273,17 @@ AT_CHECK([[cat input.output | sed -n '/^State 0$/,/^State 1$/p']], 0,
     Conflict between rule 11 and token 'c' resolved as an error (%nonassoc 'c').
 
     reduce/reduce conflict on token 'c':
-       12 empty_c2: . %empty
-       13 empty_c3: . %empty
+       12 empty_c2: %empty .
+       13 empty_c3: %empty .
       Example: . 'c'
       First reduce derivation
         start
-        `-> empty_c2 'c'
-            `-> .
+        `-> 7: empty_c2         'c'
+               `-> 12: %empty .
       Second reduce derivation
         start
-        `-> empty_c3 'c'
-            `-> .
+        `-> 8: empty_c3         'c'
+               `-> 13: %empty .
 
 
 

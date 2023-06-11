@@ -83,7 +83,8 @@ AT_CLEANUP
 AT_SETUP([Invalid inputs])
 
 AT_DATA([input.y],
-[[\000\001\002\377?
+[[%header "\360\000\200\210"
+\000\001\002\377?
 "\000"
 %%
 ?
@@ -98,37 +99,41 @@ AT_PERL_REQUIRE([[-pi -e 's/\\(\d{3})/chr(oct($1))/ge' input.y]])
 AT_BISON_CHECK([-fcaret input.y], [1], [], [stderr])
 
 # Autotest's diffing, when there are NUL bytes, just reports "binary
-# files differ".  So don't leave NUL bytes.
-AT_PERL_CHECK([[-p -e 's{([\0\377])}{sprintf "\\x%02x", ord($1)}ge' stderr]], [],
-[[input.y:1.1-2: error: invalid characters: '\0\001\002\377?'
-    1 | \x00\xff?
+# files differ".  So don't leave NUL bytes.  And don't leave invalid
+# mbchars either: escape raw binary.
+AT_PERL_CHECK([[-p -e 's{([\0\200\210\360\377])}{sprintf "\\x%02x", ord($1)}ge' stderr]], [],
+[[input.y:1.11: error: invalid null character
+    1 | %header "\xf0\x00\x80\x88"
+      |           ^
+input.y:2.1-2: error: invalid characters: '\0\001\002\377?'
+    2 | \x00\xff?
       | ^~
-input.y:2.2: error: invalid null character
-    2 | "\x00"
+input.y:3.2: error: invalid null character
+    3 | "\x00"
       |  ^
-input.y:4.1: error: invalid character: '?'
-    4 | ?
+input.y:5.1: error: invalid character: '?'
+    5 | ?
       | ^
-input.y:5.14: error: invalid character: '}'
-    5 | default: 'a' }
+input.y:6.14: error: invalid character: '}'
+    6 | default: 'a' }
       |              ^
-input.y:6.1: error: invalid character: '%'
-    6 | %&
+input.y:7.1: error: invalid character: '%'
+    7 | %&
       | ^
-input.y:6.2: error: invalid character: '&'
-    6 | %&
+input.y:7.2: error: invalid character: '&'
+    7 | %&
       |  ^
-input.y:7.1-17: error: invalid directive: '%a-does-not-exist'
-    7 | %a-does-not-exist
+input.y:8.1-17: error: invalid directive: '%a-does-not-exist'
+    8 | %a-does-not-exist
       | ^~~~~~~~~~~~~~~~~
-input.y:8.1: error: invalid character: '%'
-    8 | %-
+input.y:9.1: error: invalid character: '%'
+    9 | %-
       | ^
-input.y:8.2: error: invalid character: '-'
-    8 | %-
+input.y:9.2: error: invalid character: '-'
+    9 | %-
       |  ^
-input.y:9.1-10.0: error: missing '%}' at end of file
-    9 | %{
+input.y:10.1-11.0: error: missing '%}' at end of file
+   10 | %{
       | ^~
 ]])
 
@@ -1814,6 +1819,75 @@ AT_BISON_CHECK([-o input.c input.y])
 AT_CLEANUP
 
 
+## ------------------------- ##
+## Duplicate %start symbol.  ##
+## ------------------------- ##
+
+AT_SETUP([Duplicate %start symbol])
+
+AT_KEYWORDS([multistart])
+
+AT_DATA([input.y],
+[[%start exp exp exp
+%%
+exp: %empty;
+]])
+
+AT_BISON_CHECK([-fcaret input.y], [0], [],
+[[input.y:1.12-14: warning: duplicate directive [-Wother]
+    1 | %start exp exp exp
+      |            ^~~
+input.y:1.8-10: note: previous declaration
+    1 | %start exp exp exp
+      |        ^~~
+input.y:1.16-18: warning: duplicate directive [-Wother]
+    1 | %start exp exp exp
+      |                ^~~
+input.y:1.8-10: note: previous declaration
+    1 | %start exp exp exp
+      |        ^~~
+input.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+]])
+
+AT_DATA([input.y],
+[[%start exp foo exp
+%%
+exp: foo;
+foo: %empty;
+]])
+
+AT_BISON_CHECK([-fcaret input.y], [0], [],
+[[input.y:1.16-18: warning: duplicate directive [-Wother]
+    1 | %start exp foo exp
+      |                ^~~
+input.y:1.8-10: note: previous declaration
+    1 | %start exp foo exp
+      |        ^~~
+input.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+]])
+
+AT_DATA([input.y],
+[[%start exp foo
+%start exp
+%%
+exp: foo;
+foo: %empty;
+]])
+
+AT_BISON_CHECK([-fcaret input.y], [0], [],
+[[input.y:2.8-10: warning: duplicate directive [-Wother]
+    2 | %start exp
+      |        ^~~
+input.y:1.8-10: note: previous declaration
+    1 | %start exp foo
+      |        ^~~
+input.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+]])
+
+
+AT_CLEANUP
+
+
 ## --------------------- ##
 ## %prec takes a token.  ##
 ## --------------------- ##
@@ -2361,7 +2435,7 @@ m4_define([AT_CHECK_NAMESPACE_ERROR],
 [
 AT_DATA([[input.y]],
 [[%language "C++"
-%defines
+%header
 %define api.namespace {]$1[}
 %%
 start: %empty;
@@ -2608,42 +2682,32 @@ start: %empty;
 
 # Only "full" and "none" are accepted for parse.lac
 # Unknown values (such as "unsupported") are rejected
-AT_BISON_CHECK([[-Dparse.lac=none input.y]])
-AT_BISON_CHECK([[-Dparse.lac=none -L c++ input.y]])
-AT_BISON_CHECK([[-Dparse.lac=full input.y]])
-AT_BISON_CHECK([[-Dparse.lac=full -L c++ input.y]])
-AT_BISON_CHECK([[-Dparse.lac=unsupported input.y]],
+m4_foreach([b4_skel], [[yacc.c], [lalr1.cc], [lalr1.d], [lalr1.java]],
+[AT_BISON_CHECK([[-S]b4_skel[ -Dparse.lac=none input.y]])
+AT_BISON_CHECK([[-S]b4_skel[ -Dparse.lac=full input.y]])
+AT_BISON_CHECK([[-S]b4_skel[ -Dparse.lac=unsupported input.y]],
                [[1]], [],
-[[<command line>:3: error: invalid value for %define variable 'parse.lac': 'unsupported'
-<command line>:3: note: accepted value: 'full'
-<command line>:3: note: accepted value: 'none'
+[[<command line>:4: error: invalid value for %define variable 'parse.lac': 'unsupported'
+<command line>:4: note: accepted value: 'full'
+<command line>:4: note: accepted value: 'none'
 ]])
-AT_BISON_CHECK([[-Dparse.lac=unsupported -L c++ input.y]],
-               [[1]], [],
-[[<command line>:3: error: invalid value for %define variable 'parse.lac': 'unsupported'
-<command line>:3: note: accepted value: 'full'
-<command line>:3: note: accepted value: 'none'
-]])
+])
 
 # parse.lac.* options are useless if LAC isn't actually activated.
-AT_BISON_CHECK([[-Dparse.lac.es-capacity-initial=1 input.y]],
+AT_BISON_CHECK([[-Dparse.lac.es-capacity-initial=1 -Dparse.lac.memory-trace=full input.y]],
                [[1]], [],
 [[<command line>:3: error: %define variable 'parse.lac.es-capacity-initial' is not used
-]])
-AT_BISON_CHECK([[-Dparse.lac.memory-trace=full input.y]],
-               [[1]], [],
-[[<command line>:3: error: %define variable 'parse.lac.memory-trace' is not used
+<command line>:4: error: %define variable 'parse.lac.memory-trace' is not used
 ]])
 
-# parse.lac.* options are useless in C++ even if LAC isn't actually activated.
-AT_BISON_CHECK([[-Dparse.lac.es-capacity-initial=1 -L C++ -Dparse.lac=full input.y]],
+# parse.lac.* options are useless in C++/Java even if LAC is actually activated.
+m4_foreach([b4_skel], [[lalr1.cc], [lalr1.java]],
+[AT_BISON_CHECK([[-S]b4_skel[ -Dparse.lac=full -Dparse.lac.es-capacity-initial=1 -Dparse.lac.memory-trace=full input.y]],
                [[1]], [],
-[[<command line>:3: error: %define variable 'parse.lac.es-capacity-initial' is not used
+[[<command line>:5: error: %define variable 'parse.lac.es-capacity-initial' is not used
+<command line>:6: error: %define variable 'parse.lac.memory-trace' is not used
 ]])
-AT_BISON_CHECK([[-Dparse.lac.memory-trace=full -L C++ -Dparse.lac=full input.y]],
-               [[1]], [],
-[[<command line>:3: error: %define variable 'parse.lac.memory-trace' is not used
-]])
+])
 
 AT_CLEANUP
 
@@ -2825,26 +2889,26 @@ m4_pattern_allow([^m4_errprintn$])
 # Try to have MACRO be run by bison.
 m4_pushdef([AT_TEST],
 [AT_DATA([[input.y]],
-[[%type <$1(DEAD %type)> exp
-%token <$1(DEAD %token)> a
+[[%type <$1(%type)> exp
+%token <$1(%token)> a
 %token b
 %initial-action
 {
   $$;
-  $<$1(DEAD %initial-action)>$
+  $<$1(%initial-action)>$
 };
 %printer
 {
   $$
-  $<$1(DEAD %printer)>$
+  $<$1(%printer)>$
 } <> <*>;
 %lex-param
 {
-  $1(DEAD %lex-param)
+  $1(%lex-param)
 };
 %parse-param
 {
-  $1(DEAD %parse-param)
+  $1(%parse-param)
 };
 %%
 exp:
@@ -2852,24 +2916,23 @@ exp:
   {
     $$;
     $][1;
-    $<$1(DEAD action 1)>$
-    $<$1(DEAD action 2)>1
-    $<$1(DEAD action 3)>name
-    $<$1(DEAD action 4)>0
+    $<$1(action 1)>$
+    $<$1(action 2)>1
+    $<$1(action 3)>name
+    $<$1(action 4)>0
     ;
   };
 ]])
 
-# FIXME: Provide a means to iterate over all the skeletons.
-AT_BISON_CHECK([[-d               input.y]])
-AT_BISON_CHECK([[-d -S glr.c      input.y]])
-AT_BISON_CHECK([[-d -S lalr1.cc   input.y]])
-AT_BISON_CHECK([[-d -S glr.cc     input.y]])
-AT_BISON_CHECK([[   -S lalr1.java input.y]])
+# Disable -Wother to avoid the warnings about the suspicious presence
+# of `b4_canary` in the output.
+AT_FOR_EACH_SKEL(
+[AT_BISON_CHECK([[-Wno-other -S ]b4_skel[ ]m4_bmatch(b4_skel, [.*\.\(d\|java\)$], [], [-d])[ input.y]])
+])
 ])
 
-AT_TEST([m4_errprintn])
-AT_TEST([@:>@m4_errprintn])
+AT_TEST([b4_canary])
+AT_TEST([@:>@b4_canary])
 
 m4_popdef([AT_TEST])
 
@@ -2907,6 +2970,7 @@ AT_DATA_GRAMMAR([[input.y]],
 %error-verbose
 %glr-parser
 %name-prefix "bar"
+%defines "header.h"
 %%
 exp : '0'
 ]])
@@ -2990,6 +3054,7 @@ AT_CHECK([sed -e '1,8d' input.y], [],
 %define api.pure
 %token-table
 %glr-parser
+%defines "header.h"
 %%
 exp : '0'
 ]])

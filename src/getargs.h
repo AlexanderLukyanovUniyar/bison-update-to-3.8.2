@@ -34,8 +34,9 @@ extern int skeleton_prio;
 /* for -I */
 extern char const *include;
 
-extern bool defines_flag;               /* for -d */
+extern bool header_flag;                /* for -d/-H */
 extern bool graph_flag;                 /* for -g */
+extern bool html_flag;                  /* for --html */
 extern bool xml_flag;                   /* for -x */
 extern bool no_lines_flag;              /* for -l */
 extern bool token_table_flag;           /* for -k */
@@ -139,6 +140,7 @@ void getargs (int argc, char *argv[]);
 /* Used by parse-gram.y.  */
 void language_argmatch (char const *arg, int prio, location loc);
 void skeleton_arg (const char *arg, int prio, location loc);
+void set_yacc (location loc);
 
 /** In the string \c s, replace all characters \c from by \c to.  */
 void tr (char *s, char from, char to);

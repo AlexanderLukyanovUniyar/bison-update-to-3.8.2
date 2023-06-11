@@ -160,7 +160,7 @@ xint      0[xX][0-9abcdefABCDEF]+
 eol       \n|\r\n
 
  /* UTF-8 Encoded Unicode Code Point, from Flex's documentation. */
-mbchar    [\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF]([\x80-\xBF]{2})|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x\90-\xBF]([\x80-\xBF]{2})|[\xF1-\xF3]([\x80-\xBF]{3})|\xF4[\x80-\x8F]([\x80-\xBF]{2})
+mbchar    [\x09\x0A\x0D\x20-\x7E]|[\xC2-\xDF][\x80-\xBF]|\xE0[\xA0-\xBF][\x80-\xBF]|[\xE1-\xEC\xEE\xEF]([\x80-\xBF]{2})|\xED[\x80-\x9F][\x80-\xBF]|\xF0[\x90-\xBF]([\x80-\xBF]{2})|[\xF1-\xF3]([\x80-\xBF]{3})|\xF4[\x80-\x8F]([\x80-\xBF]{2})
 
 /* Zero or more instances of backslash-newline.  Following GCC, allow
    white space between the backslash and the newline.  */
@@ -244,15 +244,16 @@ eqopt    ({sp}=)?
   "%debug"                          RETURN_PERCENT_FLAG ("parse.trace");
   "%default-prec"                   return BISON_DIRECTIVE (DEFAULT_PREC);
   "%define"                         return BISON_DIRECTIVE (DEFINE);
-  "%defines"                        return BISON_DIRECTIVE (DEFINES);
+  "%defines"                        return BISON_DIRECTIVE (HEADER); // Deprecated in 3.8.
   "%destructor"                     return BISON_DIRECTIVE (DESTRUCTOR);
   "%dprec"                          return BISON_DIRECTIVE (DPREC);
   "%empty"                          return BISON_DIRECTIVE (EMPTY);
   "%expect"                         return BISON_DIRECTIVE (EXPECT);
   "%expect-rr"                      return BISON_DIRECTIVE (EXPECT_RR);
   "%file-prefix"                    RETURN_VALUE (PERCENT_FILE_PREFIX, uniqstr_new (yytext));
-  "%initial-action"                 return BISON_DIRECTIVE (INITIAL_ACTION);
   "%glr-parser"                     return BISON_DIRECTIVE (GLR_PARSER);
+  "%header"                         return BISON_DIRECTIVE (HEADER);
+  "%initial-action"                 return BISON_DIRECTIVE (INITIAL_ACTION);
   "%language"                       return BISON_DIRECTIVE (LANGUAGE);
   "%left"                           return PERCENT_LEFT;
   "%lex-param"                      RETURN_PERCENT_PARAM (lex);

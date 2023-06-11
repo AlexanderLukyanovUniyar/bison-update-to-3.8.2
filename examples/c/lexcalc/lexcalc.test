@@ -21,6 +21,15 @@ EOF
 run 0 7
 
 cat >input <<EOF
+1
+2
+3
+EOF
+run 0 '1
+2
+3'
+
+cat >input <<EOF
 (1+2) * 3
 EOF
 run 0 9

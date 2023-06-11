@@ -7,22 +7,22 @@
 # with or without modifications, as long as this notice is preserved.
 
 m4_define([_BISON_CXXSTD_98_snippet],
-[#include <vector>
-
-typedef std::vector<int> ints;
-])
+[[]])
 
 m4_define([_BISON_CXXSTD_03_snippet],
-[])
+[[]])
 
 m4_define([_BISON_CXXSTD_11_snippet],
-[#include <algorithm>
+[[  // C++11
+#include <algorithm>
+#include <cassert>
 #include <memory>
 #include <set>
 #include <sstream>
 #include <string>
+#include <utility> // std::swap
+#include <vector>
 
-  // C++11
   template <typename T>
   struct check
   {
@@ -66,10 +66,26 @@ m4_define([_BISON_CXXSTD_11_snippet],
 
   // GCC 4.8.2 on Solaris 11.3 does not support to_string.
   auto e = std::to_string(42);
-])
+
+  // Needed by glr2.cc.
+  void cxx11_vector_data ()
+  {
+    std::vector<int> ints;
+    ints.emplace_back (42);
+    assert (ints.data () == &ints[0]);
+  }
+
+  // Needed by glr2.cc.
+  void cxx11_array_swap ()
+  {
+    int i0[4] = { 1, 2, 3, 4 };
+    int i1[4] = { 5, 6, 7, 8 };
+    std::swap (i0, i1);
+  }
+]])
 
 m4_define([_BISON_CXXSTD_14_snippet],
-[  // C++14
+[[  // C++14
   void mismatch()
   {
     using ints = std::vector<int>;
@@ -78,20 +94,24 @@ m4_define([_BISON_CXXSTD_14_snippet],
     std::mismatch(std::begin(v1), std::end(v1),
                   std::begin(v2), std::end(v2));
   }
-])
+]])
 
 m4_define([_BISON_CXXSTD_17_snippet],
-[  // C++17
+[[  // C++17
   namespace ns1::ns2::ns3 {}
 
 #include <optional>
   auto opt_string = std::optional<std::string>{};
   auto out = std::ostringstream{};
-])
+]])
 
-m4_define([_BISON_CXXSTD_2A_snippet],
-[  // C++2A
-])
+m4_define([_BISON_CXXSTD_20_snippet],
+[[  // C++20
+]])
+
+m4_define([_BISON_CXXSTD_2B_snippet],
+[[  // C++2B
+]])
 
 
 m4_define([_BISON_CXXSTD_testbody(98)],
@@ -129,14 +149,25 @@ _BISON_CXXSTD_14_snippet
 _BISON_CXXSTD_17_snippet
 ])])
 
-m4_define([_BISON_CXXSTD_testbody(2a)],
+m4_define([_BISON_CXXSTD_testbody(20)],
 [AC_LANG_PROGRAM([
 _BISON_CXXSTD_98_snippet
 _BISON_CXXSTD_03_snippet
 _BISON_CXXSTD_11_snippet
 _BISON_CXXSTD_14_snippet
 _BISON_CXXSTD_17_snippet
-_BISON_CXXSTD_2A_snippet
+_BISON_CXXSTD_20_snippet
+])])
+
+m4_define([_BISON_CXXSTD_testbody(2b)],
+[AC_LANG_PROGRAM([
+_BISON_CXXSTD_98_snippet
+_BISON_CXXSTD_03_snippet
+_BISON_CXXSTD_11_snippet
+_BISON_CXXSTD_14_snippet
+_BISON_CXXSTD_17_snippet
+_BISON_CXXSTD_20_snippet
+_BISON_CXXSTD_2B_snippet
 ])])
 
 
@@ -148,7 +179,7 @@ m4_define([_BISON_CXXSTD_testbody],
 
 # BISON_CXXSTD(STD)
 # -----------------
-# Check whether the C++ compiler support STD (11, 98, 2a, etc.).
+# Check whether the C++ compiler supports STD (11, 98, 2b, etc.).
 # If it does, AC_SUBST 'CXX<STD>_CXXFLAGS' to the corresponding flags.
 AC_DEFUN([BISON_CXXSTD],
 [AC_REQUIRE([AC_PROG_CXX])

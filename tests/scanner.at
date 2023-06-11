@@ -94,7 +94,7 @@ m4_define([AT_RAW_YYLEX(d)],
 import std.stdio;
 
 auto yyLexer(R)(R range)
-  if (isInputRange!R && is (ElementType!R : dchar))
+if (isInputRange!R && is (ElementType!R : dchar))
 {
   return new YYLexer!R(range);
 }
@@ -105,28 +105,20 @@ auto yyLexer ()
 }
 
 class YYLexer(R) : Lexer
-  if (isInputRange!R && is (ElementType!R : dchar))
+if (isInputRange!R && is (ElementType!R : dchar))
 {
   R input;
 
-  this(R r) {
-    input = r;
-  }
+  this(R r) { input = r; }
 
   ]AT_YYERROR_DEFINE[
 
-  YYSemanticType semanticVal_;
-  public final @property YYSemanticType semanticVal ()
-  {
-    return semanticVal_;
-  }
-
-  int yylex ()
+  Symbol yylex ()
   {
     import std.uni : isNumber;
     // Handle EOF.
     if (input.empty)
-      return TokenKind.END;
+      return Symbol(TokenKind.END);
 
     auto c = input.front;
     input.popFront;
@@ -135,14 +127,13 @@ class YYLexer(R) : Lexer
     switch (c)
     {
     case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-      semanticVal_.val = c - '0';
-      return TokenKind.NUM;
-    case '+': return TokenKind.PLUS;
-    case '-': return TokenKind.MINUS;
-    case '*': return TokenKind.STAR;
-    case '/': return TokenKind.SLASH;
-    case '(': return TokenKind.LPAR;
-    case ')': return TokenKind.RPAR;
+      return Symbol(TokenKind.NUM, c - '0');
+    case '+': return Symbol(TokenKind.PLUS);
+    case '-': return Symbol(TokenKind.MINUS);
+    case '*': return Symbol(TokenKind.STAR);
+    case '/': return Symbol(TokenKind.SLASH);
+    case '(': return Symbol(TokenKind.LPAR);
+    case ')': return Symbol(TokenKind.RPAR);
     default: assert(0);
     }
   }
@@ -178,29 +169,27 @@ m4_define([AT_RAW_YYLEX(java)],
 
   StreamTokenizer st;
 
-  public CalcLexer (InputStream is)
-  {
-    st = new StreamTokenizer (new StringReader ("0-(1+2)*3/9"));
-    st.resetSyntax ();
-    st.eolIsSignificant (true);
-    st.whitespaceChars ('\t', '\t');
-    st.whitespaceChars (' ', ' ');
-    st.wordChars ('0', '9');
+  public CalcLexer(InputStream is) {
+    st = new StreamTokenizer(new StringReader("0-(1+2)*3/9"));
+    st.resetSyntax();
+    st.eolIsSignificant(true);
+    st.whitespaceChars('\t', '\t');
+    st.whitespaceChars(' ', ' ');
+    st.wordChars('0', '9');
   }
 
-  public void yyerror (String s)
-  {
-    System.err.println (s);
+  public void yyerror(String s) {
+    System.err.println(s);
   }
 
   Integer yylval;
 
-  public Object getLVal () {
+  public Object getLVal() {
     return yylval;
   }
 
-  public int yylex () throws IOException {
-    int ttype = st.nextToken ();
+  public int yylex() throws IOException {
+    int ttype = st.nextToken();
     switch (ttype)
       {
       case StreamTokenizer.TT_EOF:
@@ -208,7 +197,7 @@ m4_define([AT_RAW_YYLEX(java)],
       case StreamTokenizer.TT_EOL:
         return (int) '\n';
       case StreamTokenizer.TT_WORD:
-        yylval = new Integer (st.sval);
+        yylval = Integer.parseInt(st.sval);
         return NUM;
       case '+':
         return PLUS;
@@ -223,7 +212,7 @@ m4_define([AT_RAW_YYLEX(java)],
       case ')':
         return RPAR;
       default:
-        throw new AssertionError ("invalid character: " + ttype);
+        throw new AssertionError("invalid character: " + ttype);
       }
   }
 }
@@ -321,7 +310,8 @@ AT_FULL_COMPILE([input])
 # lalr1.java uses 'byte[] translate_table_ =' (and yytranslate_).
 AT_CHECK([[$EGREP -c 'yytranslate\[\]|translate_table\[\]|translate_table =|translate_table_ =' input.]AT_LANG_EXT],
          [ignore],
-         [AT_TOKEN_RAW_IF([0], [1])[
+         [AT_D_IF([AT_TOKEN_RAW_IF([0], [0])],
+                  [AT_TOKEN_RAW_IF([0], [1])])[
 ]])
 
 
@@ -333,7 +323,7 @@ AT_BISON_OPTION_POPDEFS
 AT_CLEANUP
 ])
 
-m4_foreach([b4_skel], [[yacc.c], [glr.c], [lalr1.cc], [glr.cc], [lalr1.java], [lalr1.d]],
+AT_FOR_EACH_SKEL(
 [AT_TEST([%skeleton "]b4_skel["])
  AT_TEST([%skeleton "]b4_skel[" %define api.token.raw])])
 

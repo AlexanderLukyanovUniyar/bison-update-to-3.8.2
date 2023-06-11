@@ -15,7 +15,9 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-EXTRA_DIST += %D%/linear $(TESTSUITE_AT) %D%/testsuite %D%/testsuite.h
+EXTRA_DIST +=					\
+  %D%/README.md %D%/linear			\
+  $(TESTSUITE_AT) %D%/testsuite %D%/testsuite.h
 
 DISTCLEANFILES       += %D%/atconfig $(check_SCRIPTS)
 MAINTAINERCLEANFILES += $(TESTSUITE)
@@ -57,6 +59,7 @@ TESTSUITE_AT =                                \
   %D%/conflicts.at                            \
   %D%/counterexample.at                       \
   %D%/cxx-type.at                             \
+  %D%/d.at                                    \
   %D%/diagnostics.at                          \
   %D%/existing.at                             \
   %D%/glr-regression.at                       \
@@ -111,7 +114,10 @@ recheck: $(RUN_TESTSUITE_deps)
 	     -e 'eof && /^(\d+).*: FAILED/ && print "$$1 "'	\
 		%D%/testsuite.dir/*/testsuite.log)
 
-check-local: $(RUN_TESTSUITE_deps)
+check-local: check-tests
+
+.PHONY: check-tests
+check-tests: $(RUN_TESTSUITE_deps)
 	$(RUN_TESTSUITE)
 
 # Run the test suite on the *installed* tree.
@@ -131,7 +137,7 @@ maintainer-check-posix: $(RUN_TESTSUITE_deps)
 VALGRIND_OPTS = --leak-check=full --show-reachable=yes --gen-suppressions=all \
   $(VALGRIND_OPTS_SUPPRESSION)
 maintainer-check-valgrind: $(RUN_TESTSUITE_deps)
-	test 'x$(VALGRIND)' == x ||					\
+	test 'x$(VALGRIND)' = x ||					\
 	  $(RUN_TESTSUITE)						\
 	    PREBISON='$(VALGRIND) -q' PREPARSER='$(VALGRIND) -q'	\
 	    VALGRIND_OPTS="$(VALGRIND_OPTS)"
