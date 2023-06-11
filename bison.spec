@@ -1,5 +1,5 @@
 Name: bison
-Version: 3.7.6
+Version: 3.8.2
 Release: alt2
 
 Summary: A GNU general-purpose parser generator
@@ -70,7 +70,6 @@ fi
 
 %build
 %{?optflags_lto:%global optflags_lto %optflags_lto -ffat-lto-objects}
-./bootstrap --no-git --skip-po --gnulib-srcdir=%_datadir/gnulib
 
 # Use translations from gnulib.
 if [ -f %_datadir/gnulib/build-aux/po/LINGUAS ]; then
@@ -112,6 +111,9 @@ touch src/scan-????.l
 %files -f %name-runtime.lang runtime
 
 %changelog
+* Sun Jun 11 2023 Alexander Lukyanov <a.lukyanov@stud.uniyar.ac.ru> 3.8.2-alt2
+- bison: v3.7.6 -> v3.7.6
+
 * Wed Aug 25 2021 Dmitry V. Levin <ldv@altlinux.org> 3.7.6-alt2
 - Added -ffat-lto-objects to %optflags_lto.
 
